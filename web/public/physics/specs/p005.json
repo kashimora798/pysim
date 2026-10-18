@@ -127,6 +127,7 @@
   "citations": [
     "OpenStax University Physics 2, 6.4 (CC BY)"
   ],
+  "trajectory": null,
   "checks": {
     "dimensions": "pass",
     "engines": [

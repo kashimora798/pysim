@@ -1,6 +1,6 @@
 {
  "schema": "1",
- "contentHash": "5f438303d71ac8fc",
+ "contentHash": "2f6a64ccaf91f00a",
  "problems": [
   {
    "id": "p001",
@@ -653,6 +653,61 @@
     "parallel_pair"
    ],
    "spec": "specs/p110.json"
+  },
+  {
+   "id": "p201",
+   "title": "Wheatstone bridge (Engine B flagship)",
+   "text": "A 10 V battery drives a bridge: 10 ohm and 20 ohm in the left arm, 20 ohm and 10 ohm\nin the right arm, and a 10 ohm bridge wire between the two midpoints. No formula\nisolates the bridge current -- it takes the assembled Kirchhoff system. What flows\nthrough the bridge resistor?",
+   "source": "After OpenStax College Physics 2e, 21.3 (CC BY)",
+   "tags": [
+    "circuits",
+    "bridge",
+    "system",
+    "engine-b",
+    "flagship"
+   ],
+   "target": "r5.electric.current",
+   "answer": "0.1429 A",
+   "beats": 39,
+   "paths": 1,
+   "laws": [
+    "kirchhoff_current_law",
+    "ohms_law"
+   ],
+   "components": [
+    "battery",
+    "circuit_node",
+    "environment",
+    "resistor"
+   ],
+   "spec": "specs/p201.json"
+  },
+  {
+   "id": "p202",
+   "title": "Single loop in nodal form (engines cross-check)",
+   "text": "The p101 loop -- 12 V across 4.0 ohm -- stated the nodal way: two circuit nodes and\none branch. Engine B must reach the same 3 A the chain derives for p101.",
+   "source": "After OpenStax College Physics 2e, 20.2 (CC BY)",
+   "tags": [
+    "circuits",
+    "system",
+    "engine-b",
+    "cross-check"
+   ],
+   "target": "r1.electric.current",
+   "answer": "3 A",
+   "beats": 15,
+   "paths": 1,
+   "laws": [
+    "kirchhoff_current_law",
+    "ohms_law"
+   ],
+   "components": [
+    "battery",
+    "circuit_node",
+    "environment",
+    "resistor"
+   ],
+   "spec": "specs/p202.json"
   }
  ]
 }

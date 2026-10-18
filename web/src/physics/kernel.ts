@@ -322,6 +322,17 @@ export interface SimSpec {
   };
   assumptions: string[];
   citations: string[];
+  /** Engine C sampled motion (RK4), when the problem declares `simulate:`. */
+  trajectory: {
+    instance: string;
+    mode: string;
+    laws: string[];
+    integrator: string;
+    t: number[];
+    position: number[][];
+    velocity: number[][];
+    speed: number[];
+  } | null;
   checks: {
     dimensions: string;
     engines: string[];

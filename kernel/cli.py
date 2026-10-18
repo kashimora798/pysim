@@ -162,8 +162,10 @@ def solve(
 
     console.print(Panel(problem.text or problem.title, title=problem.id, border_style="cyan"))
 
+    from .solve import resolve_problem
+
     resolver = Resolver(kb, problem.scene)
-    derivations = resolver.resolve(problem.target)
+    derivations, _engine = resolve_problem(kb, problem)
 
     if not derivations:
         console.print(f"[bold red]unresolved[/]\n{resolver.failure(problem.target)}")
@@ -195,7 +197,9 @@ def solve(
         )
 
     if spec_out:
-        spec = build_simspec(problem, derivations, kb)
+        from .solve import build_problem_spec
+
+        spec, derivations, _engine = build_problem_spec(kb, problem)
         spec_out.write_text(spec.to_json(), encoding="utf-8")
         console.print(f"[dim]SimSpec -> {spec_out}  ({len(spec.beats)} beats)[/]")
 

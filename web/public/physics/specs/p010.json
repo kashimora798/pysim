@@ -134,6 +134,7 @@
     "geometry",
     "definitional"
   ],
+  "trajectory": null,
   "checks": {
     "dimensions": "pass",
     "engines": [

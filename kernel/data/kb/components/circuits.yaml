@@ -134,3 +134,16 @@ components:
     properties:
       em.potential_difference: {role: observable}
       electric.power:          {role: observable}
+
+  circuit_node:
+    label: Circuit node
+    tags: [circuit, topology, node]
+    description: >-
+      A point of one potential in a circuit — a junction where branches meet. Engine B
+      (nodal assembly) solves for its potential with Kirchhoff's current law; branches
+      declare `terminal_a`/`terminal_b` relations to the nodes they join, and a battery
+      declares `positive_terminal`/`negative_terminal`. Created by wiring, like the pairs.
+    laws: [kirchhoff_current_law, kirchhoff_voltage_law]
+    model3d: null
+    properties:
+      em.electric_potential: {role: observable}

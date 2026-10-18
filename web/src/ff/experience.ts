@@ -16,7 +16,10 @@
 
 import {
   BoxGeometry,
+  BufferGeometry,
   CanvasTexture,
+  Float32BufferAttribute,
+  Line,
   ConeGeometry,
   CylinderGeometry,
   Group,
@@ -105,6 +108,7 @@ export class ExperienceSystem extends createSystem({
   private stopped = false;
   private resumeAt = 0;
   private soundOn = true;
+  private trail?: Line;
   private frames = 0;
   private lastFpsAt = 0;
 
@@ -149,6 +153,7 @@ export class ExperienceSystem extends createSystem({
       if (now > until) { mesh.scale.setScalar(mesh.userData.baseScale ?? 1); this.pulses.delete(mesh); }
       else mesh.scale.setScalar((mesh.userData.baseScale ?? 1) * (1 + 0.18 * Math.sin(now / 60)));
     }
+    this.animateTrajectory(now);
     if (this.playing && this.mode === 'auto' && now >= this.nextAt) this.advance(false);
     if (this.resumeAt && now >= this.resumeAt) { this.resumeAt = 0; this.advance(false); }
     if (this.waitingTask) this.checkTask();
@@ -482,6 +487,7 @@ export class ExperienceSystem extends createSystem({
     this.proxies.clear(); this.pulses.clear();
     if (this.lines && this.root) { this.root.remove(this.lines); this.lines = new Group(); this.root.add(this.lines); }
     if (this.arrows) this.arrows.visible = false;
+    if (this.trail && this.root) { this.root.remove(this.trail); this.trail = undefined; }
     if (this.hud.trust) this.hud.trust.textContent = 'Trust card: every number here cites its formula, law and source.';
   }
 
@@ -718,6 +724,50 @@ export class ExperienceSystem extends createSystem({
     this.freeValues.set(id, current);
     this.freeSignature = '';
     this.solveFree();
+  }
+
+  // ---------------------------------------------------------------- Engine C playback
+
+  /** Map a physics vector [x, y, z] (z up) onto the bench (x right, y up, z toward viewer). */
+  private mapPhysics(v: number[]): Vector3 {
+    return new Vector3(v[0] ?? 0, v[2] ?? 0, -(v[1] ?? 0));
+  }
+
+  private animateTrajectory(now: number): void {
+    const traj = this.spec?.trajectory;
+    if (!traj || !this.root) return;
+    const mesh = this.proxies.get(traj.instance);
+    const base = this.layout.get(traj.instance);
+    if (!mesh || !base || traj.t.length < 2) return;
+
+    const origin = traj.position[0]!;
+    let extent = 0;
+    for (const pos of traj.position) {
+      const d = this.mapPhysics(pos).distanceTo(this.mapPhysics(origin));
+      if (d > extent) extent = d;
+    }
+    const scale = extent > 1e-9 ? Math.min(0.5 / extent, 5000) : 1;
+
+    if (!this.trail) {
+      const pts = traj.position.map((pos) =>
+        base.clone().add(this.mapPhysics(pos).sub(this.mapPhysics(origin)).multiplyScalar(scale)).setY(base.y + 0.02),
+      );
+      const geo = new BufferGeometry();
+      geo.setAttribute('position', new Float32BufferAttribute(pts.flatMap((p) => [p.x, p.y, p.z]), 3));
+      this.trail = new Line(geo, new MeshBasicMaterial({ color: 0xa78bfa, transparent: true, opacity: 0.85 }));
+      this.root.add(this.trail);
+      if (this.hud['probe-read']) {
+        this.hud['probe-read']!.textContent =
+          `🎞 Engine C trajectory (${traj.mode}, RK4): real duration ${traj.t[traj.t.length - 1]} s played over 6 s, ` +
+          `magnified ×${scale.toFixed(scale >= 100 ? 0 : 1)} to fit the bench. Laws: ${traj.laws.join(', ')}. The path is integrated, never keyframed.`;
+      }
+    }
+
+    const duration = traj.t[traj.t.length - 1]!;
+    const phase = duration > 0 ? ((now / 1000) % 6) / 6 : 0;
+    const idx = Math.min(traj.t.length - 1, Math.floor(phase * (traj.t.length - 1)));
+    const offset = this.mapPhysics(traj.position[idx]!).sub(this.mapPhysics(origin)).multiplyScalar(scale);
+    mesh.position.copy(base).add(offset).setY(base.y + 0.02 + offset.y);
   }
 
   // ---------------------------------------------------------------- hand-as-probe

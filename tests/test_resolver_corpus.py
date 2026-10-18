@@ -9,6 +9,7 @@ import pytest
 
 from kernel.engine_chain import Resolver
 from kernel.kb import load_kb
+from kernel.solve import resolve_problem
 from kernel.scene import Ref, SceneError, build_scene, load_corpus, load_problem
 from kernel.trace import build_simspec
 from kernel.validate import CORPUS_DIR
@@ -36,7 +37,7 @@ def _ids(problems):
 def test_every_problem_resolves_to_its_known_answer(kb, problems):
     failures = []
     for problem in problems:
-        derivations = Resolver(kb, problem.scene).resolve(problem.target)
+        derivations, _engine = resolve_problem(kb, problem)
         if not derivations:
             failures.append(f"{problem.id}: unresolved")
             continue
@@ -192,7 +193,7 @@ def test_components_arrive_stocked(kb):
 
 def test_simspec_is_json_and_every_beat_is_justified(kb, problems):
     for problem in problems:
-        derivations = Resolver(kb, problem.scene).resolve(problem.target)
+        derivations, _engine = resolve_problem(kb, problem)
         spec = build_simspec(problem, derivations, kb)
         data = json.loads(spec.to_json())
 

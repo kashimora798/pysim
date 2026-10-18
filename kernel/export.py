@@ -259,9 +259,10 @@ def export(
     problems = load_corpus(corpus_dir, kb)
     manifest = []
     spec_bytes = 0
+    from .solve import build_problem_spec
+
     for problem in problems:
-        derivations = Resolver(kb, problem.scene).resolve(problem.target)
-        spec = build_simspec(problem, derivations, kb)
+        spec, derivations, _engine = build_problem_spec(kb, problem)
         text = spec.to_json()
         (specs_dir / f"{problem.id}.json").write_text(text, encoding="utf-8")
         spec_bytes += len(text.encode("utf-8"))

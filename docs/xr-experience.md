@@ -1,5 +1,11 @@
 # FieldForge XR — the competition experience
 
+**Engines B + C update:** the kernel now assembles simultaneous Kirchhoff systems (Wheatstone
+bridge, p201 — Engine A honestly cannot, Engine B solves 1/7 A, cross-checked on p202) and
+integrates time evolution (RK4: cavity/plates constant acceleration, cyclotron orbits), sampled
+into each SimSpec as a `trajectory` the bench animates with a trail — real durations time-dilated
+to 6 s and magnified to fit the bench, both disclosed in the HUD. 26 golden problems.
+
 **What shipped (18 Oct 2026):** the 3D WebXR bench from `docs/competition-plan.md`, wired to the
 verified kernel. One static site, dual runtime (Quest hands-first + desktop mouse), no server,
 no AI required to solve anything.
