@@ -108,6 +108,16 @@ export const Wire = createComponent(
   'A wire connecting two terminals',
 );
 
+/** A spatial transport button (NEXT / PLAY) for the lesson player. Pressed is added by interaction. */
+export const ExperienceButton = createComponent(
+  'ExperienceButton',
+  {
+    /** 'next' | 'play' */
+    action: { type: Types.String, default: 'next' },
+  },
+  'A pressable transport control for the FieldForge lesson player',
+);
+
 /** A loose wire end following a pinch, before it has found its second terminal. */
 export const WireDrag = createComponent(
   'WireDrag',

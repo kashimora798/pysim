@@ -13,9 +13,11 @@
     "typecheck": "tsc --noEmit",
     "build": "vite build",
     "preview": "vite preview",
-    "physics:export": "cd .. && .venv/Scripts/python -m kernel.cli export",
+    "physics:export": "cd .. && .venv/bin/python -m kernel.cli export",
     "verify:kernel": "node --experimental-strip-types scripts/verify-kernel.mts",
-    "prebuild": "npm run typecheck && npm run verify:kernel"
+    "prebuild": "npm run check",
+    "check": "npm run typecheck && npm run verify:kernel && npm run check:experience",
+    "check:experience": "esbuild scripts/check-experience.mts --bundle --platform=node --format=esm --outfile=node_modules/.cache/ff-check.mjs --log-level=error && node node_modules/.cache/ff-check.mjs"
   },
   "dependencies": {
     "@iwsdk/core": "1.0.1",
