@@ -1,0 +1,98 @@
+# Geometric properties.
+#
+# `geometry.separation` is deliberately a *pair* property: a distance belongs to a relation
+# between two objects, not to either object alone. Making relations first-class property carriers
+# is what lets Coulomb's law bind cleanly without special cases.
+domain: geometry
+properties:
+  geometry.position:
+    symbol: r
+    dim: length
+    rank: vector
+    kind: lumped
+    si_unit: m
+    description: Position of an object in the scene frame.
+
+  geometry.separation:
+    symbol: r
+    dim: length
+    rank: scalar
+    kind: pair
+    si_unit: m
+    description: Centre-to-centre distance between two objects.
+
+  geometry.offset:
+    symbol: a
+    dim: length
+    rank: vector
+    kind: pair
+    si_unit: m
+    description: Displacement of one object's centre from another's.
+
+  geometry.radius:
+    symbol: R
+    dim: length
+    rank: scalar
+    kind: lumped
+    si_unit: m
+    description: Radius of a sphere, shell, cavity or circular path.
+
+  geometry.separation_plates:
+    symbol: d
+    dim: length
+    rank: scalar
+    kind: lumped
+    si_unit: m
+    description: Gap between the plates of a parallel-plate arrangement.
+
+  geometry.length:
+    symbol: L
+    dim: length
+    rank: scalar
+    kind: lumped
+    si_unit: m
+    description: Characteristic length of an object.
+
+  geometry.area:
+    symbol: A
+    dim: area
+    rank: scalar
+    kind: lumped
+    si_unit: m^2
+    description: Surface area.
+
+  geometry.volume:
+    symbol: Vol
+    dim: volume
+    rank: scalar
+    kind: lumped
+    si_unit: m^3
+    description: Enclosed volume.
+
+  geometry.direction:
+    symbol: n
+    dim: dimensionless
+    rank: vector
+    kind: lumped
+    si_unit: "1"
+    description: >
+      Unit vector giving the direction of a uniform field or axis. +Y is up, matching the renderer,
+      so the default points from a top plate down to a bottom one.
+
+  geometry.cross_section:
+    symbol: A_c
+    dim: area
+    rank: scalar
+    kind: lumped
+    si_unit: m^2
+    description: >
+      Area presented to the oncoming medium. Zero by default, which is what makes drag opt-in:
+      a problem that does not mention air gets exactly no drag force.
+
+  geometry.angle:
+    symbol: theta
+    dim: dimensionless
+    rank: scalar
+    kind: lumped
+    si_unit: rad
+    description: Angle between two directions.

@@ -1,0 +1,29 @@
+id: p001
+title: Electron accelerated across a parallel-plate gap
+source: "After OpenStax College Physics 2e, 19.2 (CC BY)"
+tags: [electrostatics, energy, kinematics, two-paths]
+text: |
+  An electron is released from rest at the negative plate of a parallel-plate capacitor with a
+  potential difference of 100 V across a 2.0 cm gap. How fast is it moving when it reaches the
+  positive plate?
+scene:
+  instances:
+    - id: cap
+      kind: parallel_plate_capacitor
+      set:
+        em.potential_difference: "100 V"
+        geometry.separation_plates: "2.0 cm"
+    - id: e1
+      kind: electron
+      set:
+        kinematics.speed@initial: "0 m/s"
+  relations:
+    - {kind: inside, from: e1, to: cap}
+target: {instance: e1, prop: kinematics.speed, state: final}
+expect:
+  value: 5.9309e6
+  unit: m/s
+  tol: 0.005
+  note: >
+    v = sqrt(2*e*V/m). Two genuinely different routes should both reach it: energy conservation
+    (W = qV -> K -> v) and kinematics (E = V/d -> F -> a -> v^2 = u^2 + 2as).

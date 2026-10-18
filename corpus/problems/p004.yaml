@@ -1,0 +1,27 @@
+id: p004
+title: Electrostatic shielding inside a charged conducting shell
+source: "After OpenStax University Physics 2, 6.5 (CC BY)"
+tags: [electrostatics, conductor, shielding, zero-result]
+text: |
+  A conducting spherical shell of radius 10 cm carries a charge of +5.0 uC. What is the electric
+  field magnitude at a point inside the hollow interior?
+scene:
+  instances:
+    - id: shell
+      kind: conducting_shell
+      set:
+        em.charge: "5.0 uC"
+        geometry.radius: "10 cm"
+    - id: p1
+      kind: field_probe
+  relations:
+    - {kind: inside_cavity_of, from: p1, to: shell}
+target: {instance: p1, prop: em.electric_field_magnitude}
+expect:
+  value: 0.0
+  unit: V/m
+  tol: 0.000001
+  note: >
+    Exactly zero, and the formula that produces it takes no inputs at all -- its entire
+    precondition is the relation to a conductor. A good test that the resolver can justify a
+    result without computing from any given value.

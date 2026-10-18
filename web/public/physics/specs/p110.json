@@ -1,0 +1,704 @@
+{
+  "fieldforge": "0.1",
+  "problem": {
+    "id": "p110",
+    "title": "Two capacitors in parallel",
+    "text": "A 2.0 uF and a 3.0 uF capacitor are connected in parallel across a 10 V supply. What is the\ntotal charge stored?",
+    "source": "After OpenStax College Physics 2e, 19.6 (CC BY)",
+    "tags": [
+      "circuits",
+      "capacitor",
+      "parallel",
+      "reduction",
+      "chapter1"
+    ]
+  },
+  "target": "pp.electric.charge_stored",
+  "answer": {
+    "value": 4.9999999999999996e-05,
+    "unit": "C",
+    "dimension": {
+      "s": "1",
+      "A": "1"
+    },
+    "rank": "scalar",
+    "display": "5.000e-5 C"
+  },
+  "scene": {
+    "instances": [
+      {
+        "id": "c1",
+        "kind": "capacitor",
+        "label": "Capacitor",
+        "model3d": "capacitor.glb",
+        "tags": [
+          "passive",
+          "circuit",
+          "storage"
+        ],
+        "given": {
+          "c1.electric.capacitance": {
+            "value": 2e-06,
+            "unit": "F",
+            "dimension": {
+              "kg": "-1",
+              "m": "-2",
+              "s": "4",
+              "A": "2"
+            },
+            "rank": "scalar",
+            "display": "2.000e-6 F"
+          }
+        }
+      },
+      {
+        "id": "c2",
+        "kind": "capacitor",
+        "label": "Capacitor",
+        "model3d": "capacitor.glb",
+        "tags": [
+          "passive",
+          "circuit",
+          "storage"
+        ],
+        "given": {
+          "c2.electric.capacitance": {
+            "value": 3e-06,
+            "unit": "F",
+            "dimension": {
+              "kg": "-1",
+              "m": "-2",
+              "s": "4",
+              "A": "2"
+            },
+            "rank": "scalar",
+            "display": "3.000e-6 F"
+          }
+        }
+      },
+      {
+        "id": "pp",
+        "kind": "parallel_pair",
+        "label": "Parallel combination",
+        "model3d": null,
+        "tags": [
+          "combination",
+          "circuit",
+          "resistive"
+        ],
+        "given": {
+          "pp.em.potential_difference": {
+            "value": 10.0,
+            "unit": "V",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-1"
+            },
+            "rank": "scalar",
+            "display": "10 V"
+          }
+        }
+      },
+      {
+        "id": "env",
+        "kind": "environment",
+        "label": "Environment",
+        "model3d": null,
+        "tags": [
+          "environment",
+          "scene",
+          "settings"
+        ],
+        "given": {
+          "env.env.air_density": {
+            "value": 0.0,
+            "unit": "kg·m⁻³",
+            "dimension": {
+              "kg": "1",
+              "m": "-3"
+            },
+            "rank": "scalar",
+            "display": "0 kg·m⁻³"
+          },
+          "env.env.gravity": {
+            "value": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "unit": "m/s²",
+            "dimension": {
+              "m": "1",
+              "s": "-2"
+            },
+            "rank": "vector",
+            "display": "[0, 0, 0] m/s²"
+          },
+          "env.env.relative_permittivity": {
+            "value": 1.0,
+            "unit": "",
+            "dimension": {},
+            "rank": "scalar",
+            "display": "1"
+          },
+          "env.env.temperature": {
+            "value": 293.15,
+            "unit": "K",
+            "dimension": {
+              "K": "1"
+            },
+            "rank": "scalar",
+            "display": "293.1 K"
+          },
+          "env.env.wind_velocity": {
+            "value": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "unit": "m/s",
+            "dimension": {
+              "m": "1",
+              "s": "-1"
+            },
+            "rank": "vector",
+            "display": "[0, 0, 0] m/s"
+          }
+        }
+      }
+    ],
+    "relations": [
+      {
+        "kind": "parallel_a",
+        "from": "pp",
+        "to": "c1",
+        "given": {}
+      },
+      {
+        "kind": "parallel_b",
+        "from": "pp",
+        "to": "c2",
+        "given": {}
+      }
+    ]
+  },
+  "assumptions": [
+    "same_voltage_across_both",
+    "linear_dielectric"
+  ],
+  "citations": [
+    "OpenStax College Physics 2e, 19.6 (CC BY)",
+    "OpenStax College Physics 2e, 19.5 (CC BY)"
+  ],
+  "checks": {
+    "dimensions": "pass",
+    "engines": [
+      "chain"
+    ],
+    "paths_found": 1,
+    "paths_agree": true,
+    "path_spread": 0.0
+  },
+  "timeline": [
+    {
+      "beat": 1,
+      "kind": "place",
+      "instance": "c1",
+      "component": "capacitor",
+      "model3d": "capacitor.glb",
+      "narrate": "Place Capacitor.",
+      "because": {
+        "kind": "scene",
+        "detail": "An element storing charge in proportion to the voltage across it.",
+        "laws": [
+          "capacitor_definition"
+        ]
+      }
+    },
+    {
+      "beat": 2,
+      "kind": "place",
+      "instance": "c2",
+      "component": "capacitor",
+      "model3d": "capacitor.glb",
+      "narrate": "Place Capacitor.",
+      "because": {
+        "kind": "scene",
+        "detail": "An element storing charge in proportion to the voltage across it.",
+        "laws": [
+          "capacitor_definition"
+        ]
+      }
+    },
+    {
+      "beat": 3,
+      "kind": "place",
+      "instance": "pp",
+      "component": "parallel_pair",
+      "model3d": null,
+      "narrate": "Place Parallel combination.",
+      "because": {
+        "kind": "scene",
+        "detail": "Two elements across the same two nodes, so they share a voltage and their currents add. Carries a resistance of its own for the same compositional reason as a series pair.",
+        "laws": [
+          "parallel_resistance",
+          "kirchhoff_current_law"
+        ]
+      }
+    },
+    {
+      "beat": 4,
+      "kind": "place",
+      "instance": "env",
+      "component": "environment",
+      "model3d": null,
+      "narrate": "Place Environment.",
+      "because": {
+        "kind": "scene",
+        "detail": "The surrounding medium and fields. Defaults are an idealised vacuum with no gravity, which is what textbook electrostatics problems assume -- stated here as an editable value instead of a footnote.",
+        "laws": [
+          "newton_gravitation_uniform",
+          "superposition_of_forces",
+          "medium_permittivity"
+        ]
+      }
+    },
+    {
+      "beat": 5,
+      "kind": "relate",
+      "relation": "parallel_a",
+      "from": "pp",
+      "to": "c1",
+      "narrate": "pp is parallel a c1.",
+      "because": {
+        "kind": "scene",
+        "detail": "stated by the problem's geometry"
+      }
+    },
+    {
+      "beat": 6,
+      "kind": "relate",
+      "relation": "parallel_b",
+      "from": "pp",
+      "to": "c2",
+      "narrate": "pp is parallel b c2.",
+      "because": {
+        "kind": "scene",
+        "detail": "stated by the problem's geometry"
+      }
+    },
+    {
+      "beat": 7,
+      "kind": "given",
+      "instance": "c1",
+      "ref": "c1.electric.capacitance",
+      "property": "electric.capacitance",
+      "channel": null,
+      "value": 2e-06,
+      "unit": "F",
+      "dimension": {
+        "kg": "-1",
+        "m": "-2",
+        "s": "4",
+        "A": "2"
+      },
+      "rank": "scalar",
+      "display": "2.000e-6 F",
+      "narrate": "c1: capacitance is 2.000e-6 F, as stated.",
+      "because": {
+        "kind": "given",
+        "detail": "supplied by the problem statement"
+      }
+    },
+    {
+      "beat": 8,
+      "kind": "given",
+      "instance": "c2",
+      "ref": "c2.electric.capacitance",
+      "property": "electric.capacitance",
+      "channel": null,
+      "value": 3e-06,
+      "unit": "F",
+      "dimension": {
+        "kg": "-1",
+        "m": "-2",
+        "s": "4",
+        "A": "2"
+      },
+      "rank": "scalar",
+      "display": "3.000e-6 F",
+      "narrate": "c2: capacitance is 3.000e-6 F, as stated.",
+      "because": {
+        "kind": "given",
+        "detail": "supplied by the problem statement"
+      }
+    },
+    {
+      "beat": 9,
+      "kind": "resolve",
+      "instance": "pp",
+      "ref": "pp.electric.capacitance",
+      "property": "electric.capacitance",
+      "channel": null,
+      "value": 4.9999999999999996e-06,
+      "unit": "F",
+      "dimension": {
+        "kg": "-1",
+        "m": "-2",
+        "s": "4",
+        "A": "2"
+      },
+      "rank": "scalar",
+      "display": "5.000e-6 F",
+      "narrate": "pp: capacitance resolves to 5.000e-6 F.",
+      "because": {
+        "kind": "derived",
+        "formula": "parallel.C_from_members",
+        "expression": "Ca + Cb",
+        "substituted": "(2.000e-6 F) + (3.000e-6 F)",
+        "law": "capacitor_definition",
+        "law_label": "Definition of capacitance",
+        "law_statement": "The charge stored on a capacitor is proportional to the potential difference across it, Q = C*V, and the energy held in its field is C*V^2/2.",
+        "assumes": [
+          "same_voltage_across_both"
+        ],
+        "cite": "OpenStax College Physics 2e, 19.6 (CC BY)",
+        "inputs": [
+          {
+            "symbol": "Ca",
+            "from": "c1.electric.capacitance",
+            "value": 2e-06,
+            "unit": "F",
+            "dimension": {
+              "kg": "-1",
+              "m": "-2",
+              "s": "4",
+              "A": "2"
+            },
+            "rank": "scalar",
+            "display": "2.000e-6 F"
+          },
+          {
+            "symbol": "Cb",
+            "from": "c2.electric.capacitance",
+            "value": 3e-06,
+            "unit": "F",
+            "dimension": {
+              "kg": "-1",
+              "m": "-2",
+              "s": "4",
+              "A": "2"
+            },
+            "rank": "scalar",
+            "display": "3.000e-6 F"
+          }
+        ]
+      }
+    },
+    {
+      "beat": 10,
+      "kind": "given",
+      "instance": "pp",
+      "ref": "pp.em.potential_difference",
+      "property": "em.potential_difference",
+      "channel": "potential_shading",
+      "value": 10.0,
+      "unit": "V",
+      "dimension": {
+        "kg": "1",
+        "m": "2",
+        "s": "-3",
+        "A": "-1"
+      },
+      "rank": "scalar",
+      "display": "10 V",
+      "narrate": "pp: potential difference is 10 V, as stated.",
+      "because": {
+        "kind": "given",
+        "detail": "supplied by the problem statement"
+      }
+    },
+    {
+      "beat": 11,
+      "kind": "resolve",
+      "instance": "pp",
+      "ref": "pp.electric.charge_stored",
+      "property": "electric.charge_stored",
+      "channel": null,
+      "value": 4.9999999999999996e-05,
+      "unit": "C",
+      "dimension": {
+        "s": "1",
+        "A": "1"
+      },
+      "rank": "scalar",
+      "display": "5.000e-5 C",
+      "narrate": "pp: charge stored resolves to 5.000e-5 C.",
+      "because": {
+        "kind": "derived",
+        "formula": "cap.Q_from_C_V",
+        "expression": "C * V",
+        "substituted": "(5.000e-6 F)*(10 V)",
+        "law": "capacitor_definition",
+        "law_label": "Definition of capacitance",
+        "law_statement": "The charge stored on a capacitor is proportional to the potential difference across it, Q = C*V, and the energy held in its field is C*V^2/2.",
+        "assumes": [
+          "linear_dielectric"
+        ],
+        "cite": "OpenStax College Physics 2e, 19.5 (CC BY)",
+        "inputs": [
+          {
+            "symbol": "C",
+            "from": "pp.electric.capacitance",
+            "value": 4.9999999999999996e-06,
+            "unit": "F",
+            "dimension": {
+              "kg": "-1",
+              "m": "-2",
+              "s": "4",
+              "A": "2"
+            },
+            "rank": "scalar",
+            "display": "5.000e-6 F"
+          },
+          {
+            "symbol": "V",
+            "from": "pp.em.potential_difference",
+            "value": 10.0,
+            "unit": "V",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-1"
+            },
+            "rank": "scalar",
+            "display": "10 V"
+          }
+        ]
+      }
+    },
+    {
+      "beat": 12,
+      "kind": "answer",
+      "ref": "pp.electric.charge_stored",
+      "property": "electric.charge_stored",
+      "value": 4.9999999999999996e-05,
+      "unit": "C",
+      "dimension": {
+        "s": "1",
+        "A": "1"
+      },
+      "rank": "scalar",
+      "display": "5.000e-5 C",
+      "narrate": "Answer: 5.000e-5 C.",
+      "because": {
+        "kind": "summary",
+        "laws": [
+          "capacitor_definition"
+        ],
+        "paths_found": 1
+      }
+    }
+  ],
+  "paths": [
+    {
+      "cost": 2,
+      "laws": [
+        "capacitor_definition"
+      ],
+      "formulas": [
+        "parallel.C_from_members",
+        "cap.Q_from_C_V"
+      ],
+      "value": {
+        "value": 4.9999999999999996e-05,
+        "unit": "C",
+        "dimension": {
+          "s": "1",
+          "A": "1"
+        },
+        "rank": "scalar",
+        "display": "5.000e-5 C"
+      },
+      "assumptions": [
+        "same_voltage_across_both",
+        "linear_dielectric"
+      ],
+      "citations": [
+        "OpenStax College Physics 2e, 19.6 (CC BY)",
+        "OpenStax College Physics 2e, 19.5 (CC BY)"
+      ],
+      "steps": [
+        {
+          "ref": "c1.electric.capacitance",
+          "property": "electric.capacitance",
+          "value": 2e-06,
+          "unit": "F",
+          "dimension": {
+            "kg": "-1",
+            "m": "-2",
+            "s": "4",
+            "A": "2"
+          },
+          "rank": "scalar",
+          "display": "2.000e-6 F",
+          "because": {
+            "kind": "given",
+            "detail": "supplied by the problem statement"
+          }
+        },
+        {
+          "ref": "c2.electric.capacitance",
+          "property": "electric.capacitance",
+          "value": 3e-06,
+          "unit": "F",
+          "dimension": {
+            "kg": "-1",
+            "m": "-2",
+            "s": "4",
+            "A": "2"
+          },
+          "rank": "scalar",
+          "display": "3.000e-6 F",
+          "because": {
+            "kind": "given",
+            "detail": "supplied by the problem statement"
+          }
+        },
+        {
+          "ref": "pp.electric.capacitance",
+          "property": "electric.capacitance",
+          "value": 4.9999999999999996e-06,
+          "unit": "F",
+          "dimension": {
+            "kg": "-1",
+            "m": "-2",
+            "s": "4",
+            "A": "2"
+          },
+          "rank": "scalar",
+          "display": "5.000e-6 F",
+          "because": {
+            "kind": "derived",
+            "formula": "parallel.C_from_members",
+            "expression": "Ca + Cb",
+            "substituted": "(2.000e-6 F) + (3.000e-6 F)",
+            "law": "capacitor_definition",
+            "law_label": "Definition of capacitance",
+            "law_statement": "The charge stored on a capacitor is proportional to the potential difference across it, Q = C*V, and the energy held in its field is C*V^2/2.",
+            "assumes": [
+              "same_voltage_across_both"
+            ],
+            "cite": "OpenStax College Physics 2e, 19.6 (CC BY)",
+            "inputs": [
+              {
+                "symbol": "Ca",
+                "from": "c1.electric.capacitance",
+                "value": 2e-06,
+                "unit": "F",
+                "dimension": {
+                  "kg": "-1",
+                  "m": "-2",
+                  "s": "4",
+                  "A": "2"
+                },
+                "rank": "scalar",
+                "display": "2.000e-6 F"
+              },
+              {
+                "symbol": "Cb",
+                "from": "c2.electric.capacitance",
+                "value": 3e-06,
+                "unit": "F",
+                "dimension": {
+                  "kg": "-1",
+                  "m": "-2",
+                  "s": "4",
+                  "A": "2"
+                },
+                "rank": "scalar",
+                "display": "3.000e-6 F"
+              }
+            ]
+          }
+        },
+        {
+          "ref": "pp.em.potential_difference",
+          "property": "em.potential_difference",
+          "value": 10.0,
+          "unit": "V",
+          "dimension": {
+            "kg": "1",
+            "m": "2",
+            "s": "-3",
+            "A": "-1"
+          },
+          "rank": "scalar",
+          "display": "10 V",
+          "because": {
+            "kind": "given",
+            "detail": "supplied by the problem statement"
+          }
+        },
+        {
+          "ref": "pp.electric.charge_stored",
+          "property": "electric.charge_stored",
+          "value": 4.9999999999999996e-05,
+          "unit": "C",
+          "dimension": {
+            "s": "1",
+            "A": "1"
+          },
+          "rank": "scalar",
+          "display": "5.000e-5 C",
+          "because": {
+            "kind": "derived",
+            "formula": "cap.Q_from_C_V",
+            "expression": "C * V",
+            "substituted": "(5.000e-6 F)*(10 V)",
+            "law": "capacitor_definition",
+            "law_label": "Definition of capacitance",
+            "law_statement": "The charge stored on a capacitor is proportional to the potential difference across it, Q = C*V, and the energy held in its field is C*V^2/2.",
+            "assumes": [
+              "linear_dielectric"
+            ],
+            "cite": "OpenStax College Physics 2e, 19.5 (CC BY)",
+            "inputs": [
+              {
+                "symbol": "C",
+                "from": "pp.electric.capacitance",
+                "value": 4.9999999999999996e-06,
+                "unit": "F",
+                "dimension": {
+                  "kg": "-1",
+                  "m": "-2",
+                  "s": "4",
+                  "A": "2"
+                },
+                "rank": "scalar",
+                "display": "5.000e-6 F"
+              },
+              {
+                "symbol": "V",
+                "from": "pp.em.potential_difference",
+                "value": 10.0,
+                "unit": "V",
+                "dimension": {
+                  "kg": "1",
+                  "m": "2",
+                  "s": "-3",
+                  "A": "-1"
+                },
+                "rank": "scalar",
+                "display": "10 V"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

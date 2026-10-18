@@ -1,0 +1,19 @@
+id: p109
+title: RC time constant
+source: "After OpenStax College Physics 2e, 21.6 (CC BY)"
+tags: [circuits, capacitor, rc, chapter1]
+text: |
+  A 100 uF capacitor is charged through a 10 kohm resistor. What is the time constant of the
+  circuit?
+scene:
+  instances:
+    - {id: c1, kind: capacitor, set: {electric.capacitance: "100 uF"}}
+    - {id: r1, kind: resistor, set: {electric.resistance: "10 kohm"}}
+  relations:
+    - {kind: charged_through, from: c1, to: r1}
+target: {instance: c1, prop: electric.time_constant}
+expect:
+  value: 1.0
+  unit: s
+  tol: 0.001
+  note: "tau = R*C, and the dimension checker confirms ohm*farad really is seconds."

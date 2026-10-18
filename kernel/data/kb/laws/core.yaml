@@ -1,0 +1,111 @@
+# Laws and principles.
+#
+# A law is what a trace step *cites*. Laws are axioms here, not outputs: FieldForge derives new
+# paths through them, never new laws. The `governs` list is the scope of properties a law has
+# authority over, which the orphan audit uses to decide whether a property has a producer.
+laws:
+  coulombs_law:
+    label: Coulomb's law
+    statement: >
+      The electrostatic force between two point charges acts along the line joining them, with
+      magnitude proportional to the product of the charges and inversely proportional to the
+      square of their separation.
+    governs: [em.electric_field, em.electric_field_magnitude, em.electric_potential]
+    cite: "OpenStax College Physics 2e, 18.3 (CC BY)"
+
+  gauss_law_electric:
+    label: Gauss's law for electricity
+    statement: >
+      The electric flux through any closed surface equals the enclosed charge divided by the
+      vacuum permittivity. Its consequences fix the field of every symmetric charge distribution.
+    governs: [em.electric_flux, em.electric_field_magnitude, em.electric_field]
+    cite: "OpenStax University Physics 2, 6.3 (CC BY)"
+
+  superposition_electric:
+    label: Superposition of electric fields
+    statement: >
+      The field of a composite distribution is the vector sum of the fields of its parts. This is
+      what makes the cavity construction legitimate: a sphere with a cavity is a full sphere plus
+      a negative sphere filling the cavity.
+    governs: [em.electric_field, em.electric_field_magnitude]
+    cite: "OpenStax University Physics 2, 5.5 (CC BY)"
+
+  lorentz_force:
+    label: Lorentz force law
+    statement: >
+      A charge q moving with velocity v through fields E and B experiences force q(E + v x B).
+    governs: [mechanics.force, mechanics.force_magnitude]
+    cite: "OpenStax University Physics 2, 11.1 (CC BY)"
+
+  newton_second_law:
+    label: Newton's second law
+    statement: The net force on a body equals its mass times its acceleration.
+    governs: [mechanics.force, kinematics.acceleration, kinematics.acceleration_magnitude]
+    cite: "OpenStax College Physics 2e, 4.3 (CC BY)"
+
+  kinematics_constant_acceleration:
+    label: Kinematics under constant acceleration
+    statement: >
+      While acceleration is constant, velocity is linear in time and displacement is quadratic;
+      and v^2 = u^2 + 2*a*s eliminates time entirely.
+    governs:
+      [kinematics.velocity, kinematics.speed, kinematics.displacement, kinematics.distance,
+       kinematics.time]
+    cite: "OpenStax College Physics 2e, 2.5 (CC BY)"
+
+  work_energy_theorem:
+    label: Work-energy theorem
+    statement: The work done by the net force on a body equals the change in its kinetic energy.
+    governs: [mechanics.work, energy.kinetic, kinematics.speed]
+    cite: "OpenStax College Physics 2e, 7.2 (CC BY)"
+
+  conservation_of_energy:
+    label: Conservation of energy
+    statement: >
+      In an isolated system the total energy is constant; a charge falling through a potential
+      difference converts electric potential energy into kinetic energy exactly.
+    governs: [energy.kinetic, energy.potential_electric, kinematics.speed]
+    cite: "OpenStax College Physics 2e, 7.6 (CC BY)"
+
+  electric_potential_definition:
+    label: Definition of electric potential
+    statement: >
+      Potential is potential energy per unit charge; the work to move a charge between two points
+      is the charge times the potential difference.
+    governs: [em.electric_potential, em.potential_difference, energy.potential_electric]
+    cite: "OpenStax College Physics 2e, 19.1 (CC BY)"
+
+  uniform_field_between_plates:
+    label: Uniform field between parallel plates
+    statement: >
+      Away from the edges, the field between oppositely charged parallel plates is uniform with
+      magnitude equal to the potential difference divided by the separation.
+    governs: [em.electric_field_magnitude, em.potential_difference]
+    cite: "OpenStax College Physics 2e, 19.4 (CC BY)"
+
+  shielding_conductor_cavity:
+    label: Electrostatic shielding
+    statement: >
+      The electrostatic field inside a cavity within a conductor, with no charge in the cavity, is
+      exactly zero regardless of the external field or the conductor's own charge.
+    governs: [em.electric_field, em.electric_field_magnitude]
+    cite: "OpenStax University Physics 2, 6.5 (CC BY)"
+
+  circular_motion_magnetic:
+    label: Circular motion in a uniform magnetic field
+    statement: >
+      A charge moving perpendicular to a uniform magnetic field travels a circle whose radius is
+      mv/(qB) and whose period is independent of speed.
+    governs: [em.cyclotron_radius, em.cyclotron_period]
+    cite: "OpenStax University Physics 2, 11.3 (CC BY)"
+
+  definition_magnitude:
+    label: Magnitude of a vector quantity
+    statement: >
+      A scalar magnitude property is the Euclidean norm of its vector counterpart. Bookkeeping,
+      not physics, but it must be cited like anything else so no trace step is unexplained.
+    governs:
+      [kinematics.speed, kinematics.distance, mechanics.force_magnitude,
+       em.electric_field_magnitude, em.magnetic_field_magnitude, em.charge_magnitude,
+       kinematics.acceleration_magnitude]
+    cite: "definitional"

@@ -1,0 +1,72 @@
+# Circuit laws.
+#
+# `series_resistance` and `parallel_resistance` are stated here in their binary form, because that
+# is the form the knowledge base actually uses and the form the hand interaction produces. The
+# n-element versions are the binary ones applied repeatedly, which is both the honest statement
+# and how the subject is taught.
+laws:
+  ohms_law:
+    label: Ohm's law
+    statement: >
+      For an ohmic conductor the current through it is proportional to the potential difference
+      across it, with the resistance as the constant of proportionality: V = I*R.
+    governs: [electric.current, electric.resistance, em.potential_difference]
+    cite: "OpenStax College Physics 2e, 20.2 (CC BY)"
+
+  kirchhoff_current_law:
+    label: Kirchhoff's current law
+    statement: >
+      The algebraic sum of currents entering any node is zero: charge does not accumulate at a
+      junction. This is what makes currents add in a parallel combination.
+    governs: [electric.current]
+    cite: "OpenStax College Physics 2e, 21.3 (CC BY)"
+
+  kirchhoff_voltage_law:
+    label: Kirchhoff's voltage law
+    statement: >
+      The algebraic sum of potential differences around any closed loop is zero: energy per unit
+      charge returns to where it started. This is what makes voltages add in a series combination.
+    governs: [em.potential_difference, electric.emf]
+    cite: "OpenStax College Physics 2e, 21.3 (CC BY)"
+
+  series_resistance:
+    label: Resistances in series add
+    statement: >
+      Two elements carrying the same current present the sum of their resistances, because their
+      potential differences add while the current is common: R = R_a + R_b.
+    governs: [electric.resistance]
+    cite: "OpenStax College Physics 2e, 21.1 (CC BY)"
+
+  parallel_resistance:
+    label: Resistances in parallel combine reciprocally
+    statement: >
+      Two elements across the same pair of nodes present R_a*R_b/(R_a + R_b), because their
+      currents add while the potential difference is common. The result is always smaller than
+      either part.
+    governs: [electric.resistance]
+    cite: "OpenStax College Physics 2e, 21.1 (CC BY)"
+
+  joule_heating:
+    label: Joule heating
+    statement: >
+      A resistive element dissipates electrical energy as heat at a rate P = I*V, equivalently
+      I^2*R or V^2/R. Which of the three forms the resolver reaches for depends only on what the
+      problem happens to give.
+    governs: [electric.power]
+    cite: "OpenStax College Physics 2e, 20.4 (CC BY)"
+
+  capacitor_definition:
+    label: Definition of capacitance
+    statement: >
+      The charge stored on a capacitor is proportional to the potential difference across it,
+      Q = C*V, and the energy held in its field is C*V^2/2.
+    governs: [electric.charge_stored, electric.capacitance, electric.energy_stored]
+    cite: "OpenStax College Physics 2e, 19.5 (CC BY)"
+
+  rc_time_constant:
+    label: RC time constant
+    statement: >
+      A resistor charging a capacitor does so with characteristic time tau = R*C, after which the
+      capacitor has reached 1 - 1/e of its final charge.
+    governs: [electric.time_constant]
+    cite: "OpenStax College Physics 2e, 21.6 (CC BY)"

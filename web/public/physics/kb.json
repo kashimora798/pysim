@@ -1,0 +1,6703 @@
+{
+ "schema": "1",
+ "audit": {
+  "checks": {
+   "refs": "pass",
+   "dims": "pass",
+   "rank": "pass",
+   "units": "pass"
+  },
+  "errors": 0,
+  "warnings": 3,
+  "backlog": [
+   "em.electric_flux",
+   "geometry.angle",
+   "geometry.length"
+  ],
+  "counts": {
+   "properties": 56,
+   "constants": 10,
+   "components": 25,
+   "formulas": 68,
+   "laws": 25
+  },
+  "coverage": {
+   "total": 24,
+   "resolved": 24,
+   "agreeing": 24,
+   "multipath": 4
+  }
+ },
+ "base": [
+  "kg",
+  "m",
+  "s",
+  "A",
+  "K",
+  "mol",
+  "cd"
+ ],
+ "properties": {
+  "electric.current": {
+   "symbol": "I",
+   "dim": [
+    0.0,
+    0.0,
+    0.0,
+    1.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "dimKey": "0,0,0,1,0,0,0",
+   "dimText": "A",
+   "rank": "scalar",
+   "kind": "lumped",
+   "siUnit": "A",
+   "unit": "A",
+   "domain": "electricity",
+   "description": "Current through an element, conventional direction."
+  },
+  "electric.resistance": {
+   "symbol": "R",
+   "dim": [
+    1.0,
+    2.0,
+    -3.0,
+    -2.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "dimKey": "1,2,-3,-2,0,0,0",
+   "dimText": "kg·m²·s⁻³·A⁻²",
+   "rank": "scalar",
+   "kind": "lumped",
+   "siUnit": "ohm",
+   "unit": "Ω",
+   "domain": "electricity",
+   "description": "Resistance of an element or of a reduced combination."
+  },
+  "electric.emf": {
+   "symbol": "emf",
+   "dim": [
+    1.0,
+    2.0,
+    -3.0,
+    -1.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "dimKey": "1,2,-3,-1,0,0,0",
+   "dimText": "kg·m²·s⁻³·A⁻¹",
+   "rank": "scalar",
+   "kind": "lumped",
+   "siUnit": "V",
+   "unit": "V",
+   "domain": "electricity",
+   "description": "Electromotive force of a source, before any internal drop."
+  },
+  "electric.power": {
+   "symbol": "P",
+   "dim": [
+    1.0,
+    2.0,
+    -3.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "dimKey": "1,2,-3,0,0,0,0",
+   "dimText": "kg·m²·s⁻³",
+   "rank": "scalar",
+   "kind": "lumped",
+   "siUnit": "W",
+   "unit": "W",
+   "domain": "electricity",
+   "description": "Power dissipated or delivered by an element."
+  },
+  "electric.capacitance": {
+   "symbol": "C",
+   "dim": [
+    -1.0,
+    -2.0,
+    4.0,
+    2.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "dimKey": "-1,-2,4,2,0,0,0",
+   "dimText": "kg⁻¹·m⁻²·s⁴·A²",
+   "rank": "scalar",
+   "kind": "lumped",
+   "siUnit": "F",
+   "unit": "F",
+   "domain": "electricity",
+   "description": "Capacitance of a capacitor or reduced combination."
+  },
+  "electric.charge_stored": {
+   "symbol": "Q",
+   "dim": [
+    0.0,
+    0.0,
+    1.0,
+    1.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "dimKey": "0,0,1,1,0,0,0",
+   "dimText": "s·A",
+   "rank": "scalar",
+   "kind": "lumped",
+   "siUnit": "C",
+   "unit": "C",
+   "domain": "electricity",
+   "description": "Charge stored on a capacitor."
+  },
+  "electric.time_constant": {
+   "symbol": "tau",
+   "dim": [
+    0.0,
+    0.0,
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "dimKey": "0,0,1,0,0,0,0",
+   "dimText": "s",
+   "rank": "scalar",
+   "kind": "lumped",
+   "siUnit": "s",
+   "unit": "s",
+   "domain": "electricity",
+   "description": "RC time constant of a resistor-capacitor pair."
+  },
+  "electric.energy_stored": {
+   "symbol": "U",
+   "dim": [
+    1.0,
+    2.0,
+    -2.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "dimKey": "1,2,-2,0,0,0,0",
+   "dimText": "kg·m²·s⁻²",
+   "rank": "scalar",
+   "kind": "lumped",
+   "siUnit": "J",
+   "unit": "J",
+   "domain": "electricity",
+   "description": "Energy stored in a capacitor's field."
+  },
+  "em.charge": {
+   "symbol": "q",
+   "dim": [
+    0.0,
+    0.0,
+    1.0,
+    1.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "dimKey": "0,0,1,1,0,0,0",
+   "dimText": "s·A",
+   "rank": "scalar",
+   "kind": "lumped",
+   "siUnit": "C",
+   "unit": "C",
+   "domain": "electromagnetism",
+   "description": "Signed electric charge."
+  },
+  "em.charge_magnitude": {
+   "symbol": "Q",
+   "dim": [
+    0.0,
+    0.0,
+    1.0,
+    1.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "dimKey": "0,0,1,1,0,0,0",
+   "dimText": "s·A",
+   "rank": "scalar",
+   "kind": "lumped",
+   "siUnit": "C",
+   "unit": "C",
+   "domain": "electromagnetism",
+   "description": "Magnitude of electric charge."
+  },
+  "em.electric_field": {
+   "symbol": "E",
+   "dim": [
+    1.0,
+    1.0,
+    -3.0,
+    -1.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "dimKey": "1,1,-3,-1,0,0,0",
+   "dimText": "kg·m·s⁻³·A⁻¹",
+   "rank": "vector",
+   "kind": "field",
+   "siUnit": "V/m",
+   "unit": "V/m",
+   "domain": "electromagnetism",
+   "description": "Electric field vector at a point."
+  },
+  "em.electric_field_magnitude": {
+   "symbol": "E",
+   "dim": [
+    1.0,
+    1.0,
+    -3.0,
+    -1.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "dimKey": "1,1,-3,-1,0,0,0",
+   "dimText": "kg·m·s⁻³·A⁻¹",
+   "rank": "scalar",
+   "kind": "field",
+   "siUnit": "V/m",
+   "unit": "V/m",
+   "domain": "electromagnetism",
+   "description": "Magnitude of the electric field at a point."
+  },
+  "em.electric_potential": {
+   "symbol": "V",
+   "dim": [
+    1.0,
+    2.0,
+    -3.0,
+    -1.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "dimKey": "1,2,-3,-1,0,0,0",
+   "dimText": "kg·m²·s⁻³·A⁻¹",
+   "rank": "scalar",
+   "kind": "field",
+   "siUnit": "V",
+   "unit": "V",
+   "domain": "electromagnetism",
+   "description": "Electric potential at a point."
+  },
+  "em.potential_difference": {
+   "symbol": "V",
+   "dim": [
+    1.0,
+    2.0,
+    -3.0,
+    -1.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "dimKey": "1,2,-3,-1,0,0,0",
+   "dimText": "kg·m²·s⁻³·A⁻¹",
+   "rank": "scalar",
+   "kind": "lumped",
+   "siUnit": "V",
+   "unit": "V",
+   "domain": "electromagnetism",
+   "description": "Potential difference across a pair of points or plates."
+  },
+  "em.magnetic_field": {
+   "symbol": "B",
+   "dim": [
+    1.0,
+    0.0,
+    -2.0,
+    -1.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "dimKey": "1,0,-2,-1,0,0,0",
+   "dimText": "kg·s⁻²·A⁻¹",
+   "rank": "vector",
+   "kind": "field",
+   "siUnit": "T",
+   "unit": "T",
+   "domain": "electromagnetism",
+   "description": "Magnetic flux density vector at a point."
+  },
+  "em.magnetic_field_magnitude": {
+   "symbol": "B",
+   "dim": [
+    1.0,
+    0.0,
+    -2.0,
+    -1.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "dimKey": "1,0,-2,-1,0,0,0",
+   "dimText": "kg·s⁻²·A⁻¹",
+   "rank": "scalar",
+   "kind": "field",
+   "siUnit": "T",
+   "unit": "T",
+   "domain": "electromagnetism",
+   "description": "Magnitude of the magnetic flux density."
+  },
+  "em.charge_density_volume": {
+   "symbol": "rho",
+   "dim": [
+    0.0,
+    -3.0,
+    1.0,
+    1.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "dimKey": "0,-3,1,1,0,0,0",
+   "dimText": "m⁻³·s·A",
+   "rank": "scalar",
+   "kind": "lumped",
+   "siUnit": "C/m^3",
+   "unit": "C/m³",
+   "domain": "electromagnetism",
+   "description": "Charge per unit volume."
+  },
+  "em.charge_density_surface": {
+   "symbol": "sigma",
+   "dim": [
+    0.0,
+    -2.0,
+    1.0,
+    1.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "dimKey": "0,-2,1,1,0,0,0",
+   "dimText": "m⁻²·s·A",
+   "rank": "scalar",
+   "kind": "lumped",
+   "siUnit": "C/m^2",
+   "unit": "C/m²",
+   "domain": "electromagnetism",
+   "description": "Charge per unit area."
+  },
+  "em.charge_density_linear": {
+   "symbol": "lambda",
+   "dim": [
+    0.0,
+    -1.0,
+    1.0,
+    1.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "dimKey": "0,-1,1,1,0,0,0",
+   "dimText": "m⁻¹·s·A",
+   "rank": "scalar",
+   "kind": "lumped",
+   "siUnit": "C/m",
+   "unit": "C/m",
+   "domain": "electromagnetism",
+   "description": "Charge per unit length."
+  },
+  "em.electric_flux": {
+   "symbol": "Phi",
+   "dim": [
+    1.0,
+    3.0,
+    -3.0,
+    -1.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "dimKey": "1,3,-3,-1,0,0,0",
+   "dimText": "kg·m³·s⁻³·A⁻¹",
+   "rank": "scalar",
+   "kind": "lumped",
+   "siUnit": "V*m",
+   "unit": "V·m",
+   "domain": "electromagnetism",
+   "description": "Electric flux through a closed surface."
+  },
+  "em.cyclotron_radius": {
+   "symbol": "r_c",
+   "dim": [
+    0.0,
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "dimKey": "0,1,0,0,0,0,0",
+   "dimText": "m",
+   "rank": "scalar",
+   "kind": "lumped",
+   "siUnit": "m",
+   "unit": "m",
+   "domain": "electromagnetism",
+   "description": "Radius of the circular path of a charge in a uniform magnetic field."
+  },
+  "em.cyclotron_period": {
+   "symbol": "T_c",
+   "dim": [
+    0.0,
+    0.0,
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "dimKey": "0,0,1,0,0,0,0",
+   "dimText": "s",
+   "rank": "scalar",
+   "kind": "lumped",
+   "siUnit": "s",
+   "unit": "s",
+   "domain": "electromagnetism",
+   "description": "Period of revolution of a charge in a uniform magnetic field."
+  },
+  "env.gravity": {
+   "symbol": "g",
+   "dim": [
+    0.0,
+    1.0,
+    -2.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "dimKey": "0,1,-2,0,0,0,0",
+   "dimText": "m·s⁻²",
+   "rank": "vector",
+   "kind": "field",
+   "siUnit": "m/s^2",
+   "unit": "m/s²",
+   "domain": "environment",
+   "description": "Gravitational field of the surroundings, +Y up. Zero for the idealised case."
+  },
+  "env.wind_velocity": {
+   "symbol": "v_wind",
+   "dim": [
+    0.0,
+    1.0,
+    -1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "dimKey": "0,1,-1,0,0,0,0",
+   "dimText": "m·s⁻¹",
+   "rank": "vector",
+   "kind": "field",
+   "siUnit": "m/s",
+   "unit": "m/s",
+   "domain": "environment",
+   "description": "Bulk velocity of the surrounding medium."
+  },
+  "env.relative_permittivity": {
+   "symbol": "eps_r",
+   "dim": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "dimKey": "0,0,0,0,0,0,0",
+   "dimText": "1",
+   "rank": "scalar",
+   "kind": "lumped",
+   "siUnit": "1",
+   "unit": "",
+   "domain": "environment",
+   "description": "Permittivity of the medium relative to vacuum. 1 is vacuum, air is ~1.0006, water ~80. Dividing Coulomb's law by this is why immersing the same charges in water weakens the field.\n"
+  },
+  "env.air_density": {
+   "symbol": "rho_air",
+   "dim": [
+    1.0,
+    -3.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "dimKey": "1,-3,0,0,0,0,0",
+   "dimText": "kg·m⁻³",
+   "rank": "scalar",
+   "kind": "lumped",
+   "siUnit": "kg/m^3",
+   "unit": "kg·m⁻³",
+   "domain": "environment",
+   "description": "Density of the surrounding medium. Zero means no drag."
+  },
+  "env.temperature": {
+   "symbol": "T",
+   "dim": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    1.0,
+    0.0,
+    0.0
+   ],
+   "dimKey": "0,0,0,0,1,0,0",
+   "dimText": "K",
+   "rank": "scalar",
+   "kind": "lumped",
+   "siUnit": "K",
+   "unit": "K",
+   "domain": "environment",
+   "description": "Temperature of the surroundings."
+  },
+  "geometry.position": {
+   "symbol": "r",
+   "dim": [
+    0.0,
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "dimKey": "0,1,0,0,0,0,0",
+   "dimText": "m",
+   "rank": "vector",
+   "kind": "lumped",
+   "siUnit": "m",
+   "unit": "m",
+   "domain": "geometry",
+   "description": "Position of an object in the scene frame."
+  },
+  "geometry.separation": {
+   "symbol": "r",
+   "dim": [
+    0.0,
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "dimKey": "0,1,0,0,0,0,0",
+   "dimText": "m",
+   "rank": "scalar",
+   "kind": "pair",
+   "siUnit": "m",
+   "unit": "m",
+   "domain": "geometry",
+   "description": "Centre-to-centre distance between two objects."
+  },
+  "geometry.offset": {
+   "symbol": "a",
+   "dim": [
+    0.0,
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "dimKey": "0,1,0,0,0,0,0",
+   "dimText": "m",
+   "rank": "vector",
+   "kind": "pair",
+   "siUnit": "m",
+   "unit": "m",
+   "domain": "geometry",
+   "description": "Displacement of one object's centre from another's."
+  },
+  "geometry.radius": {
+   "symbol": "R",
+   "dim": [
+    0.0,
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "dimKey": "0,1,0,0,0,0,0",
+   "dimText": "m",
+   "rank": "scalar",
+   "kind": "lumped",
+   "siUnit": "m",
+   "unit": "m",
+   "domain": "geometry",
+   "description": "Radius of a sphere, shell, cavity or circular path."
+  },
+  "geometry.separation_plates": {
+   "symbol": "d",
+   "dim": [
+    0.0,
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "dimKey": "0,1,0,0,0,0,0",
+   "dimText": "m",
+   "rank": "scalar",
+   "kind": "lumped",
+   "siUnit": "m",
+   "unit": "m",
+   "domain": "geometry",
+   "description": "Gap between the plates of a parallel-plate arrangement."
+  },
+  "geometry.length": {
+   "symbol": "L",
+   "dim": [
+    0.0,
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "dimKey": "0,1,0,0,0,0,0",
+   "dimText": "m",
+   "rank": "scalar",
+   "kind": "lumped",
+   "siUnit": "m",
+   "unit": "m",
+   "domain": "geometry",
+   "description": "Characteristic length of an object."
+  },
+  "geometry.area": {
+   "symbol": "A",
+   "dim": [
+    0.0,
+    2.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "dimKey": "0,2,0,0,0,0,0",
+   "dimText": "m²",
+   "rank": "scalar",
+   "kind": "lumped",
+   "siUnit": "m^2",
+   "unit": "m²",
+   "domain": "geometry",
+   "description": "Surface area."
+  },
+  "geometry.volume": {
+   "symbol": "Vol",
+   "dim": [
+    0.0,
+    3.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "dimKey": "0,3,0,0,0,0,0",
+   "dimText": "m³",
+   "rank": "scalar",
+   "kind": "lumped",
+   "siUnit": "m^3",
+   "unit": "m³",
+   "domain": "geometry",
+   "description": "Enclosed volume."
+  },
+  "geometry.direction": {
+   "symbol": "n",
+   "dim": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "dimKey": "0,0,0,0,0,0,0",
+   "dimText": "1",
+   "rank": "vector",
+   "kind": "lumped",
+   "siUnit": "1",
+   "unit": "",
+   "domain": "geometry",
+   "description": "Unit vector giving the direction of a uniform field or axis. +Y is up, matching the renderer, so the default points from a top plate down to a bottom one.\n"
+  },
+  "geometry.cross_section": {
+   "symbol": "A_c",
+   "dim": [
+    0.0,
+    2.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "dimKey": "0,2,0,0,0,0,0",
+   "dimText": "m²",
+   "rank": "scalar",
+   "kind": "lumped",
+   "siUnit": "m^2",
+   "unit": "m²",
+   "domain": "geometry",
+   "description": "Area presented to the oncoming medium. Zero by default, which is what makes drag opt-in: a problem that does not mention air gets exactly no drag force.\n"
+  },
+  "geometry.angle": {
+   "symbol": "theta",
+   "dim": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "dimKey": "0,0,0,0,0,0,0",
+   "dimText": "1",
+   "rank": "scalar",
+   "kind": "lumped",
+   "siUnit": "rad",
+   "unit": "",
+   "domain": "geometry",
+   "description": "Angle between two directions."
+  },
+  "kinematics.time": {
+   "symbol": "t",
+   "dim": [
+    0.0,
+    0.0,
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "dimKey": "0,0,1,0,0,0,0",
+   "dimText": "s",
+   "rank": "scalar",
+   "kind": "lumped",
+   "siUnit": "s",
+   "unit": "s",
+   "domain": "kinematics",
+   "description": "Elapsed time."
+  },
+  "kinematics.displacement": {
+   "symbol": "s",
+   "dim": [
+    0.0,
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "dimKey": "0,1,0,0,0,0,0",
+   "dimText": "m",
+   "rank": "vector",
+   "kind": "lumped",
+   "siUnit": "m",
+   "unit": "m",
+   "domain": "kinematics",
+   "description": "Change in position."
+  },
+  "kinematics.distance": {
+   "symbol": "d",
+   "dim": [
+    0.0,
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "dimKey": "0,1,0,0,0,0,0",
+   "dimText": "m",
+   "rank": "scalar",
+   "kind": "lumped",
+   "siUnit": "m",
+   "unit": "m",
+   "domain": "kinematics",
+   "description": "Path length or magnitude of displacement."
+  },
+  "kinematics.velocity": {
+   "symbol": "v",
+   "dim": [
+    0.0,
+    1.0,
+    -1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "dimKey": "0,1,-1,0,0,0,0",
+   "dimText": "m·s⁻¹",
+   "rank": "vector",
+   "kind": "lumped",
+   "siUnit": "m/s",
+   "unit": "m/s",
+   "domain": "kinematics",
+   "description": "Rate of change of position, with direction."
+  },
+  "kinematics.speed": {
+   "symbol": "v",
+   "dim": [
+    0.0,
+    1.0,
+    -1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "dimKey": "0,1,-1,0,0,0,0",
+   "dimText": "m·s⁻¹",
+   "rank": "scalar",
+   "kind": "lumped",
+   "siUnit": "m/s",
+   "unit": "m/s",
+   "domain": "kinematics",
+   "description": "Magnitude of velocity."
+  },
+  "kinematics.acceleration": {
+   "symbol": "a",
+   "dim": [
+    0.0,
+    1.0,
+    -2.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "dimKey": "0,1,-2,0,0,0,0",
+   "dimText": "m·s⁻²",
+   "rank": "vector",
+   "kind": "lumped",
+   "siUnit": "m/s^2",
+   "unit": "m/s²",
+   "domain": "kinematics",
+   "description": "Rate of change of velocity, with direction."
+  },
+  "kinematics.acceleration_magnitude": {
+   "symbol": "a",
+   "dim": [
+    0.0,
+    1.0,
+    -2.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "dimKey": "0,1,-2,0,0,0,0",
+   "dimText": "m·s⁻²",
+   "rank": "scalar",
+   "kind": "lumped",
+   "siUnit": "m/s^2",
+   "unit": "m/s²",
+   "domain": "kinematics",
+   "description": "Magnitude of acceleration."
+  },
+  "mechanics.mass": {
+   "symbol": "m",
+   "dim": [
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "dimKey": "1,0,0,0,0,0,0",
+   "dimText": "kg",
+   "rank": "scalar",
+   "kind": "lumped",
+   "siUnit": "kg",
+   "unit": "kg",
+   "domain": "mechanics",
+   "description": "Inertial mass."
+  },
+  "mechanics.force": {
+   "symbol": "F",
+   "dim": [
+    1.0,
+    1.0,
+    -2.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "dimKey": "1,1,-2,0,0,0,0",
+   "dimText": "kg·m·s⁻²",
+   "rank": "vector",
+   "kind": "lumped",
+   "siUnit": "N",
+   "unit": "N",
+   "domain": "mechanics",
+   "description": "Net force acting on an object."
+  },
+  "mechanics.force_em": {
+   "symbol": "F_em",
+   "dim": [
+    1.0,
+    1.0,
+    -2.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "dimKey": "1,1,-2,0,0,0,0",
+   "dimText": "kg·m·s⁻²",
+   "rank": "vector",
+   "kind": "lumped",
+   "siUnit": "N",
+   "unit": "N",
+   "domain": "mechanics",
+   "description": "Electromagnetic contribution to the net force on a body."
+  },
+  "mechanics.force_gravity": {
+   "symbol": "F_g",
+   "dim": [
+    1.0,
+    1.0,
+    -2.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "dimKey": "1,1,-2,0,0,0,0",
+   "dimText": "kg·m·s⁻²",
+   "rank": "vector",
+   "kind": "lumped",
+   "siUnit": "N",
+   "unit": "N",
+   "domain": "mechanics",
+   "description": "Gravitational contribution (weight) to the net force on a body."
+  },
+  "mechanics.force_drag": {
+   "symbol": "F_d",
+   "dim": [
+    1.0,
+    1.0,
+    -2.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "dimKey": "1,1,-2,0,0,0,0",
+   "dimText": "kg·m·s⁻²",
+   "rank": "vector",
+   "kind": "lumped",
+   "siUnit": "N",
+   "unit": "N",
+   "domain": "mechanics",
+   "description": "Drag contribution from motion relative to the surrounding medium."
+  },
+  "mechanics.drag_coefficient": {
+   "symbol": "C_d",
+   "dim": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "dimKey": "0,0,0,0,0,0,0",
+   "dimText": "1",
+   "rank": "scalar",
+   "kind": "lumped",
+   "siUnit": "1",
+   "unit": "",
+   "domain": "mechanics",
+   "description": "Shape-dependent drag coefficient. About 0.47 for a sphere."
+  },
+  "mechanics.force_magnitude": {
+   "symbol": "F",
+   "dim": [
+    1.0,
+    1.0,
+    -2.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "dimKey": "1,1,-2,0,0,0,0",
+   "dimText": "kg·m·s⁻²",
+   "rank": "scalar",
+   "kind": "lumped",
+   "siUnit": "N",
+   "unit": "N",
+   "domain": "mechanics",
+   "description": "Magnitude of the net force."
+  },
+  "mechanics.momentum": {
+   "symbol": "p",
+   "dim": [
+    1.0,
+    1.0,
+    -1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "dimKey": "1,1,-1,0,0,0,0",
+   "dimText": "kg·m·s⁻¹",
+   "rank": "vector",
+   "kind": "lumped",
+   "siUnit": "kg*m/s",
+   "unit": "kg·m/s",
+   "domain": "mechanics",
+   "description": "Linear momentum."
+  },
+  "mechanics.work": {
+   "symbol": "W",
+   "dim": [
+    1.0,
+    2.0,
+    -2.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "dimKey": "1,2,-2,0,0,0,0",
+   "dimText": "kg·m²·s⁻²",
+   "rank": "scalar",
+   "kind": "lumped",
+   "siUnit": "J",
+   "unit": "J",
+   "domain": "mechanics",
+   "description": "Work done on an object."
+  },
+  "energy.kinetic": {
+   "symbol": "K",
+   "dim": [
+    1.0,
+    2.0,
+    -2.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "dimKey": "1,2,-2,0,0,0,0",
+   "dimText": "kg·m²·s⁻²",
+   "rank": "scalar",
+   "kind": "lumped",
+   "siUnit": "J",
+   "unit": "J",
+   "domain": "mechanics",
+   "description": "Kinetic energy."
+  },
+  "energy.potential_electric": {
+   "symbol": "U",
+   "dim": [
+    1.0,
+    2.0,
+    -2.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "dimKey": "1,2,-2,0,0,0,0",
+   "dimText": "kg·m²·s⁻²",
+   "rank": "scalar",
+   "kind": "lumped",
+   "siUnit": "J",
+   "unit": "J",
+   "domain": "mechanics",
+   "description": "Electric potential energy of a charge."
+  }
+ },
+ "constants": {
+  "k_e": {
+   "symbol": "k_e",
+   "value": 8987551787.368176,
+   "dim": [
+    1.0,
+    3.0,
+    -4.0,
+    -2.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "rank": "scalar",
+   "unit": "kg·m³·s⁻⁴·A⁻²",
+   "display": "8.988e9 kg·m³·s⁻⁴·A⁻²",
+   "description": "Coulomb constant, 1/(4*pi*epsilon_0).",
+   "cite": "SI 2019 exact (derived from exact c and mu_0 definition)"
+  },
+  "epsilon_0": {
+   "symbol": "epsilon_0",
+   "value": 8.8541878128e-12,
+   "dim": [
+    -1.0,
+    -3.0,
+    4.0,
+    2.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "rank": "scalar",
+   "unit": "kg⁻¹·m⁻³·s⁴·A²",
+   "display": "8.854e-12 kg⁻¹·m⁻³·s⁴·A²",
+   "description": "Vacuum electric permittivity.",
+   "cite": "CODATA 2018"
+  },
+  "mu_0": {
+   "symbol": "mu_0",
+   "value": 1.25663706212e-06,
+   "dim": [
+    1.0,
+    1.0,
+    -2.0,
+    -2.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "rank": "scalar",
+   "unit": "kg·m·s⁻²·A⁻²",
+   "display": "1.257e-6 kg·m·s⁻²·A⁻²",
+   "description": "Vacuum magnetic permeability.",
+   "cite": "CODATA 2018"
+  },
+  "c": {
+   "symbol": "c",
+   "value": 299792458.0,
+   "dim": [
+    0.0,
+    1.0,
+    -1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "rank": "scalar",
+   "unit": "m/s",
+   "display": "2.998e8 m/s",
+   "description": "Speed of light in vacuum.",
+   "cite": "SI exact"
+  },
+  "e_charge": {
+   "symbol": "e",
+   "value": 1.602176634e-19,
+   "dim": [
+    0.0,
+    0.0,
+    1.0,
+    1.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "rank": "scalar",
+   "unit": "C",
+   "display": "1.602e-19 C",
+   "description": "Elementary charge.",
+   "cite": "SI 2019 exact"
+  },
+  "m_e": {
+   "symbol": "m_e",
+   "value": 9.1093837015e-31,
+   "dim": [
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "rank": "scalar",
+   "unit": "kg",
+   "display": "9.109e-31 kg",
+   "description": "Electron rest mass.",
+   "cite": "CODATA 2018"
+  },
+  "m_p": {
+   "symbol": "m_p",
+   "value": 1.67262192369e-27,
+   "dim": [
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "rank": "scalar",
+   "unit": "kg",
+   "display": "1.673e-27 kg",
+   "description": "Proton rest mass.",
+   "cite": "CODATA 2018"
+  },
+  "g_n": {
+   "symbol": "g",
+   "value": 9.80665,
+   "dim": [
+    0.0,
+    1.0,
+    -2.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "rank": "scalar",
+   "unit": "m/s²",
+   "display": "9.807 m/s²",
+   "description": "Standard gravitational acceleration (magnitude).",
+   "cite": "CGPM 1901 conventional value"
+  },
+  "g_vec": {
+   "symbol": "g_vec",
+   "value": [
+    0.0,
+    -9.80665,
+    0.0
+   ],
+   "dim": [
+    0.0,
+    1.0,
+    -2.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "rank": "vector",
+   "unit": "m/s²",
+   "display": "[0, -9.807, 0] m/s²",
+   "description": "Standard gravitational acceleration as a vector. +Y is up, matching the WebXR and three.js convention the renderer uses, so a kernel-computed vector needs no axis swap downstream.\n",
+   "cite": "CGPM 1901 conventional value"
+  },
+  "pi_const": {
+   "symbol": "pi_c",
+   "value": 3.141592653589793,
+   "dim": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "rank": "scalar",
+   "unit": "",
+   "display": "3.142",
+   "description": "Circle constant, as a dimensionless binding.",
+   "cite": "mathematical"
+  }
+ },
+ "components": {
+  "battery": {
+   "label": "Battery",
+   "tags": [
+    "source",
+    "circuit",
+    "emf"
+   ],
+   "laws": [
+    "ohms_law",
+    "kirchhoff_voltage_law"
+   ],
+   "model3d": "battery.glb",
+   "description": "An ideal source of constant emf. Two terminals; current leaves the positive one. Ideal here means zero internal resistance, which the assumption list on every formula states plainly.",
+   "slots": {
+    "electric.emf": {
+     "role": "settable",
+     "required": true,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "em.potential_difference": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "electric.current": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "electric.power": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    }
+   }
+  },
+  "resistor": {
+   "label": "Resistor",
+   "tags": [
+    "passive",
+    "circuit",
+    "resistive"
+   ],
+   "laws": [
+    "ohms_law",
+    "joule_heating"
+   ],
+   "model3d": "resistor.glb",
+   "description": "An ohmic element: the voltage across it is proportional to the current through it. The workhorse of the chapter and the first thing a student picks up off the shelf.",
+   "slots": {
+    "electric.resistance": {
+     "role": "settable",
+     "required": true,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "electric.current": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "em.potential_difference": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "electric.power": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    }
+   }
+  },
+  "lamp": {
+   "label": "Lamp",
+   "tags": [
+    "passive",
+    "circuit",
+    "resistive",
+    "indicator"
+   ],
+   "laws": [
+    "ohms_law",
+    "joule_heating"
+   ],
+   "model3d": "lamp.glb",
+   "description": "A resistive element that visibly brightens with dissipated power. Physically a resistor; pedagogically much better, because the answer is something you can see rather than read.",
+   "slots": {
+    "electric.resistance": {
+     "role": "settable",
+     "required": true,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "electric.current": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "em.potential_difference": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "electric.power": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    }
+   }
+  },
+  "capacitor": {
+   "label": "Capacitor",
+   "tags": [
+    "passive",
+    "circuit",
+    "storage"
+   ],
+   "laws": [
+    "capacitor_definition"
+   ],
+   "model3d": "capacitor.glb",
+   "description": "An element storing charge in proportion to the voltage across it.",
+   "slots": {
+    "electric.capacitance": {
+     "role": "settable",
+     "required": true,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "em.potential_difference": {
+     "role": "settable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "electric.charge_stored": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "electric.energy_stored": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "electric.time_constant": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    }
+   }
+  },
+  "series_pair": {
+   "label": "Series combination",
+   "tags": [
+    "combination",
+    "circuit",
+    "resistive"
+   ],
+   "laws": [
+    "series_resistance",
+    "kirchhoff_voltage_law"
+   ],
+   "model3d": null,
+   "description": "Two elements wired end to end, so the same current passes through both and their voltages add. Created by the student's own wiring; carries a resistance of its own, so it can be a member of a further combination.",
+   "slots": {
+    "electric.resistance": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "electric.capacitance": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "electric.current": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "em.potential_difference": {
+     "role": "settable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": "a problem may state the supply voltage across a combination"
+    },
+    "electric.charge_stored": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "electric.energy_stored": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "electric.power": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    }
+   }
+  },
+  "parallel_pair": {
+   "label": "Parallel combination",
+   "tags": [
+    "combination",
+    "circuit",
+    "resistive"
+   ],
+   "laws": [
+    "parallel_resistance",
+    "kirchhoff_current_law"
+   ],
+   "model3d": null,
+   "description": "Two elements across the same two nodes, so they share a voltage and their currents add. Carries a resistance of its own for the same compositional reason as a series pair.",
+   "slots": {
+    "electric.resistance": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "electric.capacitance": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "electric.current": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "em.potential_difference": {
+     "role": "settable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": "a problem may state the supply voltage across a combination"
+    },
+    "electric.charge_stored": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "electric.energy_stored": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "electric.power": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    }
+   }
+  },
+  "circuit_loop": {
+   "label": "Circuit loop",
+   "tags": [
+    "circuit",
+    "topology"
+   ],
+   "laws": [
+    "ohms_law",
+    "kirchhoff_voltage_law"
+   ],
+   "model3d": null,
+   "description": "A closed loop: one source driving one resistive thing, which may itself be a whole reduced network. This is the component the wiring interaction produces when the student closes the circuit, and it is where the current the whole chapter is about actually lives.",
+   "slots": {
+    "electric.current": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "electric.resistance": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "em.potential_difference": {
+     "role": "settable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": "a problem may state the supply voltage directly"
+    },
+    "electric.power": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    }
+   }
+  },
+  "ammeter": {
+   "label": "Ammeter",
+   "tags": [
+    "tool",
+    "probe",
+    "circuit"
+   ],
+   "laws": [
+    "kirchhoff_current_law"
+   ],
+   "model3d": "ammeter.glb",
+   "description": "Reads the current through the element it is placed in series with. Ideal: zero resistance, so inserting it does not change the circuit. A tool is an ordinary component, so this reading resolves through exactly the same machinery as a derived current.",
+   "slots": {
+    "electric.current": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    }
+   }
+  },
+  "voltmeter_dc": {
+   "label": "Voltmeter",
+   "tags": [
+    "tool",
+    "probe",
+    "circuit"
+   ],
+   "laws": [
+    "kirchhoff_voltage_law"
+   ],
+   "model3d": "voltmeter.glb",
+   "description": "Reads the potential difference across the element it is placed in parallel with. Ideal: infinite resistance, so it draws no current.",
+   "slots": {
+    "em.potential_difference": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "electric.power": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    }
+   }
+  },
+  "point_charge": {
+   "label": "Point charge",
+   "tags": [
+    "charge_source",
+    "electrostatic",
+    "source"
+   ],
+   "laws": [
+    "coulombs_law",
+    "superposition_electric"
+   ],
+   "model3d": "point_charge.glb",
+   "description": "An idealised charge with no extent. The canonical field source; everything else in electrostatics is a superposition of these.",
+   "slots": {
+    "em.charge": {
+     "role": "settable",
+     "required": true,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "em.charge_magnitude": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "geometry.position": {
+     "role": "settable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    }
+   }
+  },
+  "charged_particle": {
+   "label": "Charged particle",
+   "tags": [
+    "charge_source",
+    "electrostatic",
+    "source",
+    "movable",
+    "projectile"
+   ],
+   "laws": [
+    "coulombs_law",
+    "lorentz_force",
+    "newton_second_law"
+   ],
+   "model3d": "particle.glb",
+   "description": "A charge with mass, free to move. Both a field source and the thing that responds to a field — which is precisely why the field -> force -> trajectory chain needs no special case.",
+   "slots": {
+    "em.charge": {
+     "role": "settable",
+     "required": true,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "em.charge_magnitude": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "mechanics.mass": {
+     "role": "settable",
+     "required": true,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "geometry.position": {
+     "role": "settable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "kinematics.velocity": {
+     "role": "settable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "kinematics.speed": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "kinematics.acceleration": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "kinematics.acceleration_magnitude": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "kinematics.displacement": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "kinematics.distance": {
+     "role": "settable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": "a problem may state the distance travelled"
+    },
+    "kinematics.time": {
+     "role": "settable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": "a problem may state the elapsed time"
+    },
+    "mechanics.force": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "mechanics.force_em": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "mechanics.force_gravity": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "mechanics.force_drag": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "mechanics.drag_coefficient": {
+     "role": "settable",
+     "required": false,
+     "default": "0.47",
+     "defaultQuantity": {
+      "value": 0.47,
+      "dim": [
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      "rank": "scalar",
+      "unit": "",
+      "display": "0.47"
+     },
+     "note": ""
+    },
+    "geometry.cross_section": {
+     "role": "settable",
+     "required": false,
+     "default": "0 m^2",
+     "defaultQuantity": {
+      "value": 0.0,
+      "dim": [
+       0.0,
+       2.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      "rank": "scalar",
+      "unit": "m²",
+      "display": "0 m²"
+     },
+     "note": ""
+    },
+    "mechanics.force_magnitude": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "mechanics.momentum": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "mechanics.work": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "energy.kinetic": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "energy.potential_electric": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "em.electric_field": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": "field evaluated at the particle"
+    },
+    "em.electric_field_magnitude": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "em.electric_potential": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "em.cyclotron_radius": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "em.cyclotron_period": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    }
+   }
+  },
+  "electron": {
+   "label": "Electron",
+   "tags": [
+    "charge_source",
+    "electrostatic",
+    "source",
+    "movable",
+    "projectile"
+   ],
+   "laws": [
+    "coulombs_law",
+    "lorentz_force",
+    "newton_second_law"
+   ],
+   "model3d": "electron.glb",
+   "description": "An electron, with charge and mass fixed by nature rather than by the problem.",
+   "slots": {
+    "em.charge": {
+     "role": "intrinsic",
+     "required": false,
+     "default": "-1.602176634e-19 C",
+     "defaultQuantity": {
+      "value": -1.602176634e-19,
+      "dim": [
+       0.0,
+       0.0,
+       1.0,
+       1.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      "rank": "scalar",
+      "unit": "C",
+      "display": "-1.602e-19 C"
+     },
+     "note": ""
+    },
+    "em.charge_magnitude": {
+     "role": "intrinsic",
+     "required": false,
+     "default": "1.602176634e-19 C",
+     "defaultQuantity": {
+      "value": 1.602176634e-19,
+      "dim": [
+       0.0,
+       0.0,
+       1.0,
+       1.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      "rank": "scalar",
+      "unit": "C",
+      "display": "1.602e-19 C"
+     },
+     "note": ""
+    },
+    "mechanics.mass": {
+     "role": "intrinsic",
+     "required": false,
+     "default": "9.1093837015e-31 kg",
+     "defaultQuantity": {
+      "value": 9.1093837015e-31,
+      "dim": [
+       1.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      "rank": "scalar",
+      "unit": "kg",
+      "display": "9.109e-31 kg"
+     },
+     "note": ""
+    },
+    "geometry.position": {
+     "role": "settable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "kinematics.velocity": {
+     "role": "settable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "kinematics.speed": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "kinematics.acceleration": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "kinematics.acceleration_magnitude": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "kinematics.displacement": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "kinematics.distance": {
+     "role": "settable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": "a problem may state the distance travelled"
+    },
+    "kinematics.time": {
+     "role": "settable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": "a problem may state the elapsed time"
+    },
+    "mechanics.force": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "mechanics.force_em": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "mechanics.force_gravity": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "mechanics.force_drag": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "mechanics.drag_coefficient": {
+     "role": "settable",
+     "required": false,
+     "default": "0.47",
+     "defaultQuantity": {
+      "value": 0.47,
+      "dim": [
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      "rank": "scalar",
+      "unit": "",
+      "display": "0.47"
+     },
+     "note": ""
+    },
+    "geometry.cross_section": {
+     "role": "settable",
+     "required": false,
+     "default": "0 m^2",
+     "defaultQuantity": {
+      "value": 0.0,
+      "dim": [
+       0.0,
+       2.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      "rank": "scalar",
+      "unit": "m²",
+      "display": "0 m²"
+     },
+     "note": ""
+    },
+    "mechanics.force_magnitude": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "mechanics.momentum": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "mechanics.work": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "energy.kinetic": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "energy.potential_electric": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "em.electric_field": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "em.electric_field_magnitude": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "em.cyclotron_radius": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "em.cyclotron_period": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    }
+   }
+  },
+  "parallel_plate_capacitor": {
+   "label": "Parallel-plate capacitor",
+   "tags": [
+    "field_region",
+    "electrostatic",
+    "source",
+    "uniform_field"
+   ],
+   "laws": [
+    "uniform_field_between_plates",
+    "gauss_law_electric"
+   ],
+   "model3d": "parallel_plates.glb",
+   "description": "Two oppositely charged plates. Away from the edges the field between them is uniform, which makes this the standard way to produce a known constant field in a problem.",
+   "slots": {
+    "em.potential_difference": {
+     "role": "settable",
+     "required": true,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "geometry.separation_plates": {
+     "role": "settable",
+     "required": true,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "geometry.area": {
+     "role": "settable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "em.electric_field_magnitude": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "em.electric_field": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "geometry.direction": {
+     "role": "settable",
+     "required": false,
+     "default": "[0, -1, 0]",
+     "defaultQuantity": {
+      "value": [
+       0.0,
+       -1.0,
+       0.0
+      ],
+      "dim": [
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      "rank": "vector",
+      "unit": "",
+      "display": "[0, -1, 0]"
+     },
+     "note": ""
+    },
+    "em.charge_density_surface": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    }
+   }
+  },
+  "uniform_field_region": {
+   "label": "Uniform field region",
+   "tags": [
+    "field_region",
+    "electrostatic",
+    "source",
+    "uniform_field"
+   ],
+   "laws": [
+    "superposition_electric"
+   ],
+   "model3d": "field_region.glb",
+   "description": "A region of stated uniform field, for problems that give the field directly.",
+   "slots": {
+    "em.electric_field": {
+     "role": "settable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "em.electric_field_magnitude": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "geometry.direction": {
+     "role": "settable",
+     "required": false,
+     "default": "[0, -1, 0]",
+     "defaultQuantity": {
+      "value": [
+       0.0,
+       -1.0,
+       0.0
+      ],
+      "dim": [
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      "rank": "vector",
+      "unit": "",
+      "display": "[0, -1, 0]"
+     },
+     "note": ""
+    }
+   }
+  },
+  "uniform_magnetic_field_region": {
+   "label": "Uniform magnetic field region",
+   "tags": [
+    "field_region",
+    "magnetostatic",
+    "source"
+   ],
+   "laws": [
+    "circular_motion_magnetic",
+    "lorentz_force"
+   ],
+   "model3d": "field_region.glb",
+   "description": "A region of stated uniform magnetic flux density.",
+   "slots": {
+    "em.magnetic_field": {
+     "role": "settable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "em.magnetic_field_magnitude": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    }
+   }
+  },
+  "uniform_charged_sphere": {
+   "label": "Uniformly charged insulating sphere",
+   "tags": [
+    "charge_source",
+    "electrostatic",
+    "source"
+   ],
+   "laws": [
+    "gauss_law_electric",
+    "superposition_electric"
+   ],
+   "model3d": "sphere.glb",
+   "description": "A sphere of uniform volume charge density. Non-conducting, so the charge stays put and the interior field is non-zero and linear in r.",
+   "slots": {
+    "em.charge": {
+     "role": "settable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "em.charge_magnitude": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "em.charge_density_volume": {
+     "role": "settable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "geometry.radius": {
+     "role": "settable",
+     "required": true,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "geometry.volume": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "geometry.position": {
+     "role": "settable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "em.electric_field_magnitude": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    }
+   }
+  },
+  "spherical_cavity_in_charged_sphere": {
+   "label": "Spherical cavity in a uniformly charged sphere",
+   "tags": [
+    "charge_source",
+    "electrostatic",
+    "source",
+    "uniform_field",
+    "cavity"
+   ],
+   "laws": [
+    "superposition_electric",
+    "gauss_law_electric"
+   ],
+   "model3d": "cavity_sphere.glb",
+   "description": "A spherical hole carved out of a uniformly charged insulating sphere. By superposition the field everywhere inside the cavity is uniform, equal to rho*a/(3*eps0) along the offset vector a from the sphere's centre to the cavity's. This is the flagship case: no simulation library contains it, and a charge released inside undergoes exact constant-acceleration projectile motion.",
+   "slots": {
+    "em.charge_density_volume": {
+     "role": "settable",
+     "required": true,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "geometry.radius": {
+     "role": "settable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "geometry.offset": {
+     "role": "settable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": "sphere centre -> cavity centre"
+    },
+    "em.electric_field": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "em.electric_field_magnitude": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    }
+   }
+  },
+  "conducting_shell": {
+   "label": "Conducting spherical shell",
+   "tags": [
+    "charge_source",
+    "electrostatic",
+    "source",
+    "conductor",
+    "cavity"
+   ],
+   "laws": [
+    "shielding_conductor_cavity",
+    "gauss_law_electric"
+   ],
+   "model3d": "shell.glb",
+   "description": "A charged conductor with a hollow interior. The field inside the cavity is exactly zero — electrostatic shielding — whatever the shell's charge or the external field.",
+   "slots": {
+    "em.charge": {
+     "role": "settable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "em.charge_magnitude": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "geometry.radius": {
+     "role": "settable",
+     "required": true,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "geometry.position": {
+     "role": "settable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "em.electric_field_magnitude": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    }
+   }
+  },
+  "infinite_charged_plane": {
+   "label": "Infinite charged plane",
+   "tags": [
+    "charge_source",
+    "electrostatic",
+    "source",
+    "uniform_field"
+   ],
+   "laws": [
+    "gauss_law_electric"
+   ],
+   "model3d": "plane.glb",
+   "description": "An infinite sheet of uniform surface charge density. Its field is uniform and independent of distance, which is why it is the standard idealisation for a large plate.",
+   "slots": {
+    "em.charge_density_surface": {
+     "role": "settable",
+     "required": true,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "em.electric_field_magnitude": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    }
+   }
+  },
+  "infinite_charged_line": {
+   "label": "Infinite charged line",
+   "tags": [
+    "charge_source",
+    "electrostatic",
+    "source"
+   ],
+   "laws": [
+    "gauss_law_electric"
+   ],
+   "model3d": "line.glb",
+   "description": "An infinite straight line of uniform linear charge density.",
+   "slots": {
+    "em.charge_density_linear": {
+     "role": "settable",
+     "required": true,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "em.electric_field_magnitude": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    }
+   }
+  },
+  "environment": {
+   "label": "Environment",
+   "tags": [
+    "environment",
+    "scene",
+    "settings"
+   ],
+   "laws": [
+    "newton_gravitation_uniform",
+    "superposition_of_forces",
+    "medium_permittivity"
+   ],
+   "model3d": null,
+   "description": "The surrounding medium and fields. Defaults are an idealised vacuum with no gravity, which is what textbook electrostatics problems assume -- stated here as an editable value instead of a footnote.",
+   "slots": {
+    "env.gravity": {
+     "role": "settable",
+     "required": false,
+     "default": "[0, 0, 0] m/s^2",
+     "defaultQuantity": {
+      "value": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "dim": [
+       0.0,
+       1.0,
+       -2.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      "rank": "vector",
+      "unit": "m/s²",
+      "display": "[0, 0, 0] m/s²"
+     },
+     "note": ""
+    },
+    "env.wind_velocity": {
+     "role": "settable",
+     "required": false,
+     "default": "[0, 0, 0] m/s",
+     "defaultQuantity": {
+      "value": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "dim": [
+       0.0,
+       1.0,
+       -1.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      "rank": "vector",
+      "unit": "m/s",
+      "display": "[0, 0, 0] m/s"
+     },
+     "note": ""
+    },
+    "env.relative_permittivity": {
+     "role": "settable",
+     "required": false,
+     "default": "1",
+     "defaultQuantity": {
+      "value": 1.0,
+      "dim": [
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      "rank": "scalar",
+      "unit": "",
+      "display": "1"
+     },
+     "note": ""
+    },
+    "env.air_density": {
+     "role": "settable",
+     "required": false,
+     "default": "0 kg/m^3",
+     "defaultQuantity": {
+      "value": 0.0,
+      "dim": [
+       1.0,
+       -3.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      "rank": "scalar",
+      "unit": "kg·m⁻³",
+      "display": "0 kg·m⁻³"
+     },
+     "note": ""
+    },
+    "env.temperature": {
+     "role": "settable",
+     "required": false,
+     "default": "293.15 K",
+     "defaultQuantity": {
+      "value": 293.15,
+      "dim": [
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       1.0,
+       0.0,
+       0.0
+      ],
+      "rank": "scalar",
+      "unit": "K",
+      "display": "293.1 K"
+     },
+     "note": ""
+    }
+   }
+  },
+  "field_probe": {
+   "label": "Field probe",
+   "tags": [
+    "tool",
+    "probe",
+    "test_point"
+   ],
+   "laws": [],
+   "model3d": "probe.glb",
+   "description": "A massless, chargeless point placed in the world to read the field there. The canonical \"where\" for a field question; carries no charge of its own so it never perturbs the scene.",
+   "slots": {
+    "geometry.position": {
+     "role": "settable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "em.electric_field": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "em.electric_field_magnitude": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "em.electric_potential": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "em.magnetic_field": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "em.magnetic_field_magnitude": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    }
+   }
+  },
+  "voltmeter": {
+   "label": "Voltmeter",
+   "tags": [
+    "tool",
+    "probe"
+   ],
+   "laws": [
+    "electric_potential_definition"
+   ],
+   "model3d": "voltmeter.glb",
+   "description": "Reads the potential difference between two points. Ideal — draws no charge.",
+   "slots": {
+    "geometry.position": {
+     "role": "settable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "em.potential_difference": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "em.electric_potential": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    }
+   }
+  },
+  "ruler": {
+   "label": "Ruler",
+   "tags": [
+    "tool",
+    "probe"
+   ],
+   "laws": [],
+   "model3d": "ruler.glb",
+   "description": "Reads a distance or displacement in the scene.",
+   "slots": {
+    "geometry.length": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "kinematics.distance": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    },
+    "kinematics.displacement": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    }
+   }
+  },
+  "stopwatch": {
+   "label": "Stopwatch",
+   "tags": [
+    "tool",
+    "probe"
+   ],
+   "laws": [],
+   "model3d": "stopwatch.glb",
+   "description": "Reads an elapsed time.",
+   "slots": {
+    "kinematics.time": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    }
+   }
+  }
+ },
+ "formulas": {
+  "series.R_from_members": {
+   "solvesFor": "electric.resistance",
+   "producesState": null,
+   "scope": "pair",
+   "roles": {
+    "a": {
+     "via": "series_a",
+     "kinds": [
+      "resistor",
+      "lamp",
+      "series_pair",
+      "parallel_pair"
+     ]
+    },
+    "b": {
+     "via": "series_b",
+     "kinds": [
+      "resistor",
+      "lamp",
+      "series_pair",
+      "parallel_pair"
+     ]
+    }
+   },
+   "exprText": "Ra + Rb",
+   "ast": {
+    "k": "add",
+    "a": [
+     {
+      "k": "sym",
+      "n": "Ra"
+     },
+     {
+      "k": "sym",
+      "n": "Rb"
+     }
+    ]
+   },
+   "bindings": {
+    "Ra": {
+     "prop": "electric.resistance",
+     "const": null,
+     "from": "a",
+     "state": null
+    },
+    "Rb": {
+     "prop": "electric.resistance",
+     "const": null,
+     "from": "b",
+     "state": null
+    }
+   },
+   "law": "series_resistance",
+   "assumes": [
+    "same_current_through_both",
+    "ideal_wires"
+   ],
+   "cite": "OpenStax College Physics 2e, 21.1 (CC BY)",
+   "cost": 1,
+   "note": ""
+  },
+  "parallel.R_from_members": {
+   "solvesFor": "electric.resistance",
+   "producesState": null,
+   "scope": "pair",
+   "roles": {
+    "a": {
+     "via": "parallel_a",
+     "kinds": [
+      "resistor",
+      "lamp",
+      "series_pair",
+      "parallel_pair"
+     ]
+    },
+    "b": {
+     "via": "parallel_b",
+     "kinds": [
+      "resistor",
+      "lamp",
+      "series_pair",
+      "parallel_pair"
+     ]
+    }
+   },
+   "exprText": "Ra * Rb / (Ra + Rb)",
+   "ast": {
+    "k": "mul",
+    "a": [
+     {
+      "k": "sym",
+      "n": "Ra"
+     },
+     {
+      "k": "sym",
+      "n": "Rb"
+     },
+     {
+      "k": "pow",
+      "b": {
+       "k": "add",
+       "a": [
+        {
+         "k": "sym",
+         "n": "Ra"
+        },
+        {
+         "k": "sym",
+         "n": "Rb"
+        }
+       ]
+      },
+      "e": -1.0
+     }
+    ]
+   },
+   "bindings": {
+    "Ra": {
+     "prop": "electric.resistance",
+     "const": null,
+     "from": "a",
+     "state": null
+    },
+    "Rb": {
+     "prop": "electric.resistance",
+     "const": null,
+     "from": "b",
+     "state": null
+    }
+   },
+   "law": "parallel_resistance",
+   "assumes": [
+    "same_voltage_across_both",
+    "ideal_wires"
+   ],
+   "cite": "OpenStax College Physics 2e, 21.1 (CC BY)",
+   "cost": 1,
+   "note": "The product-over-sum form rather than the reciprocal sum, because it is one expression instead of two and the dimension checker can verify it directly."
+  },
+  "series.C_from_members": {
+   "solvesFor": "electric.capacitance",
+   "producesState": null,
+   "scope": "pair",
+   "roles": {
+    "a": {
+     "via": "series_a",
+     "kinds": [
+      "capacitor",
+      "series_pair",
+      "parallel_pair"
+     ]
+    },
+    "b": {
+     "via": "series_b",
+     "kinds": [
+      "capacitor",
+      "series_pair",
+      "parallel_pair"
+     ]
+    }
+   },
+   "exprText": "Ca * Cb / (Ca + Cb)",
+   "ast": {
+    "k": "mul",
+    "a": [
+     {
+      "k": "sym",
+      "n": "Ca"
+     },
+     {
+      "k": "sym",
+      "n": "Cb"
+     },
+     {
+      "k": "pow",
+      "b": {
+       "k": "add",
+       "a": [
+        {
+         "k": "sym",
+         "n": "Ca"
+        },
+        {
+         "k": "sym",
+         "n": "Cb"
+        }
+       ]
+      },
+      "e": -1.0
+     }
+    ]
+   },
+   "bindings": {
+    "Ca": {
+     "prop": "electric.capacitance",
+     "const": null,
+     "from": "a",
+     "state": null
+    },
+    "Cb": {
+     "prop": "electric.capacitance",
+     "const": null,
+     "from": "b",
+     "state": null
+    }
+   },
+   "law": "capacitor_definition",
+   "assumes": [
+    "same_charge_on_both"
+   ],
+   "cite": "OpenStax College Physics 2e, 19.6 (CC BY)",
+   "cost": 1,
+   "note": "Capacitors combine the opposite way round to resistors — in series they reduce."
+  },
+  "parallel.C_from_members": {
+   "solvesFor": "electric.capacitance",
+   "producesState": null,
+   "scope": "pair",
+   "roles": {
+    "a": {
+     "via": "parallel_a",
+     "kinds": [
+      "capacitor",
+      "series_pair",
+      "parallel_pair"
+     ]
+    },
+    "b": {
+     "via": "parallel_b",
+     "kinds": [
+      "capacitor",
+      "series_pair",
+      "parallel_pair"
+     ]
+    }
+   },
+   "exprText": "Ca + Cb",
+   "ast": {
+    "k": "add",
+    "a": [
+     {
+      "k": "sym",
+      "n": "Ca"
+     },
+     {
+      "k": "sym",
+      "n": "Cb"
+     }
+    ]
+   },
+   "bindings": {
+    "Ca": {
+     "prop": "electric.capacitance",
+     "const": null,
+     "from": "a",
+     "state": null
+    },
+    "Cb": {
+     "prop": "electric.capacitance",
+     "const": null,
+     "from": "b",
+     "state": null
+    }
+   },
+   "law": "capacitor_definition",
+   "assumes": [
+    "same_voltage_across_both"
+   ],
+   "cite": "OpenStax College Physics 2e, 19.6 (CC BY)",
+   "cost": 1,
+   "note": ""
+  },
+  "loop.R_from_load": {
+   "solvesFor": "electric.resistance",
+   "producesState": null,
+   "scope": "pair",
+   "roles": {
+    "load": {
+     "via": "loads",
+     "kinds": [
+      "resistor",
+      "lamp",
+      "series_pair",
+      "parallel_pair"
+     ]
+    }
+   },
+   "exprText": "R",
+   "ast": {
+    "k": "sym",
+    "n": "R"
+   },
+   "bindings": {
+    "R": {
+     "prop": "electric.resistance",
+     "const": null,
+     "from": "load",
+     "state": null
+    }
+   },
+   "law": "series_resistance",
+   "assumes": [
+    "ideal_wires",
+    "ideal_source"
+   ],
+   "cite": "OpenStax College Physics 2e, 21.1 (CC BY)",
+   "cost": 1,
+   "note": "The loop's total resistance is its load's, whatever that load reduced from. Trivial as algebra, essential as a link: it is what carries a reduced network's resistance into the loop where the current lives."
+  },
+  "loop.V_from_source": {
+   "solvesFor": "em.potential_difference",
+   "producesState": null,
+   "scope": "pair",
+   "roles": {
+    "src": {
+     "via": "driven_by",
+     "kinds": [
+      "battery"
+     ]
+    }
+   },
+   "exprText": "emf",
+   "ast": {
+    "k": "sym",
+    "n": "emf"
+   },
+   "bindings": {
+    "emf": {
+     "prop": "electric.emf",
+     "const": null,
+     "from": "src",
+     "state": null
+    }
+   },
+   "law": "kirchhoff_voltage_law",
+   "assumes": [
+    "ideal_source",
+    "no_internal_resistance"
+   ],
+   "cite": "OpenStax College Physics 2e, 21.2 (CC BY)",
+   "cost": 1,
+   "note": ""
+  },
+  "loop.I_from_V_R": {
+   "solvesFor": "electric.current",
+   "producesState": null,
+   "scope": "self",
+   "roles": {},
+   "exprText": "V / R",
+   "ast": {
+    "k": "mul",
+    "a": [
+     {
+      "k": "sym",
+      "n": "V"
+     },
+     {
+      "k": "pow",
+      "b": {
+       "k": "sym",
+       "n": "R"
+      },
+      "e": -1.0
+     }
+    ]
+   },
+   "bindings": {
+    "V": {
+     "prop": "em.potential_difference",
+     "const": null,
+     "from": "self",
+     "state": null
+    },
+    "R": {
+     "prop": "electric.resistance",
+     "const": null,
+     "from": "self",
+     "state": null
+    }
+   },
+   "law": "ohms_law",
+   "assumes": [
+    "steady_state",
+    "ohmic_load"
+   ],
+   "cite": "OpenStax College Physics 2e, 20.2 (CC BY)",
+   "cost": 1,
+   "note": "The whole chapter in one line — once the network has reduced, the current falls out."
+  },
+  "ohm.I_from_V_R": {
+   "solvesFor": "electric.current",
+   "producesState": null,
+   "scope": "self",
+   "roles": {},
+   "exprText": "V / R",
+   "ast": {
+    "k": "mul",
+    "a": [
+     {
+      "k": "sym",
+      "n": "V"
+     },
+     {
+      "k": "pow",
+      "b": {
+       "k": "sym",
+       "n": "R"
+      },
+      "e": -1.0
+     }
+    ]
+   },
+   "bindings": {
+    "V": {
+     "prop": "em.potential_difference",
+     "const": null,
+     "from": "self",
+     "state": null
+    },
+    "R": {
+     "prop": "electric.resistance",
+     "const": null,
+     "from": "self",
+     "state": null
+    }
+   },
+   "law": "ohms_law",
+   "assumes": [
+    "ohmic",
+    "steady_state"
+   ],
+   "cite": "OpenStax College Physics 2e, 20.2 (CC BY)",
+   "cost": 2,
+   "note": ""
+  },
+  "ohm.V_from_I_R": {
+   "solvesFor": "em.potential_difference",
+   "producesState": null,
+   "scope": "self",
+   "roles": {},
+   "exprText": "I * R",
+   "ast": {
+    "k": "mul",
+    "a": [
+     {
+      "k": "sym",
+      "n": "I"
+     },
+     {
+      "k": "sym",
+      "n": "R"
+     }
+    ]
+   },
+   "bindings": {
+    "I": {
+     "prop": "electric.current",
+     "const": null,
+     "from": "self",
+     "state": null
+    },
+    "R": {
+     "prop": "electric.resistance",
+     "const": null,
+     "from": "self",
+     "state": null
+    }
+   },
+   "law": "ohms_law",
+   "assumes": [
+    "ohmic",
+    "steady_state"
+   ],
+   "cite": "OpenStax College Physics 2e, 20.2 (CC BY)",
+   "cost": 2,
+   "note": ""
+  },
+  "ohm.R_from_V_I": {
+   "solvesFor": "electric.resistance",
+   "producesState": null,
+   "scope": "self",
+   "roles": {},
+   "exprText": "V / I",
+   "ast": {
+    "k": "mul",
+    "a": [
+     {
+      "k": "sym",
+      "n": "V"
+     },
+     {
+      "k": "pow",
+      "b": {
+       "k": "sym",
+       "n": "I"
+      },
+      "e": -1.0
+     }
+    ]
+   },
+   "bindings": {
+    "V": {
+     "prop": "em.potential_difference",
+     "const": null,
+     "from": "self",
+     "state": null
+    },
+    "I": {
+     "prop": "electric.current",
+     "const": null,
+     "from": "self",
+     "state": null
+    }
+   },
+   "law": "ohms_law",
+   "assumes": [
+    "ohmic",
+    "steady_state"
+   ],
+   "cite": "OpenStax College Physics 2e, 20.2 (CC BY)",
+   "cost": 3,
+   "note": ""
+  },
+  "series.I_shared_to_member": {
+   "solvesFor": "electric.current",
+   "producesState": null,
+   "scope": "pair",
+   "roles": {
+    "group": {
+     "via": "series_a",
+     "kinds": [
+      "series_pair"
+     ]
+    }
+   },
+   "exprText": "I",
+   "ast": {
+    "k": "sym",
+    "n": "I"
+   },
+   "bindings": {
+    "I": {
+     "prop": "electric.current",
+     "const": null,
+     "from": "group",
+     "state": null
+    }
+   },
+   "law": "kirchhoff_current_law",
+   "assumes": [
+    "same_current_through_both"
+   ],
+   "cite": "OpenStax College Physics 2e, 21.1 (CC BY)",
+   "cost": 2,
+   "note": "In series the current is common, so a member inherits the group's current. Together with the member_b variant this is how a reading on one element reaches the other."
+  },
+  "series.I_shared_to_member_b": {
+   "solvesFor": "electric.current",
+   "producesState": null,
+   "scope": "pair",
+   "roles": {
+    "group": {
+     "via": "series_b",
+     "kinds": [
+      "series_pair"
+     ]
+    }
+   },
+   "exprText": "I",
+   "ast": {
+    "k": "sym",
+    "n": "I"
+   },
+   "bindings": {
+    "I": {
+     "prop": "electric.current",
+     "const": null,
+     "from": "group",
+     "state": null
+    }
+   },
+   "law": "kirchhoff_current_law",
+   "assumes": [
+    "same_current_through_both"
+   ],
+   "cite": "OpenStax College Physics 2e, 21.1 (CC BY)",
+   "cost": 2,
+   "note": ""
+  },
+  "parallel.V_shared_to_member": {
+   "solvesFor": "em.potential_difference",
+   "producesState": null,
+   "scope": "pair",
+   "roles": {
+    "group": {
+     "via": "parallel_a",
+     "kinds": [
+      "parallel_pair"
+     ]
+    }
+   },
+   "exprText": "V",
+   "ast": {
+    "k": "sym",
+    "n": "V"
+   },
+   "bindings": {
+    "V": {
+     "prop": "em.potential_difference",
+     "const": null,
+     "from": "group",
+     "state": null
+    }
+   },
+   "law": "kirchhoff_voltage_law",
+   "assumes": [
+    "same_voltage_across_both"
+   ],
+   "cite": "OpenStax College Physics 2e, 21.1 (CC BY)",
+   "cost": 2,
+   "note": ""
+  },
+  "parallel.V_shared_to_member_b": {
+   "solvesFor": "em.potential_difference",
+   "producesState": null,
+   "scope": "pair",
+   "roles": {
+    "group": {
+     "via": "parallel_b",
+     "kinds": [
+      "parallel_pair"
+     ]
+    }
+   },
+   "exprText": "V",
+   "ast": {
+    "k": "sym",
+    "n": "V"
+   },
+   "bindings": {
+    "V": {
+     "prop": "em.potential_difference",
+     "const": null,
+     "from": "group",
+     "state": null
+    }
+   },
+   "law": "kirchhoff_voltage_law",
+   "assumes": [
+    "same_voltage_across_both"
+   ],
+   "cite": "OpenStax College Physics 2e, 21.1 (CC BY)",
+   "cost": 2,
+   "note": ""
+  },
+  "loop.I_shared_to_load": {
+   "solvesFor": "electric.current",
+   "producesState": null,
+   "scope": "pair",
+   "roles": {
+    "loop": {
+     "via": "loads",
+     "kinds": [
+      "circuit_loop"
+     ]
+    }
+   },
+   "exprText": "I",
+   "ast": {
+    "k": "sym",
+    "n": "I"
+   },
+   "bindings": {
+    "I": {
+     "prop": "electric.current",
+     "const": null,
+     "from": "loop",
+     "state": null
+    }
+   },
+   "law": "kirchhoff_current_law",
+   "assumes": [
+    "single_loop"
+   ],
+   "cite": "OpenStax College Physics 2e, 21.1 (CC BY)",
+   "cost": 2,
+   "note": "A single loop's current passes through its load, which is how the answer reaches a part."
+  },
+  "loop.V_shared_to_load": {
+   "solvesFor": "em.potential_difference",
+   "producesState": null,
+   "scope": "pair",
+   "roles": {
+    "loop": {
+     "via": "loads",
+     "kinds": [
+      "circuit_loop"
+     ]
+    }
+   },
+   "exprText": "V",
+   "ast": {
+    "k": "sym",
+    "n": "V"
+   },
+   "bindings": {
+    "V": {
+     "prop": "em.potential_difference",
+     "const": null,
+     "from": "loop",
+     "state": null
+    }
+   },
+   "law": "kirchhoff_voltage_law",
+   "assumes": [
+    "ideal_wires",
+    "single_loop"
+   ],
+   "cite": "OpenStax College Physics 2e, 21.2 (CC BY)",
+   "cost": 3,
+   "note": ""
+  },
+  "power.P_from_I_V": {
+   "solvesFor": "electric.power",
+   "producesState": null,
+   "scope": "self",
+   "roles": {},
+   "exprText": "I * V",
+   "ast": {
+    "k": "mul",
+    "a": [
+     {
+      "k": "sym",
+      "n": "I"
+     },
+     {
+      "k": "sym",
+      "n": "V"
+     }
+    ]
+   },
+   "bindings": {
+    "I": {
+     "prop": "electric.current",
+     "const": null,
+     "from": "self",
+     "state": null
+    },
+    "V": {
+     "prop": "em.potential_difference",
+     "const": null,
+     "from": "self",
+     "state": null
+    }
+   },
+   "law": "joule_heating",
+   "assumes": [
+    "steady_state"
+   ],
+   "cite": "OpenStax College Physics 2e, 20.4 (CC BY)",
+   "cost": 1,
+   "note": ""
+  },
+  "power.P_from_I_R": {
+   "solvesFor": "electric.power",
+   "producesState": null,
+   "scope": "self",
+   "roles": {},
+   "exprText": "I**2 * R",
+   "ast": {
+    "k": "mul",
+    "a": [
+     {
+      "k": "sym",
+      "n": "R"
+     },
+     {
+      "k": "pow",
+      "b": {
+       "k": "sym",
+       "n": "I"
+      },
+      "e": 2.0
+     }
+    ]
+   },
+   "bindings": {
+    "I": {
+     "prop": "electric.current",
+     "const": null,
+     "from": "self",
+     "state": null
+    },
+    "R": {
+     "prop": "electric.resistance",
+     "const": null,
+     "from": "self",
+     "state": null
+    }
+   },
+   "law": "joule_heating",
+   "assumes": [
+    "steady_state",
+    "ohmic"
+   ],
+   "cite": "OpenStax College Physics 2e, 20.4 (CC BY)",
+   "cost": 1,
+   "note": ""
+  },
+  "power.P_from_V_R": {
+   "solvesFor": "electric.power",
+   "producesState": null,
+   "scope": "self",
+   "roles": {},
+   "exprText": "V**2 / R",
+   "ast": {
+    "k": "mul",
+    "a": [
+     {
+      "k": "pow",
+      "b": {
+       "k": "sym",
+       "n": "R"
+      },
+      "e": -1.0
+     },
+     {
+      "k": "pow",
+      "b": {
+       "k": "sym",
+       "n": "V"
+      },
+      "e": 2.0
+     }
+    ]
+   },
+   "bindings": {
+    "V": {
+     "prop": "em.potential_difference",
+     "const": null,
+     "from": "self",
+     "state": null
+    },
+    "R": {
+     "prop": "electric.resistance",
+     "const": null,
+     "from": "self",
+     "state": null
+    }
+   },
+   "law": "joule_heating",
+   "assumes": [
+    "steady_state",
+    "ohmic"
+   ],
+   "cite": "OpenStax College Physics 2e, 20.4 (CC BY)",
+   "cost": 1,
+   "note": "Three forms of the same law. They are NOT alternative paths in the multi-path sense — all three cite joule_heating, so the resolver's law-set dedup collapses them to one. That is correct: picking V^2/R over I^2*R is an algebraic convenience, not different physics."
+  },
+  "cap.Q_from_C_V": {
+   "solvesFor": "electric.charge_stored",
+   "producesState": null,
+   "scope": "self",
+   "roles": {},
+   "exprText": "C * V",
+   "ast": {
+    "k": "mul",
+    "a": [
+     {
+      "k": "sym",
+      "n": "C"
+     },
+     {
+      "k": "sym",
+      "n": "V"
+     }
+    ]
+   },
+   "bindings": {
+    "C": {
+     "prop": "electric.capacitance",
+     "const": null,
+     "from": "self",
+     "state": null
+    },
+    "V": {
+     "prop": "em.potential_difference",
+     "const": null,
+     "from": "self",
+     "state": null
+    }
+   },
+   "law": "capacitor_definition",
+   "assumes": [
+    "linear_dielectric"
+   ],
+   "cite": "OpenStax College Physics 2e, 19.5 (CC BY)",
+   "cost": 1,
+   "note": ""
+  },
+  "cap.U_from_C_V": {
+   "solvesFor": "electric.energy_stored",
+   "producesState": null,
+   "scope": "self",
+   "roles": {},
+   "exprText": "C * V**2 / 2",
+   "ast": {
+    "k": "mul",
+    "a": [
+     {
+      "k": "num",
+      "v": 0.5
+     },
+     {
+      "k": "sym",
+      "n": "C"
+     },
+     {
+      "k": "pow",
+      "b": {
+       "k": "sym",
+       "n": "V"
+      },
+      "e": 2.0
+     }
+    ]
+   },
+   "bindings": {
+    "C": {
+     "prop": "electric.capacitance",
+     "const": null,
+     "from": "self",
+     "state": null
+    },
+    "V": {
+     "prop": "em.potential_difference",
+     "const": null,
+     "from": "self",
+     "state": null
+    }
+   },
+   "law": "capacitor_definition",
+   "assumes": [
+    "linear_dielectric"
+   ],
+   "cite": "OpenStax College Physics 2e, 19.7 (CC BY)",
+   "cost": 1,
+   "note": ""
+  },
+  "rc.tau_from_R_C": {
+   "solvesFor": "electric.time_constant",
+   "producesState": null,
+   "scope": "pair",
+   "roles": {
+    "r": {
+     "via": "charged_through",
+     "kinds": [
+      "resistor",
+      "series_pair",
+      "parallel_pair"
+     ]
+    }
+   },
+   "exprText": "R * C",
+   "ast": {
+    "k": "mul",
+    "a": [
+     {
+      "k": "sym",
+      "n": "C"
+     },
+     {
+      "k": "sym",
+      "n": "R"
+     }
+    ]
+   },
+   "bindings": {
+    "C": {
+     "prop": "electric.capacitance",
+     "const": null,
+     "from": "self",
+     "state": null
+    },
+    "R": {
+     "prop": "electric.resistance",
+     "const": null,
+     "from": "r",
+     "state": null
+    }
+   },
+   "law": "rc_time_constant",
+   "assumes": [
+    "single_rc_branch"
+   ],
+   "cite": "OpenStax College Physics 2e, 21.6 (CC BY)",
+   "cost": 1,
+   "note": ""
+  },
+  "coulomb.E_mag_from_point_charge": {
+   "solvesFor": "em.electric_field_magnitude",
+   "producesState": null,
+   "scope": "pair",
+   "roles": {
+    "src": {
+     "via": "acts_on",
+     "kinds": [
+      "point_charge",
+      "charged_particle",
+      "electron",
+      "conducting_shell"
+     ]
+    },
+    "env": {
+     "via": null,
+     "kinds": [
+      "environment"
+     ]
+    }
+   },
+   "exprText": "k_e * Q / (eps_r * r**2)",
+   "ast": {
+    "k": "mul",
+    "a": [
+     {
+      "k": "sym",
+      "n": "Q"
+     },
+     {
+      "k": "sym",
+      "n": "k_e"
+     },
+     {
+      "k": "pow",
+      "b": {
+       "k": "sym",
+       "n": "eps_r"
+      },
+      "e": -1.0
+     },
+     {
+      "k": "pow",
+      "b": {
+       "k": "sym",
+       "n": "r"
+      },
+      "e": -2.0
+     }
+    ]
+   },
+   "bindings": {
+    "k_e": {
+     "prop": null,
+     "const": "k_e",
+     "from": "self",
+     "state": null
+    },
+    "Q": {
+     "prop": "em.charge_magnitude",
+     "const": null,
+     "from": "src",
+     "state": null
+    },
+    "r": {
+     "prop": "geometry.separation",
+     "const": null,
+     "from": "rel.src",
+     "state": null
+    },
+    "eps_r": {
+     "prop": "env.relative_permittivity",
+     "const": null,
+     "from": "env",
+     "state": null
+    }
+   },
+   "law": "coulombs_law",
+   "assumes": [
+    "point_source",
+    "vacuum",
+    "outside_any_conductor"
+   ],
+   "cite": "OpenStax College Physics 2e, 18.5 (CC BY)",
+   "cost": 1,
+   "note": "The inverse square is the whole claim. A 1/r**3 slip here is dimensionally detectable, which is why the compiler compares this expression's inferred dimension against the declared solves_for property before the formula is ever used."
+  },
+  "coulomb.V_from_point_charge": {
+   "solvesFor": "em.electric_potential",
+   "producesState": null,
+   "scope": "pair",
+   "roles": {
+    "src": {
+     "via": "acts_on",
+     "kinds": [
+      "point_charge",
+      "charged_particle",
+      "electron",
+      "conducting_shell"
+     ]
+    },
+    "env": {
+     "via": null,
+     "kinds": [
+      "environment"
+     ]
+    }
+   },
+   "exprText": "k_e * q / (eps_r * r)",
+   "ast": {
+    "k": "mul",
+    "a": [
+     {
+      "k": "sym",
+      "n": "k_e"
+     },
+     {
+      "k": "sym",
+      "n": "q"
+     },
+     {
+      "k": "pow",
+      "b": {
+       "k": "sym",
+       "n": "eps_r"
+      },
+      "e": -1.0
+     },
+     {
+      "k": "pow",
+      "b": {
+       "k": "sym",
+       "n": "r"
+      },
+      "e": -1.0
+     }
+    ]
+   },
+   "bindings": {
+    "k_e": {
+     "prop": null,
+     "const": "k_e",
+     "from": "self",
+     "state": null
+    },
+    "q": {
+     "prop": "em.charge",
+     "const": null,
+     "from": "src",
+     "state": null
+    },
+    "r": {
+     "prop": "geometry.separation",
+     "const": null,
+     "from": "rel.src",
+     "state": null
+    },
+    "eps_r": {
+     "prop": "env.relative_permittivity",
+     "const": null,
+     "from": "env",
+     "state": null
+    }
+   },
+   "law": "coulombs_law",
+   "assumes": [
+    "point_source",
+    "vacuum",
+    "zero_at_infinity"
+   ],
+   "cite": "OpenStax College Physics 2e, 19.3 (CC BY)",
+   "cost": 1,
+   "note": ""
+  },
+  "plates.E_mag_from_pd": {
+   "solvesFor": "em.electric_field_magnitude",
+   "producesState": null,
+   "scope": "self",
+   "roles": {},
+   "exprText": "V / d",
+   "ast": {
+    "k": "mul",
+    "a": [
+     {
+      "k": "sym",
+      "n": "V"
+     },
+     {
+      "k": "pow",
+      "b": {
+       "k": "sym",
+       "n": "d"
+      },
+      "e": -1.0
+     }
+    ]
+   },
+   "bindings": {
+    "V": {
+     "prop": "em.potential_difference",
+     "const": null,
+     "from": "self",
+     "state": null
+    },
+    "d": {
+     "prop": "geometry.separation_plates",
+     "const": null,
+     "from": "self",
+     "state": null
+    }
+   },
+   "law": "uniform_field_between_plates",
+   "assumes": [
+    "uniform_field",
+    "edge_effects_neglected"
+   ],
+   "cite": "OpenStax College Physics 2e, 19.4 (CC BY)",
+   "cost": 1,
+   "note": ""
+  },
+  "plates.E_mag_at_charge": {
+   "solvesFor": "em.electric_field_magnitude",
+   "producesState": null,
+   "scope": "pair",
+   "roles": {
+    "region": {
+     "via": "inside",
+     "kinds": [
+      "parallel_plate_capacitor",
+      "uniform_field_region",
+      "infinite_charged_plane"
+     ]
+    }
+   },
+   "exprText": "E",
+   "ast": {
+    "k": "sym",
+    "n": "E"
+   },
+   "bindings": {
+    "E": {
+     "prop": "em.electric_field_magnitude",
+     "const": null,
+     "from": "region",
+     "state": null
+    }
+   },
+   "law": "uniform_field_between_plates",
+   "assumes": [
+    "uniform_field"
+   ],
+   "cite": "OpenStax College Physics 2e, 19.4 (CC BY)",
+   "cost": 1,
+   "note": "In a uniform region the field at an enclosed object is the region's field. Trivial as algebra, essential as a link: it is what carries a field value across the `inside` relation."
+  },
+  "plane.E_mag_from_sigma": {
+   "solvesFor": "em.electric_field_magnitude",
+   "producesState": null,
+   "scope": "self",
+   "roles": {},
+   "exprText": "Abs(sigma) / (2 * epsilon_0)",
+   "ast": {
+    "k": "mul",
+    "a": [
+     {
+      "k": "num",
+      "v": 0.5
+     },
+     {
+      "k": "pow",
+      "b": {
+       "k": "sym",
+       "n": "epsilon_0"
+      },
+      "e": -1.0
+     },
+     {
+      "k": "fn",
+      "f": "abs",
+      "a": [
+       {
+        "k": "sym",
+        "n": "sigma"
+       }
+      ]
+     }
+    ]
+   },
+   "bindings": {
+    "sigma": {
+     "prop": "em.charge_density_surface",
+     "const": null,
+     "from": "self",
+     "state": null
+    },
+    "epsilon_0": {
+     "prop": null,
+     "const": "epsilon_0",
+     "from": "self",
+     "state": null
+    }
+   },
+   "law": "gauss_law_electric",
+   "assumes": [
+    "infinite_plane",
+    "vacuum"
+   ],
+   "cite": "OpenStax University Physics 2, 6.4 (CC BY)",
+   "cost": 1,
+   "note": ""
+  },
+  "line.E_mag_from_lambda": {
+   "solvesFor": "em.electric_field_magnitude",
+   "producesState": null,
+   "scope": "pair",
+   "roles": {
+    "src": {
+     "via": "acts_on",
+     "kinds": [
+      "infinite_charged_line"
+     ]
+    }
+   },
+   "exprText": "Abs(lam) / (2 * pi * epsilon_0 * r)",
+   "ast": {
+    "k": "mul",
+    "a": [
+     {
+      "k": "num",
+      "v": 0.5
+     },
+     {
+      "k": "num",
+      "v": 0.3183098861837907
+     },
+     {
+      "k": "pow",
+      "b": {
+       "k": "sym",
+       "n": "epsilon_0"
+      },
+      "e": -1.0
+     },
+     {
+      "k": "pow",
+      "b": {
+       "k": "sym",
+       "n": "r"
+      },
+      "e": -1.0
+     },
+     {
+      "k": "fn",
+      "f": "abs",
+      "a": [
+       {
+        "k": "sym",
+        "n": "lam"
+       }
+      ]
+     }
+    ]
+   },
+   "bindings": {
+    "lam": {
+     "prop": "em.charge_density_linear",
+     "const": null,
+     "from": "src",
+     "state": null
+    },
+    "r": {
+     "prop": "geometry.separation",
+     "const": null,
+     "from": "rel",
+     "state": null
+    },
+    "epsilon_0": {
+     "prop": null,
+     "const": "epsilon_0",
+     "from": "self",
+     "state": null
+    }
+   },
+   "law": "gauss_law_electric",
+   "assumes": [
+    "infinite_line",
+    "vacuum"
+   ],
+   "cite": "OpenStax University Physics 2, 6.4 (CC BY)",
+   "cost": 1,
+   "note": ""
+  },
+  "sphere.E_mag_outside": {
+   "solvesFor": "em.electric_field_magnitude",
+   "producesState": null,
+   "scope": "pair",
+   "roles": {
+    "src": {
+     "via": "acts_on",
+     "kinds": [
+      "uniform_charged_sphere"
+     ]
+    }
+   },
+   "exprText": "k_e * Q / r**2",
+   "ast": {
+    "k": "mul",
+    "a": [
+     {
+      "k": "sym",
+      "n": "Q"
+     },
+     {
+      "k": "sym",
+      "n": "k_e"
+     },
+     {
+      "k": "pow",
+      "b": {
+       "k": "sym",
+       "n": "r"
+      },
+      "e": -2.0
+     }
+    ]
+   },
+   "bindings": {
+    "k_e": {
+     "prop": null,
+     "const": "k_e",
+     "from": "self",
+     "state": null
+    },
+    "Q": {
+     "prop": "em.charge_magnitude",
+     "const": null,
+     "from": "src",
+     "state": null
+    },
+    "r": {
+     "prop": "geometry.separation",
+     "const": null,
+     "from": "rel",
+     "state": null
+    }
+   },
+   "law": "gauss_law_electric",
+   "assumes": [
+    "outside_sphere",
+    "spherical_symmetry",
+    "vacuum"
+   ],
+   "cite": "OpenStax University Physics 2, 6.4 (CC BY)",
+   "cost": 2,
+   "note": "Outside a spherically symmetric charge, the field is that of a point charge at its centre."
+  },
+  "sphere.charge_from_density": {
+   "solvesFor": "em.charge",
+   "producesState": null,
+   "scope": "self",
+   "roles": {},
+   "exprText": "rho * Vol",
+   "ast": {
+    "k": "mul",
+    "a": [
+     {
+      "k": "sym",
+      "n": "Vol"
+     },
+     {
+      "k": "sym",
+      "n": "rho"
+     }
+    ]
+   },
+   "bindings": {
+    "rho": {
+     "prop": "em.charge_density_volume",
+     "const": null,
+     "from": "self",
+     "state": null
+    },
+    "Vol": {
+     "prop": "geometry.volume",
+     "const": null,
+     "from": "self",
+     "state": null
+    }
+   },
+   "law": "gauss_law_electric",
+   "assumes": [
+    "uniform_density"
+   ],
+   "cite": "definitional",
+   "cost": 1,
+   "note": ""
+  },
+  "sphere.volume_from_radius": {
+   "solvesFor": "geometry.volume",
+   "producesState": null,
+   "scope": "self",
+   "roles": {},
+   "exprText": "4 * pi * R**3 / 3",
+   "ast": {
+    "k": "mul",
+    "a": [
+     {
+      "k": "num",
+      "v": 1.3333333333333333
+     },
+     {
+      "k": "num",
+      "v": 3.141592653589793
+     },
+     {
+      "k": "pow",
+      "b": {
+       "k": "sym",
+       "n": "R"
+      },
+      "e": 3.0
+     }
+    ]
+   },
+   "bindings": {
+    "R": {
+     "prop": "geometry.radius",
+     "const": null,
+     "from": "self",
+     "state": null
+    }
+   },
+   "law": null,
+   "assumes": [
+    "sphere"
+   ],
+   "cite": "geometry",
+   "cost": 1,
+   "note": ""
+  },
+  "cavity.E_vec_uniform": {
+   "solvesFor": "em.electric_field",
+   "producesState": null,
+   "scope": "self",
+   "roles": {},
+   "exprText": "rho * a / (3 * epsilon_0)",
+   "ast": {
+    "k": "mul",
+    "a": [
+     {
+      "k": "num",
+      "v": 0.3333333333333333
+     },
+     {
+      "k": "sym",
+      "n": "a"
+     },
+     {
+      "k": "sym",
+      "n": "rho"
+     },
+     {
+      "k": "pow",
+      "b": {
+       "k": "sym",
+       "n": "epsilon_0"
+      },
+      "e": -1.0
+     }
+    ]
+   },
+   "bindings": {
+    "rho": {
+     "prop": "em.charge_density_volume",
+     "const": null,
+     "from": "self",
+     "state": null
+    },
+    "a": {
+     "prop": "geometry.offset",
+     "const": null,
+     "from": "self",
+     "state": null
+    },
+    "epsilon_0": {
+     "prop": null,
+     "const": "epsilon_0",
+     "from": "self",
+     "state": null
+    }
+   },
+   "law": "superposition_electric",
+   "assumes": [
+    "uniform_density",
+    "spherical_cavity",
+    "cavity_entirely_inside",
+    "vacuum"
+   ],
+   "cite": "OpenStax University Physics 2, 6.4 + superposition (CC BY)",
+   "cost": 1,
+   "note": "The cavity field. Treat the holed sphere as a full sphere of density rho plus a sphere of density -rho filling the cavity. Inside a uniform sphere E = rho*r/(3*eps0) measured from its own centre, so the two contributions leave exactly rho*a/(3*eps0) along the offset a -- independent of position. Uniform field inside the hole, hence exact projectile motion for a charge released there. This is the case the market has no simulation for."
+  },
+  "cavity.E_vec_at_particle": {
+   "solvesFor": "em.electric_field",
+   "producesState": null,
+   "scope": "pair",
+   "roles": {
+    "host": {
+     "via": "inside_cavity_of",
+     "kinds": [
+      "spherical_cavity_in_charged_sphere"
+     ]
+    }
+   },
+   "exprText": "E",
+   "ast": {
+    "k": "sym",
+    "n": "E"
+   },
+   "bindings": {
+    "E": {
+     "prop": "em.electric_field",
+     "const": null,
+     "from": "host",
+     "state": null
+    }
+   },
+   "law": "superposition_electric",
+   "assumes": [
+    "cavity_entirely_inside"
+   ],
+   "cite": "OpenStax University Physics 2, 6.4 (CC BY)",
+   "cost": 1,
+   "note": ""
+  },
+  "shield.E_mag_inside_conductor_cavity": {
+   "solvesFor": "em.electric_field_magnitude",
+   "producesState": null,
+   "scope": "pair",
+   "roles": {
+    "host": {
+     "via": "inside_cavity_of",
+     "kinds": [
+      "conducting_shell"
+     ]
+    }
+   },
+   "exprText": "0",
+   "ast": {
+    "k": "num",
+    "v": 0.0
+   },
+   "bindings": {},
+   "law": "shielding_conductor_cavity",
+   "assumes": [
+    "electrostatic_equilibrium",
+    "no_charge_in_cavity"
+   ],
+   "cite": "OpenStax University Physics 2, 6.5 (CC BY)",
+   "cost": 1,
+   "note": "Exactly zero, whatever the shell carries and whatever surrounds it. The formula needs no inputs at all: its entire precondition is the `inside_cavity_of` relation to a conductor, which scope/via/role_kinds already state. A literal zero is dimensionally polymorphic -- the zero element belongs to every dimension space -- so the dimension checker admits it against a V/m target without weakening anything else."
+  },
+  "field.E_vec_from_magnitude_and_direction": {
+   "solvesFor": "em.electric_field",
+   "producesState": null,
+   "scope": "self",
+   "roles": {},
+   "exprText": "E * n",
+   "ast": {
+    "k": "mul",
+    "a": [
+     {
+      "k": "sym",
+      "n": "E"
+     },
+     {
+      "k": "sym",
+      "n": "n"
+     }
+    ]
+   },
+   "bindings": {
+    "E": {
+     "prop": "em.electric_field_magnitude",
+     "const": null,
+     "from": "self",
+     "state": null
+    },
+    "n": {
+     "prop": "geometry.direction",
+     "const": null,
+     "from": "self",
+     "state": null
+    }
+   },
+   "law": "uniform_field_between_plates",
+   "assumes": [
+    "uniform_field"
+   ],
+   "cite": "OpenStax College Physics 2e, 19.4 (CC BY)",
+   "cost": 1,
+   "note": "A magnitude plus a direction is a vector. Trivial, but it is what reconnects the scalar plate-field chain to the vector force chain, and the renderer samples the result to draw field arrows."
+  },
+  "plates.E_vec_at_charge": {
+   "solvesFor": "em.electric_field",
+   "producesState": null,
+   "scope": "pair",
+   "roles": {
+    "region": {
+     "via": "inside",
+     "kinds": [
+      "parallel_plate_capacitor",
+      "uniform_field_region"
+     ]
+    }
+   },
+   "exprText": "E",
+   "ast": {
+    "k": "sym",
+    "n": "E"
+   },
+   "bindings": {
+    "E": {
+     "prop": "em.electric_field",
+     "const": null,
+     "from": "region",
+     "state": null
+    }
+   },
+   "law": "uniform_field_between_plates",
+   "assumes": [
+    "uniform_field"
+   ],
+   "cite": "OpenStax College Physics 2e, 19.4 (CC BY)",
+   "cost": 1,
+   "note": ""
+  },
+  "field.E_mag_from_vector": {
+   "solvesFor": "em.electric_field_magnitude",
+   "producesState": null,
+   "scope": "self",
+   "roles": {},
+   "exprText": "mag(E)",
+   "ast": {
+    "k": "fn",
+    "f": "mag",
+    "a": [
+     {
+      "k": "sym",
+      "n": "E"
+     }
+    ]
+   },
+   "bindings": {
+    "E": {
+     "prop": "em.electric_field",
+     "const": null,
+     "from": "self",
+     "state": null
+    }
+   },
+   "law": "definition_magnitude",
+   "assumes": [],
+   "cite": "definitional",
+   "cost": 1,
+   "note": ""
+  },
+  "field.B_mag_from_vector": {
+   "solvesFor": "em.magnetic_field_magnitude",
+   "producesState": null,
+   "scope": "self",
+   "roles": {},
+   "exprText": "mag(B)",
+   "ast": {
+    "k": "fn",
+    "f": "mag",
+    "a": [
+     {
+      "k": "sym",
+      "n": "B"
+     }
+    ]
+   },
+   "bindings": {
+    "B": {
+     "prop": "em.magnetic_field",
+     "const": null,
+     "from": "self",
+     "state": null
+    }
+   },
+   "law": "definition_magnitude",
+   "assumes": [],
+   "cite": "definitional",
+   "cost": 1,
+   "note": ""
+  },
+  "charge.magnitude_from_signed": {
+   "solvesFor": "em.charge_magnitude",
+   "producesState": null,
+   "scope": "self",
+   "roles": {},
+   "exprText": "Abs(q)",
+   "ast": {
+    "k": "fn",
+    "f": "abs",
+    "a": [
+     {
+      "k": "sym",
+      "n": "q"
+     }
+    ]
+   },
+   "bindings": {
+    "q": {
+     "prop": "em.charge",
+     "const": null,
+     "from": "self",
+     "state": null
+    }
+   },
+   "law": "definition_magnitude",
+   "assumes": [],
+   "cite": "definitional",
+   "cost": 1,
+   "note": ""
+  },
+  "field.B_mag_at_particle": {
+   "solvesFor": "em.magnetic_field_magnitude",
+   "producesState": null,
+   "scope": "pair",
+   "roles": {
+    "region": {
+     "via": "inside",
+     "kinds": [
+      "uniform_magnetic_field_region"
+     ]
+    }
+   },
+   "exprText": "B",
+   "ast": {
+    "k": "sym",
+    "n": "B"
+   },
+   "bindings": {
+    "B": {
+     "prop": "em.magnetic_field_magnitude",
+     "const": null,
+     "from": "region",
+     "state": null
+    }
+   },
+   "law": "circular_motion_magnetic",
+   "assumes": [
+    "uniform_field"
+   ],
+   "cite": "OpenStax University Physics 2, 11.3 (CC BY)",
+   "cost": 1,
+   "note": ""
+  },
+  "lorentz.F_vec_electric": {
+   "solvesFor": "mechanics.force_em",
+   "producesState": null,
+   "scope": "self",
+   "roles": {},
+   "exprText": "q * E",
+   "ast": {
+    "k": "mul",
+    "a": [
+     {
+      "k": "sym",
+      "n": "E"
+     },
+     {
+      "k": "sym",
+      "n": "q"
+     }
+    ]
+   },
+   "bindings": {
+    "q": {
+     "prop": "em.charge",
+     "const": null,
+     "from": "self",
+     "state": null
+    },
+    "E": {
+     "prop": "em.electric_field",
+     "const": null,
+     "from": "self",
+     "state": null
+    }
+   },
+   "law": "lorentz_force",
+   "assumes": [
+    "negligible_magnetic_force"
+   ],
+   "cite": "OpenStax College Physics 2e, 18.5 (CC BY)",
+   "cost": 1,
+   "note": "The link that makes the whole project cross-domain. `q` is electromagnetic, the result is mechanical, and the formula knows about neither domain -- only about property keys."
+  },
+  "lorentz.F_vec_magnetic": {
+   "solvesFor": "mechanics.force_em",
+   "producesState": null,
+   "scope": "self",
+   "roles": {},
+   "exprText": "q * cross(v, B)",
+   "ast": {
+    "k": "mul",
+    "a": [
+     {
+      "k": "sym",
+      "n": "q"
+     },
+     {
+      "k": "fn",
+      "f": "cross",
+      "a": [
+       {
+        "k": "sym",
+        "n": "v"
+       },
+       {
+        "k": "sym",
+        "n": "B"
+       }
+      ]
+     }
+    ]
+   },
+   "bindings": {
+    "q": {
+     "prop": "em.charge",
+     "const": null,
+     "from": "self",
+     "state": null
+    },
+    "v": {
+     "prop": "kinematics.velocity",
+     "const": null,
+     "from": "self",
+     "state": null
+    },
+    "B": {
+     "prop": "em.magnetic_field",
+     "const": null,
+     "from": "self",
+     "state": null
+    }
+   },
+   "law": "lorentz_force",
+   "assumes": [
+    "no_electric_field"
+   ],
+   "cite": "OpenStax University Physics 2, 11.2 (CC BY)",
+   "cost": 2,
+   "note": ""
+  },
+  "gravity.F_vec_from_env": {
+   "solvesFor": "mechanics.force_gravity",
+   "producesState": null,
+   "scope": "pair",
+   "roles": {
+    "env": {
+     "via": null,
+     "kinds": [
+      "environment"
+     ]
+    }
+   },
+   "exprText": "m * g",
+   "ast": {
+    "k": "mul",
+    "a": [
+     {
+      "k": "sym",
+      "n": "g"
+     },
+     {
+      "k": "sym",
+      "n": "m"
+     }
+    ]
+   },
+   "bindings": {
+    "m": {
+     "prop": "mechanics.mass",
+     "const": null,
+     "from": "self",
+     "state": null
+    },
+    "g": {
+     "prop": "env.gravity",
+     "const": null,
+     "from": "env",
+     "state": null
+    }
+   },
+   "law": "newton_gravitation_uniform",
+   "assumes": [
+    "uniform_field"
+   ],
+   "cite": "OpenStax College Physics 2e, 4.5 (CC BY)",
+   "cost": 1,
+   "note": "Binds the scene's environment rather than a constant, so the weight a body feels is whatever the user has set gravity to. With the default [0,0,0] this is exactly zero, which is the idealisation textbook electrostatics problems assume."
+  },
+  "drag.F_vec_from_env": {
+   "solvesFor": "mechanics.force_drag",
+   "producesState": null,
+   "scope": "pair",
+   "roles": {
+    "env": {
+     "via": null,
+     "kinds": [
+      "environment"
+     ]
+    }
+   },
+   "exprText": "-0.5 * rho * Cd * A * mag(v - v_wind) * (v - v_wind)",
+   "ast": {
+    "k": "mul",
+    "a": [
+     {
+      "k": "num",
+      "v": -0.5
+     },
+     {
+      "k": "sym",
+      "n": "A"
+     },
+     {
+      "k": "sym",
+      "n": "Cd"
+     },
+     {
+      "k": "sym",
+      "n": "rho"
+     },
+     {
+      "k": "add",
+      "a": [
+       {
+        "k": "sym",
+        "n": "v"
+       },
+       {
+        "k": "mul",
+        "a": [
+         {
+          "k": "num",
+          "v": -1.0
+         },
+         {
+          "k": "sym",
+          "n": "v_wind"
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "k": "fn",
+      "f": "mag",
+      "a": [
+       {
+        "k": "add",
+        "a": [
+         {
+          "k": "sym",
+          "n": "v"
+         },
+         {
+          "k": "mul",
+          "a": [
+           {
+            "k": "num",
+            "v": -1.0
+           },
+           {
+            "k": "sym",
+            "n": "v_wind"
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   "bindings": {
+    "rho": {
+     "prop": "env.air_density",
+     "const": null,
+     "from": "env",
+     "state": null
+    },
+    "v_wind": {
+     "prop": "env.wind_velocity",
+     "const": null,
+     "from": "env",
+     "state": null
+    },
+    "Cd": {
+     "prop": "mechanics.drag_coefficient",
+     "const": null,
+     "from": "self",
+     "state": null
+    },
+    "A": {
+     "prop": "geometry.cross_section",
+     "const": null,
+     "from": "self",
+     "state": null
+    },
+    "v": {
+     "prop": "kinematics.velocity",
+     "const": null,
+     "from": "self",
+     "state": null
+    }
+   },
+   "law": "quadratic_drag",
+   "assumes": [
+    "rigid_body",
+    "subsonic",
+    "no_lift"
+   ],
+   "cite": "OpenStax College Physics 2e, 5.2 (CC BY)",
+   "cost": 1,
+   "note": "Wind acts only through the RELATIVE velocity v - v_wind, so a body drifting with the wind feels nothing. Both air density and cross-section default to zero, which makes drag opt-in: every existing problem gets exactly zero without having to say so."
+  },
+  "force.net_from_contributions": {
+   "solvesFor": "mechanics.force",
+   "producesState": null,
+   "scope": "self",
+   "roles": {},
+   "exprText": "F_em + F_g",
+   "ast": {
+    "k": "add",
+    "a": [
+     {
+      "k": "sym",
+      "n": "F_em"
+     },
+     {
+      "k": "sym",
+      "n": "F_g"
+     }
+    ]
+   },
+   "bindings": {
+    "F_em": {
+     "prop": "mechanics.force_em",
+     "const": null,
+     "from": "self",
+     "state": null
+    },
+    "F_g": {
+     "prop": "mechanics.force_gravity",
+     "const": null,
+     "from": "self",
+     "state": null
+    }
+   },
+   "law": "superposition_of_forces",
+   "assumes": [
+    "no_other_forces",
+    "negligible_drag"
+   ],
+   "cite": "OpenStax College Physics 2e, 4.6 (CC BY)",
+   "cost": 1,
+   "note": "Superposition as an actual sum. Separating the electric and gravitational contributions is what keeps this ONE derivation instead of two rival paths that would disagree the moment gravity stopped being zero.\nDrag is deliberately NOT in this sum. It only exists when the scene states a velocity, an area and a medium density, and a chain resolver cannot express \"include this term only if it resolves\" -- an optional contribution would either manufacture a phantom zero path or make two net formulas disagree. `mechanics.force_drag` is therefore derivable on its own and visualised on its own, and folding it in is work for the equation assembler (Engine B), where contributions are collected rather than chained. Honest limitation, recorded here rather than papered over."
+  },
+  "force.magnitude_from_vector": {
+   "solvesFor": "mechanics.force_magnitude",
+   "producesState": null,
+   "scope": "self",
+   "roles": {},
+   "exprText": "mag(F)",
+   "ast": {
+    "k": "fn",
+    "f": "mag",
+    "a": [
+     {
+      "k": "sym",
+      "n": "F"
+     }
+    ]
+   },
+   "bindings": {
+    "F": {
+     "prop": "mechanics.force",
+     "const": null,
+     "from": "self",
+     "state": null
+    }
+   },
+   "law": "definition_magnitude",
+   "assumes": [],
+   "cite": "definitional",
+   "cost": 1,
+   "note": ""
+  },
+  "newton.a_vec_from_F": {
+   "solvesFor": "kinematics.acceleration",
+   "producesState": null,
+   "scope": "self",
+   "roles": {},
+   "exprText": "F / m",
+   "ast": {
+    "k": "mul",
+    "a": [
+     {
+      "k": "sym",
+      "n": "F"
+     },
+     {
+      "k": "pow",
+      "b": {
+       "k": "sym",
+       "n": "m"
+      },
+      "e": -1.0
+     }
+    ]
+   },
+   "bindings": {
+    "F": {
+     "prop": "mechanics.force",
+     "const": null,
+     "from": "self",
+     "state": null
+    },
+    "m": {
+     "prop": "mechanics.mass",
+     "const": null,
+     "from": "self",
+     "state": null
+    }
+   },
+   "law": "newton_second_law",
+   "assumes": [
+    "constant_mass",
+    "non_relativistic"
+   ],
+   "cite": "OpenStax College Physics 2e, 4.3 (CC BY)",
+   "cost": 1,
+   "note": ""
+  },
+  "newton.a_mag_from_F": {
+   "solvesFor": "kinematics.acceleration_magnitude",
+   "producesState": null,
+   "scope": "self",
+   "roles": {},
+   "exprText": "F / m",
+   "ast": {
+    "k": "mul",
+    "a": [
+     {
+      "k": "sym",
+      "n": "F"
+     },
+     {
+      "k": "pow",
+      "b": {
+       "k": "sym",
+       "n": "m"
+      },
+      "e": -1.0
+     }
+    ]
+   },
+   "bindings": {
+    "F": {
+     "prop": "mechanics.force_magnitude",
+     "const": null,
+     "from": "self",
+     "state": null
+    },
+    "m": {
+     "prop": "mechanics.mass",
+     "const": null,
+     "from": "self",
+     "state": null
+    }
+   },
+   "law": "newton_second_law",
+   "assumes": [
+    "constant_mass",
+    "non_relativistic"
+   ],
+   "cite": "OpenStax College Physics 2e, 4.3 (CC BY)",
+   "cost": 1,
+   "note": ""
+  },
+  "accel.magnitude_from_vector": {
+   "solvesFor": "kinematics.acceleration_magnitude",
+   "producesState": null,
+   "scope": "self",
+   "roles": {},
+   "exprText": "mag(a)",
+   "ast": {
+    "k": "fn",
+    "f": "mag",
+    "a": [
+     {
+      "k": "sym",
+      "n": "a"
+     }
+    ]
+   },
+   "bindings": {
+    "a": {
+     "prop": "kinematics.acceleration",
+     "const": null,
+     "from": "self",
+     "state": null
+    }
+   },
+   "law": "definition_magnitude",
+   "assumes": [],
+   "cite": "definitional",
+   "cost": 1,
+   "note": ""
+  },
+  "kin.v_final_from_u_a_t": {
+   "solvesFor": "kinematics.speed",
+   "producesState": "final",
+   "scope": "self",
+   "roles": {},
+   "exprText": "u + a * t",
+   "ast": {
+    "k": "add",
+    "a": [
+     {
+      "k": "sym",
+      "n": "u"
+     },
+     {
+      "k": "mul",
+      "a": [
+       {
+        "k": "sym",
+        "n": "a"
+       },
+       {
+        "k": "sym",
+        "n": "t"
+       }
+      ]
+     }
+    ]
+   },
+   "bindings": {
+    "u": {
+     "prop": "kinematics.speed",
+     "const": null,
+     "from": "self",
+     "state": "initial"
+    },
+    "a": {
+     "prop": "kinematics.acceleration_magnitude",
+     "const": null,
+     "from": "self",
+     "state": null
+    },
+    "t": {
+     "prop": "kinematics.time",
+     "const": null,
+     "from": "self",
+     "state": null
+    }
+   },
+   "law": "kinematics_constant_acceleration",
+   "assumes": [
+    "constant_acceleration",
+    "straight_line"
+   ],
+   "cite": "OpenStax College Physics 2e, 2.5 (CC BY)",
+   "cost": 1,
+   "note": ""
+  },
+  "kin.v_final_from_u_a_s": {
+   "solvesFor": "kinematics.speed",
+   "producesState": "final",
+   "scope": "self",
+   "roles": {},
+   "exprText": "sqrt(u**2 + 2 * a * s)",
+   "ast": {
+    "k": "pow",
+    "b": {
+     "k": "add",
+     "a": [
+      {
+       "k": "pow",
+       "b": {
+        "k": "sym",
+        "n": "u"
+       },
+       "e": 2.0
+      },
+      {
+       "k": "mul",
+       "a": [
+        {
+         "k": "num",
+         "v": 2.0
+        },
+        {
+         "k": "sym",
+         "n": "a"
+        },
+        {
+         "k": "sym",
+         "n": "s"
+        }
+       ]
+      }
+     ]
+    },
+    "e": 0.5
+   },
+   "bindings": {
+    "u": {
+     "prop": "kinematics.speed",
+     "const": null,
+     "from": "self",
+     "state": "initial"
+    },
+    "a": {
+     "prop": "kinematics.acceleration_magnitude",
+     "const": null,
+     "from": "self",
+     "state": null
+    },
+    "s": {
+     "prop": "kinematics.distance",
+     "const": null,
+     "from": "self",
+     "state": null
+    }
+   },
+   "law": "kinematics_constant_acceleration",
+   "assumes": [
+    "constant_acceleration",
+    "straight_line"
+   ],
+   "cite": "OpenStax College Physics 2e, 2.5 (CC BY)",
+   "cost": 1,
+   "note": "The time-free form. Where the energy route is also available this gives a second, genuinely different derivation of the same answer -- a real alternative path, not an algebraic rearrangement, because it cites kinematics where the other cites energy conservation."
+  },
+  "kin.s_from_u_a_t": {
+   "solvesFor": "kinematics.distance",
+   "producesState": null,
+   "scope": "self",
+   "roles": {},
+   "exprText": "u * t + a * t**2 / 2",
+   "ast": {
+    "k": "add",
+    "a": [
+     {
+      "k": "mul",
+      "a": [
+       {
+        "k": "sym",
+        "n": "t"
+       },
+       {
+        "k": "sym",
+        "n": "u"
+       }
+      ]
+     },
+     {
+      "k": "mul",
+      "a": [
+       {
+        "k": "num",
+        "v": 0.5
+       },
+       {
+        "k": "sym",
+        "n": "a"
+       },
+       {
+        "k": "pow",
+        "b": {
+         "k": "sym",
+         "n": "t"
+        },
+        "e": 2.0
+       }
+      ]
+     }
+    ]
+   },
+   "bindings": {
+    "u": {
+     "prop": "kinematics.speed",
+     "const": null,
+     "from": "self",
+     "state": "initial"
+    },
+    "a": {
+     "prop": "kinematics.acceleration_magnitude",
+     "const": null,
+     "from": "self",
+     "state": null
+    },
+    "t": {
+     "prop": "kinematics.time",
+     "const": null,
+     "from": "self",
+     "state": null
+    }
+   },
+   "law": "kinematics_constant_acceleration",
+   "assumes": [
+    "constant_acceleration",
+    "straight_line"
+   ],
+   "cite": "OpenStax College Physics 2e, 2.5 (CC BY)",
+   "cost": 1,
+   "note": ""
+  },
+  "kin.t_from_u_v_a": {
+   "solvesFor": "kinematics.time",
+   "producesState": null,
+   "scope": "self",
+   "roles": {},
+   "exprText": "(v - u) / a",
+   "ast": {
+    "k": "mul",
+    "a": [
+     {
+      "k": "pow",
+      "b": {
+       "k": "sym",
+       "n": "a"
+      },
+      "e": -1.0
+     },
+     {
+      "k": "add",
+      "a": [
+       {
+        "k": "sym",
+        "n": "v"
+       },
+       {
+        "k": "mul",
+        "a": [
+         {
+          "k": "num",
+          "v": -1.0
+         },
+         {
+          "k": "sym",
+          "n": "u"
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   "bindings": {
+    "u": {
+     "prop": "kinematics.speed",
+     "const": null,
+     "from": "self",
+     "state": "initial"
+    },
+    "v": {
+     "prop": "kinematics.speed",
+     "const": null,
+     "from": "self",
+     "state": "final"
+    },
+    "a": {
+     "prop": "kinematics.acceleration_magnitude",
+     "const": null,
+     "from": "self",
+     "state": null
+    }
+   },
+   "law": "kinematics_constant_acceleration",
+   "assumes": [
+    "constant_acceleration",
+    "straight_line"
+   ],
+   "cite": "OpenStax College Physics 2e, 2.5 (CC BY)",
+   "cost": 1,
+   "note": ""
+  },
+  "kin.t_from_s_a_rest": {
+   "solvesFor": "kinematics.time",
+   "producesState": null,
+   "scope": "self",
+   "roles": {},
+   "exprText": "sqrt(2 * s / a)",
+   "ast": {
+    "k": "mul",
+    "a": [
+     {
+      "k": "num",
+      "v": 1.4142135623730951
+     },
+     {
+      "k": "pow",
+      "b": {
+       "k": "mul",
+       "a": [
+        {
+         "k": "sym",
+         "n": "s"
+        },
+        {
+         "k": "pow",
+         "b": {
+          "k": "sym",
+          "n": "a"
+         },
+         "e": -1.0
+        }
+       ]
+      },
+      "e": 0.5
+     }
+    ]
+   },
+   "bindings": {
+    "s": {
+     "prop": "kinematics.distance",
+     "const": null,
+     "from": "self",
+     "state": null
+    },
+    "a": {
+     "prop": "kinematics.acceleration_magnitude",
+     "const": null,
+     "from": "self",
+     "state": null
+    }
+   },
+   "law": "kinematics_constant_acceleration",
+   "assumes": [
+    "constant_acceleration",
+    "straight_line",
+    "starts_from_rest"
+   ],
+   "cite": "OpenStax College Physics 2e, 2.5 (CC BY)",
+   "cost": 2,
+   "note": ""
+  },
+  "kin.speed_from_velocity": {
+   "solvesFor": "kinematics.speed",
+   "producesState": null,
+   "scope": "self",
+   "roles": {},
+   "exprText": "mag(v)",
+   "ast": {
+    "k": "fn",
+    "f": "mag",
+    "a": [
+     {
+      "k": "sym",
+      "n": "v"
+     }
+    ]
+   },
+   "bindings": {
+    "v": {
+     "prop": "kinematics.velocity",
+     "const": null,
+     "from": "self",
+     "state": "same"
+    }
+   },
+   "law": "definition_magnitude",
+   "assumes": [],
+   "cite": "definitional",
+   "cost": 1,
+   "note": ""
+  },
+  "kin.distance_from_displacement": {
+   "solvesFor": "kinematics.distance",
+   "producesState": null,
+   "scope": "self",
+   "roles": {},
+   "exprText": "mag(s)",
+   "ast": {
+    "k": "fn",
+    "f": "mag",
+    "a": [
+     {
+      "k": "sym",
+      "n": "s"
+     }
+    ]
+   },
+   "bindings": {
+    "s": {
+     "prop": "kinematics.displacement",
+     "const": null,
+     "from": "self",
+     "state": null
+    }
+   },
+   "law": "definition_magnitude",
+   "assumes": [],
+   "cite": "definitional",
+   "cost": 1,
+   "note": ""
+  },
+  "kin.distance_across_plates": {
+   "solvesFor": "kinematics.distance",
+   "producesState": null,
+   "scope": "pair",
+   "roles": {
+    "region": {
+     "via": "inside",
+     "kinds": [
+      "parallel_plate_capacitor"
+     ]
+    }
+   },
+   "exprText": "d",
+   "ast": {
+    "k": "sym",
+    "n": "d"
+   },
+   "bindings": {
+    "d": {
+     "prop": "geometry.separation_plates",
+     "const": null,
+     "from": "region",
+     "state": null
+    }
+   },
+   "law": "kinematics_constant_acceleration",
+   "assumes": [
+    "full_traverse",
+    "released_at_one_plate"
+   ],
+   "cite": "geometry of the problem",
+   "cost": 2,
+   "note": "A charge released at one plate and arriving at the other has travelled the gap. Geometry rather than physics, but it has to be a cited step or the kinematics route to final speed would contain an unexplained number."
+  },
+  "kin.displacement_from_u_a_t": {
+   "solvesFor": "kinematics.displacement",
+   "producesState": null,
+   "scope": "self",
+   "roles": {},
+   "exprText": "u * t + a * t**2 / 2",
+   "ast": {
+    "k": "add",
+    "a": [
+     {
+      "k": "mul",
+      "a": [
+       {
+        "k": "sym",
+        "n": "t"
+       },
+       {
+        "k": "sym",
+        "n": "u"
+       }
+      ]
+     },
+     {
+      "k": "mul",
+      "a": [
+       {
+        "k": "num",
+        "v": 0.5
+       },
+       {
+        "k": "sym",
+        "n": "a"
+       },
+       {
+        "k": "pow",
+        "b": {
+         "k": "sym",
+         "n": "t"
+        },
+        "e": 2.0
+       }
+      ]
+     }
+    ]
+   },
+   "bindings": {
+    "u": {
+     "prop": "kinematics.velocity",
+     "const": null,
+     "from": "self",
+     "state": "initial"
+    },
+    "a": {
+     "prop": "kinematics.acceleration",
+     "const": null,
+     "from": "self",
+     "state": null
+    },
+    "t": {
+     "prop": "kinematics.time",
+     "const": null,
+     "from": "self",
+     "state": null
+    }
+   },
+   "law": "kinematics_constant_acceleration",
+   "assumes": [
+    "constant_acceleration"
+   ],
+   "cite": "OpenStax College Physics 2e, 2.5 (CC BY)",
+   "cost": 1,
+   "note": "The vector form -- this is what the renderer samples to draw a curved trajectory."
+  },
+  "kin.velocity_final_from_u_a_t": {
+   "solvesFor": "kinematics.velocity",
+   "producesState": "final",
+   "scope": "self",
+   "roles": {},
+   "exprText": "u + a * t",
+   "ast": {
+    "k": "add",
+    "a": [
+     {
+      "k": "sym",
+      "n": "u"
+     },
+     {
+      "k": "mul",
+      "a": [
+       {
+        "k": "sym",
+        "n": "a"
+       },
+       {
+        "k": "sym",
+        "n": "t"
+       }
+      ]
+     }
+    ]
+   },
+   "bindings": {
+    "u": {
+     "prop": "kinematics.velocity",
+     "const": null,
+     "from": "self",
+     "state": "initial"
+    },
+    "a": {
+     "prop": "kinematics.acceleration",
+     "const": null,
+     "from": "self",
+     "state": null
+    },
+    "t": {
+     "prop": "kinematics.time",
+     "const": null,
+     "from": "self",
+     "state": null
+    }
+   },
+   "law": "kinematics_constant_acceleration",
+   "assumes": [
+    "constant_acceleration"
+   ],
+   "cite": "OpenStax College Physics 2e, 2.5 (CC BY)",
+   "cost": 1,
+   "note": ""
+  },
+  "energy.K_from_m_v": {
+   "solvesFor": "energy.kinetic",
+   "producesState": null,
+   "scope": "self",
+   "roles": {},
+   "exprText": "m * v**2 / 2",
+   "ast": {
+    "k": "mul",
+    "a": [
+     {
+      "k": "num",
+      "v": 0.5
+     },
+     {
+      "k": "sym",
+      "n": "m"
+     },
+     {
+      "k": "pow",
+      "b": {
+       "k": "sym",
+       "n": "v"
+      },
+      "e": 2.0
+     }
+    ]
+   },
+   "bindings": {
+    "m": {
+     "prop": "mechanics.mass",
+     "const": null,
+     "from": "self",
+     "state": null
+    },
+    "v": {
+     "prop": "kinematics.speed",
+     "const": null,
+     "from": "self",
+     "state": "same"
+    }
+   },
+   "law": "work_energy_theorem",
+   "assumes": [
+    "non_relativistic"
+   ],
+   "cite": "OpenStax College Physics 2e, 7.2 (CC BY)",
+   "cost": 1,
+   "note": ""
+  },
+  "energy.v_from_K_m": {
+   "solvesFor": "kinematics.speed",
+   "producesState": "final",
+   "scope": "self",
+   "roles": {},
+   "exprText": "sqrt(2 * K / m)",
+   "ast": {
+    "k": "mul",
+    "a": [
+     {
+      "k": "num",
+      "v": 1.4142135623730951
+     },
+     {
+      "k": "pow",
+      "b": {
+       "k": "mul",
+       "a": [
+        {
+         "k": "sym",
+         "n": "K"
+        },
+        {
+         "k": "pow",
+         "b": {
+          "k": "sym",
+          "n": "m"
+         },
+         "e": -1.0
+        }
+       ]
+      },
+      "e": 0.5
+     }
+    ]
+   },
+   "bindings": {
+    "K": {
+     "prop": "energy.kinetic",
+     "const": null,
+     "from": "self",
+     "state": null
+    },
+    "m": {
+     "prop": "mechanics.mass",
+     "const": null,
+     "from": "self",
+     "state": null
+    }
+   },
+   "law": "work_energy_theorem",
+   "assumes": [
+    "non_relativistic"
+   ],
+   "cite": "OpenStax College Physics 2e, 7.2 (CC BY)",
+   "cost": 1,
+   "note": ""
+  },
+  "energy.K_from_work_at_rest": {
+   "solvesFor": "energy.kinetic",
+   "producesState": null,
+   "scope": "self",
+   "roles": {},
+   "exprText": "W",
+   "ast": {
+    "k": "sym",
+    "n": "W"
+   },
+   "bindings": {
+    "W": {
+     "prop": "mechanics.work",
+     "const": null,
+     "from": "self",
+     "state": null
+    }
+   },
+   "law": "work_energy_theorem",
+   "assumes": [
+    "starts_from_rest",
+    "no_other_forces"
+   ],
+   "cite": "OpenStax College Physics 2e, 7.2 (CC BY)",
+   "cost": 1,
+   "note": ""
+  },
+  "energy.work_from_q_pd": {
+   "solvesFor": "mechanics.work",
+   "producesState": null,
+   "scope": "pair",
+   "roles": {
+    "region": {
+     "via": "inside",
+     "kinds": [
+      "parallel_plate_capacitor",
+      "uniform_field_region"
+     ]
+    }
+   },
+   "exprText": "Q * V",
+   "ast": {
+    "k": "mul",
+    "a": [
+     {
+      "k": "sym",
+      "n": "Q"
+     },
+     {
+      "k": "sym",
+      "n": "V"
+     }
+    ]
+   },
+   "bindings": {
+    "Q": {
+     "prop": "em.charge_magnitude",
+     "const": null,
+     "from": "self",
+     "state": null
+    },
+    "V": {
+     "prop": "em.potential_difference",
+     "const": null,
+     "from": "region",
+     "state": null
+    }
+   },
+   "law": "electric_potential_definition",
+   "assumes": [
+    "full_traverse",
+    "no_other_forces"
+   ],
+   "cite": "OpenStax College Physics 2e, 19.1 (CC BY)",
+   "cost": 1,
+   "note": "Work done on a charge crossing the full gap. Pairs with energy.K_from_work_at_rest and energy.v_from_K_m to give the energy route to final speed -- the alternative to the kinematics route, citing a different law."
+  },
+  "energy.U_from_q_V": {
+   "solvesFor": "energy.potential_electric",
+   "producesState": null,
+   "scope": "self",
+   "roles": {},
+   "exprText": "q * V",
+   "ast": {
+    "k": "mul",
+    "a": [
+     {
+      "k": "sym",
+      "n": "V"
+     },
+     {
+      "k": "sym",
+      "n": "q"
+     }
+    ]
+   },
+   "bindings": {
+    "q": {
+     "prop": "em.charge",
+     "const": null,
+     "from": "self",
+     "state": null
+    },
+    "V": {
+     "prop": "em.electric_potential",
+     "const": null,
+     "from": "self",
+     "state": null
+    }
+   },
+   "law": "electric_potential_definition",
+   "assumes": [
+    "zero_at_infinity"
+   ],
+   "cite": "OpenStax College Physics 2e, 19.1 (CC BY)",
+   "cost": 1,
+   "note": ""
+  },
+  "energy.work_from_force_distance": {
+   "solvesFor": "mechanics.work",
+   "producesState": null,
+   "scope": "self",
+   "roles": {},
+   "exprText": "F * d",
+   "ast": {
+    "k": "mul",
+    "a": [
+     {
+      "k": "sym",
+      "n": "F"
+     },
+     {
+      "k": "sym",
+      "n": "d"
+     }
+    ]
+   },
+   "bindings": {
+    "F": {
+     "prop": "mechanics.force_magnitude",
+     "const": null,
+     "from": "self",
+     "state": null
+    },
+    "d": {
+     "prop": "kinematics.distance",
+     "const": null,
+     "from": "self",
+     "state": null
+    }
+   },
+   "law": "work_energy_theorem",
+   "assumes": [
+    "constant_force",
+    "force_along_displacement"
+   ],
+   "cite": "OpenStax College Physics 2e, 7.1 (CC BY)",
+   "cost": 2,
+   "note": ""
+  },
+  "momentum.p_from_m_v": {
+   "solvesFor": "mechanics.momentum",
+   "producesState": null,
+   "scope": "self",
+   "roles": {},
+   "exprText": "m * v",
+   "ast": {
+    "k": "mul",
+    "a": [
+     {
+      "k": "sym",
+      "n": "m"
+     },
+     {
+      "k": "sym",
+      "n": "v"
+     }
+    ]
+   },
+   "bindings": {
+    "m": {
+     "prop": "mechanics.mass",
+     "const": null,
+     "from": "self",
+     "state": null
+    },
+    "v": {
+     "prop": "kinematics.velocity",
+     "const": null,
+     "from": "self",
+     "state": null
+    }
+   },
+   "law": "newton_second_law",
+   "assumes": [
+    "non_relativistic"
+   ],
+   "cite": "OpenStax College Physics 2e, 8.1 (CC BY)",
+   "cost": 1,
+   "note": ""
+  },
+  "cyclotron.radius": {
+   "solvesFor": "em.cyclotron_radius",
+   "producesState": null,
+   "scope": "self",
+   "roles": {},
+   "exprText": "m * v / (Q * B)",
+   "ast": {
+    "k": "mul",
+    "a": [
+     {
+      "k": "sym",
+      "n": "m"
+     },
+     {
+      "k": "sym",
+      "n": "v"
+     },
+     {
+      "k": "pow",
+      "b": {
+       "k": "sym",
+       "n": "B"
+      },
+      "e": -1.0
+     },
+     {
+      "k": "pow",
+      "b": {
+       "k": "sym",
+       "n": "Q"
+      },
+      "e": -1.0
+     }
+    ]
+   },
+   "bindings": {
+    "m": {
+     "prop": "mechanics.mass",
+     "const": null,
+     "from": "self",
+     "state": null
+    },
+    "v": {
+     "prop": "kinematics.speed",
+     "const": null,
+     "from": "self",
+     "state": null
+    },
+    "Q": {
+     "prop": "em.charge_magnitude",
+     "const": null,
+     "from": "self",
+     "state": null
+    },
+    "B": {
+     "prop": "em.magnetic_field_magnitude",
+     "const": null,
+     "from": "self",
+     "state": null
+    }
+   },
+   "law": "circular_motion_magnetic",
+   "assumes": [
+    "velocity_perpendicular_to_B",
+    "non_relativistic"
+   ],
+   "cite": "OpenStax University Physics 2, 11.3 (CC BY)",
+   "cost": 1,
+   "note": ""
+  },
+  "cyclotron.period": {
+   "solvesFor": "em.cyclotron_period",
+   "producesState": null,
+   "scope": "self",
+   "roles": {},
+   "exprText": "2 * pi * m / (Q * B)",
+   "ast": {
+    "k": "mul",
+    "a": [
+     {
+      "k": "num",
+      "v": 2.0
+     },
+     {
+      "k": "num",
+      "v": 3.141592653589793
+     },
+     {
+      "k": "sym",
+      "n": "m"
+     },
+     {
+      "k": "pow",
+      "b": {
+       "k": "sym",
+       "n": "B"
+      },
+      "e": -1.0
+     },
+     {
+      "k": "pow",
+      "b": {
+       "k": "sym",
+       "n": "Q"
+      },
+      "e": -1.0
+     }
+    ]
+   },
+   "bindings": {
+    "m": {
+     "prop": "mechanics.mass",
+     "const": null,
+     "from": "self",
+     "state": null
+    },
+    "Q": {
+     "prop": "em.charge_magnitude",
+     "const": null,
+     "from": "self",
+     "state": null
+    },
+    "B": {
+     "prop": "em.magnetic_field_magnitude",
+     "const": null,
+     "from": "self",
+     "state": null
+    }
+   },
+   "law": "circular_motion_magnetic",
+   "assumes": [
+    "velocity_perpendicular_to_B",
+    "non_relativistic"
+   ],
+   "cite": "OpenStax University Physics 2, 11.3 (CC BY)",
+   "cost": 1,
+   "note": "Independent of speed -- the fact that makes the cyclotron work."
+  }
+ },
+ "laws": {
+  "ohms_law": {
+   "label": "Ohm's law",
+   "statement": "For an ohmic conductor the current through it is proportional to the potential difference across it, with the resistance as the constant of proportionality: V = I*R.",
+   "governs": [
+    "electric.current",
+    "electric.resistance",
+    "em.potential_difference"
+   ],
+   "cite": "OpenStax College Physics 2e, 20.2 (CC BY)"
+  },
+  "kirchhoff_current_law": {
+   "label": "Kirchhoff's current law",
+   "statement": "The algebraic sum of currents entering any node is zero: charge does not accumulate at a junction. This is what makes currents add in a parallel combination.",
+   "governs": [
+    "electric.current"
+   ],
+   "cite": "OpenStax College Physics 2e, 21.3 (CC BY)"
+  },
+  "kirchhoff_voltage_law": {
+   "label": "Kirchhoff's voltage law",
+   "statement": "The algebraic sum of potential differences around any closed loop is zero: energy per unit charge returns to where it started. This is what makes voltages add in a series combination.",
+   "governs": [
+    "em.potential_difference",
+    "electric.emf"
+   ],
+   "cite": "OpenStax College Physics 2e, 21.3 (CC BY)"
+  },
+  "series_resistance": {
+   "label": "Resistances in series add",
+   "statement": "Two elements carrying the same current present the sum of their resistances, because their potential differences add while the current is common: R = R_a + R_b.",
+   "governs": [
+    "electric.resistance"
+   ],
+   "cite": "OpenStax College Physics 2e, 21.1 (CC BY)"
+  },
+  "parallel_resistance": {
+   "label": "Resistances in parallel combine reciprocally",
+   "statement": "Two elements across the same pair of nodes present R_a*R_b/(R_a + R_b), because their currents add while the potential difference is common. The result is always smaller than either part.",
+   "governs": [
+    "electric.resistance"
+   ],
+   "cite": "OpenStax College Physics 2e, 21.1 (CC BY)"
+  },
+  "joule_heating": {
+   "label": "Joule heating",
+   "statement": "A resistive element dissipates electrical energy as heat at a rate P = I*V, equivalently I^2*R or V^2/R. Which of the three forms the resolver reaches for depends only on what the problem happens to give.",
+   "governs": [
+    "electric.power"
+   ],
+   "cite": "OpenStax College Physics 2e, 20.4 (CC BY)"
+  },
+  "capacitor_definition": {
+   "label": "Definition of capacitance",
+   "statement": "The charge stored on a capacitor is proportional to the potential difference across it, Q = C*V, and the energy held in its field is C*V^2/2.",
+   "governs": [
+    "electric.charge_stored",
+    "electric.capacitance",
+    "electric.energy_stored"
+   ],
+   "cite": "OpenStax College Physics 2e, 19.5 (CC BY)"
+  },
+  "rc_time_constant": {
+   "label": "RC time constant",
+   "statement": "A resistor charging a capacitor does so with characteristic time tau = R*C, after which the capacitor has reached 1 - 1/e of its final charge.",
+   "governs": [
+    "electric.time_constant"
+   ],
+   "cite": "OpenStax College Physics 2e, 21.6 (CC BY)"
+  },
+  "coulombs_law": {
+   "label": "Coulomb's law",
+   "statement": "The electrostatic force between two point charges acts along the line joining them, with magnitude proportional to the product of the charges and inversely proportional to the square of their separation.",
+   "governs": [
+    "em.electric_field",
+    "em.electric_field_magnitude",
+    "em.electric_potential"
+   ],
+   "cite": "OpenStax College Physics 2e, 18.3 (CC BY)"
+  },
+  "gauss_law_electric": {
+   "label": "Gauss's law for electricity",
+   "statement": "The electric flux through any closed surface equals the enclosed charge divided by the vacuum permittivity. Its consequences fix the field of every symmetric charge distribution.",
+   "governs": [
+    "em.electric_flux",
+    "em.electric_field_magnitude",
+    "em.electric_field"
+   ],
+   "cite": "OpenStax University Physics 2, 6.3 (CC BY)"
+  },
+  "superposition_electric": {
+   "label": "Superposition of electric fields",
+   "statement": "The field of a composite distribution is the vector sum of the fields of its parts. This is what makes the cavity construction legitimate: a sphere with a cavity is a full sphere plus a negative sphere filling the cavity.",
+   "governs": [
+    "em.electric_field",
+    "em.electric_field_magnitude"
+   ],
+   "cite": "OpenStax University Physics 2, 5.5 (CC BY)"
+  },
+  "lorentz_force": {
+   "label": "Lorentz force law",
+   "statement": "A charge q moving with velocity v through fields E and B experiences force q(E + v x B).",
+   "governs": [
+    "mechanics.force",
+    "mechanics.force_magnitude"
+   ],
+   "cite": "OpenStax University Physics 2, 11.1 (CC BY)"
+  },
+  "newton_second_law": {
+   "label": "Newton's second law",
+   "statement": "The net force on a body equals its mass times its acceleration.",
+   "governs": [
+    "mechanics.force",
+    "kinematics.acceleration",
+    "kinematics.acceleration_magnitude"
+   ],
+   "cite": "OpenStax College Physics 2e, 4.3 (CC BY)"
+  },
+  "kinematics_constant_acceleration": {
+   "label": "Kinematics under constant acceleration",
+   "statement": "While acceleration is constant, velocity is linear in time and displacement is quadratic; and v^2 = u^2 + 2*a*s eliminates time entirely.",
+   "governs": [
+    "kinematics.velocity",
+    "kinematics.speed",
+    "kinematics.displacement",
+    "kinematics.distance",
+    "kinematics.time"
+   ],
+   "cite": "OpenStax College Physics 2e, 2.5 (CC BY)"
+  },
+  "work_energy_theorem": {
+   "label": "Work-energy theorem",
+   "statement": "The work done by the net force on a body equals the change in its kinetic energy.",
+   "governs": [
+    "mechanics.work",
+    "energy.kinetic",
+    "kinematics.speed"
+   ],
+   "cite": "OpenStax College Physics 2e, 7.2 (CC BY)"
+  },
+  "conservation_of_energy": {
+   "label": "Conservation of energy",
+   "statement": "In an isolated system the total energy is constant; a charge falling through a potential difference converts electric potential energy into kinetic energy exactly.",
+   "governs": [
+    "energy.kinetic",
+    "energy.potential_electric",
+    "kinematics.speed"
+   ],
+   "cite": "OpenStax College Physics 2e, 7.6 (CC BY)"
+  },
+  "electric_potential_definition": {
+   "label": "Definition of electric potential",
+   "statement": "Potential is potential energy per unit charge; the work to move a charge between two points is the charge times the potential difference.",
+   "governs": [
+    "em.electric_potential",
+    "em.potential_difference",
+    "energy.potential_electric"
+   ],
+   "cite": "OpenStax College Physics 2e, 19.1 (CC BY)"
+  },
+  "uniform_field_between_plates": {
+   "label": "Uniform field between parallel plates",
+   "statement": "Away from the edges, the field between oppositely charged parallel plates is uniform with magnitude equal to the potential difference divided by the separation.",
+   "governs": [
+    "em.electric_field_magnitude",
+    "em.potential_difference"
+   ],
+   "cite": "OpenStax College Physics 2e, 19.4 (CC BY)"
+  },
+  "shielding_conductor_cavity": {
+   "label": "Electrostatic shielding",
+   "statement": "The electrostatic field inside a cavity within a conductor, with no charge in the cavity, is exactly zero regardless of the external field or the conductor's own charge.",
+   "governs": [
+    "em.electric_field",
+    "em.electric_field_magnitude"
+   ],
+   "cite": "OpenStax University Physics 2, 6.5 (CC BY)"
+  },
+  "circular_motion_magnetic": {
+   "label": "Circular motion in a uniform magnetic field",
+   "statement": "A charge moving perpendicular to a uniform magnetic field travels a circle whose radius is mv/(qB) and whose period is independent of speed.",
+   "governs": [
+    "em.cyclotron_radius",
+    "em.cyclotron_period"
+   ],
+   "cite": "OpenStax University Physics 2, 11.3 (CC BY)"
+  },
+  "definition_magnitude": {
+   "label": "Magnitude of a vector quantity",
+   "statement": "A scalar magnitude property is the Euclidean norm of its vector counterpart. Bookkeeping, not physics, but it must be cited like anything else so no trace step is unexplained.",
+   "governs": [
+    "kinematics.speed",
+    "kinematics.distance",
+    "mechanics.force_magnitude",
+    "em.electric_field_magnitude",
+    "em.magnetic_field_magnitude",
+    "em.charge_magnitude",
+    "kinematics.acceleration_magnitude"
+   ],
+   "cite": "definitional"
+  },
+  "newton_gravitation_uniform": {
+   "label": "Weight in a uniform gravitational field",
+   "statement": "A body of mass m in a uniform gravitational field g experiences a force m*g directed along the field. Uniform is the right idealisation on a bench: g varies by less than a part in a million across a desk.",
+   "governs": [
+    "mechanics.force_gravity",
+    "env.gravity"
+   ],
+   "cite": "OpenStax College Physics 2e, 4.5 (CC BY)"
+  },
+  "superposition_of_forces": {
+   "label": "Superposition of forces",
+   "statement": "The net force on a body is the vector sum of the forces acting on it, each computed as if the others were absent. This is why an electric force and a weight can be derived independently and then added.",
+   "governs": [
+    "mechanics.force",
+    "mechanics.force_em",
+    "mechanics.force_gravity"
+   ],
+   "cite": "OpenStax College Physics 2e, 4.6 (CC BY)"
+  },
+  "medium_permittivity": {
+   "label": "Permittivity of the medium",
+   "statement": "In a uniform dielectric the electric field of a given charge is reduced by the medium's relative permittivity. The same two charges in water attract about eighty times less strongly than in vacuum.",
+   "governs": [
+    "em.electric_field_magnitude",
+    "em.electric_potential",
+    "env.relative_permittivity"
+   ],
+   "cite": "OpenStax University Physics 2, 5.1 (CC BY)"
+  },
+  "quadratic_drag": {
+   "label": "Quadratic drag through a medium",
+   "statement": "A body moving at velocity v through a medium of density rho, with the medium itself moving at v_wind, feels a force -0.5*rho*C_d*A*|v - v_wind|*(v - v_wind): opposing the RELATIVE motion and growing with its square. Wind enters only through that relative velocity, which is why a body moving with the wind feels no drag at all.",
+   "governs": [
+    "mechanics.force_drag",
+    "env.wind_velocity",
+    "env.air_density"
+   ],
+   "cite": "OpenStax College Physics 2e, 5.2 (CC BY)"
+  }
+ },
+ "solvers": {
+  "electric.resistance": [
+   "loop.R_from_load",
+   "parallel.R_from_members",
+   "series.R_from_members",
+   "ohm.R_from_V_I"
+  ],
+  "electric.capacitance": [
+   "parallel.C_from_members",
+   "series.C_from_members"
+  ],
+  "em.potential_difference": [
+   "loop.V_from_source",
+   "ohm.V_from_I_R",
+   "parallel.V_shared_to_member",
+   "parallel.V_shared_to_member_b",
+   "loop.V_shared_to_load"
+  ],
+  "electric.current": [
+   "loop.I_from_V_R",
+   "loop.I_shared_to_load",
+   "ohm.I_from_V_R",
+   "series.I_shared_to_member",
+   "series.I_shared_to_member_b"
+  ],
+  "electric.power": [
+   "power.P_from_I_R",
+   "power.P_from_I_V",
+   "power.P_from_V_R"
+  ],
+  "electric.charge_stored": [
+   "cap.Q_from_C_V"
+  ],
+  "electric.energy_stored": [
+   "cap.U_from_C_V"
+  ],
+  "electric.time_constant": [
+   "rc.tau_from_R_C"
+  ],
+  "em.electric_field_magnitude": [
+   "coulomb.E_mag_from_point_charge",
+   "field.E_mag_from_vector",
+   "line.E_mag_from_lambda",
+   "plane.E_mag_from_sigma",
+   "plates.E_mag_at_charge",
+   "plates.E_mag_from_pd",
+   "shield.E_mag_inside_conductor_cavity",
+   "sphere.E_mag_outside"
+  ],
+  "em.electric_potential": [
+   "coulomb.V_from_point_charge"
+  ],
+  "em.charge": [
+   "sphere.charge_from_density"
+  ],
+  "geometry.volume": [
+   "sphere.volume_from_radius"
+  ],
+  "em.electric_field": [
+   "cavity.E_vec_at_particle",
+   "cavity.E_vec_uniform",
+   "field.E_vec_from_magnitude_and_direction",
+   "plates.E_vec_at_charge"
+  ],
+  "em.magnetic_field_magnitude": [
+   "field.B_mag_at_particle",
+   "field.B_mag_from_vector"
+  ],
+  "em.charge_magnitude": [
+   "charge.magnitude_from_signed"
+  ],
+  "mechanics.force_em": [
+   "lorentz.F_vec_electric",
+   "lorentz.F_vec_magnetic"
+  ],
+  "mechanics.force_gravity": [
+   "gravity.F_vec_from_env"
+  ],
+  "mechanics.force_drag": [
+   "drag.F_vec_from_env"
+  ],
+  "mechanics.force": [
+   "force.net_from_contributions"
+  ],
+  "mechanics.force_magnitude": [
+   "force.magnitude_from_vector"
+  ],
+  "kinematics.acceleration": [
+   "newton.a_vec_from_F"
+  ],
+  "kinematics.acceleration_magnitude": [
+   "accel.magnitude_from_vector",
+   "newton.a_mag_from_F"
+  ],
+  "kinematics.speed": [
+   "energy.v_from_K_m",
+   "kin.speed_from_velocity",
+   "kin.v_final_from_u_a_s",
+   "kin.v_final_from_u_a_t"
+  ],
+  "kinematics.distance": [
+   "kin.distance_from_displacement",
+   "kin.s_from_u_a_t",
+   "kin.distance_across_plates"
+  ],
+  "kinematics.time": [
+   "kin.t_from_u_v_a",
+   "kin.t_from_s_a_rest"
+  ],
+  "kinematics.displacement": [
+   "kin.displacement_from_u_a_t"
+  ],
+  "kinematics.velocity": [
+   "kin.velocity_final_from_u_a_t"
+  ],
+  "energy.kinetic": [
+   "energy.K_from_m_v",
+   "energy.K_from_work_at_rest"
+  ],
+  "mechanics.work": [
+   "energy.work_from_q_pd",
+   "energy.work_from_force_distance"
+  ],
+  "energy.potential_electric": [
+   "energy.U_from_q_V"
+  ],
+  "mechanics.momentum": [
+   "momentum.p_from_m_v"
+  ],
+  "em.cyclotron_radius": [
+   "cyclotron.radius"
+  ],
+  "em.cyclotron_period": [
+   "cyclotron.period"
+  ]
+ },
+ "displayUnits": {
+  "0,0,0,1,0,0,0": "A",
+  "1,2,-3,-2,0,0,0": "Ω",
+  "1,2,-3,-1,0,0,0": "V",
+  "1,2,-3,0,0,0,0": "W",
+  "-1,-2,4,2,0,0,0": "F",
+  "0,0,1,1,0,0,0": "C",
+  "0,0,1,0,0,0,0": "s",
+  "1,2,-2,0,0,0,0": "J",
+  "1,1,-3,-1,0,0,0": "V/m",
+  "1,0,-2,-1,0,0,0": "T",
+  "0,-3,1,1,0,0,0": "C/m³",
+  "0,-2,1,1,0,0,0": "C/m²",
+  "0,-1,1,1,0,0,0": "C/m",
+  "1,3,-3,-1,0,0,0": "V·m",
+  "0,1,0,0,0,0,0": "m",
+  "0,1,-2,0,0,0,0": "m/s²",
+  "0,1,-1,0,0,0,0": "m/s",
+  "0,0,0,0,0,0,0": "",
+  "1,-3,0,0,0,0,0": "kg·m⁻³",
+  "0,0,0,0,1,0,0": "K",
+  "0,2,0,0,0,0,0": "m²",
+  "0,3,0,0,0,0,0": "m³",
+  "1,0,0,0,0,0,0": "kg",
+  "1,1,-2,0,0,0,0": "N",
+  "1,1,-1,0,0,0,0": "kg·m/s"
+ },
+ "contentHash": "5f438303d71ac8fc"
+}

@@ -1,0 +1,1438 @@
+{
+  "fieldforge": "0.1",
+  "problem": {
+    "id": "p003",
+    "title": "Charge released in the cavity of a uniformly charged sphere",
+    "text": "A spherical cavity of radius 2.0 cm is carved out of a uniformly charged insulating sphere of\nradius 10 cm whose volume charge density is 1.0e-5 C/m^3. The cavity's centre is offset 2.0 cm\nfrom the sphere's centre. A 1.0 nC charge of mass 1.0 mg is released inside the cavity. What is\nthe magnitude of its acceleration?",
+    "source": "Superposition construction; OpenStax University Physics 2, 6.4 (CC BY)",
+    "tags": [
+      "electrostatics",
+      "superposition",
+      "cavity",
+      "cross-domain",
+      "flagship"
+    ]
+  },
+  "target": "p.kinematics.acceleration_magnitude",
+  "answer": {
+    "value": 7.529393782486795,
+    "unit": "m/s²",
+    "dimension": {
+      "m": "1",
+      "s": "-2"
+    },
+    "rank": "scalar",
+    "display": "7.529 m/s²"
+  },
+  "scene": {
+    "instances": [
+      {
+        "id": "cav",
+        "kind": "spherical_cavity_in_charged_sphere",
+        "label": "Spherical cavity in a uniformly charged sphere",
+        "model3d": "cavity_sphere.glb",
+        "tags": [
+          "charge_source",
+          "electrostatic",
+          "source",
+          "uniform_field",
+          "cavity"
+        ],
+        "given": {
+          "cav.em.charge_density_volume": {
+            "value": 1e-05,
+            "unit": "C/m³",
+            "dimension": {
+              "m": "-3",
+              "s": "1",
+              "A": "1"
+            },
+            "rank": "scalar",
+            "display": "1.000e-5 C/m³"
+          },
+          "cav.geometry.offset": {
+            "value": [
+              0.02,
+              0.0,
+              0.0
+            ],
+            "unit": "m",
+            "dimension": {
+              "m": "1"
+            },
+            "rank": "vector",
+            "display": "[0.02, 0, 0] m"
+          },
+          "cav.geometry.radius": {
+            "value": 0.1,
+            "unit": "m",
+            "dimension": {
+              "m": "1"
+            },
+            "rank": "scalar",
+            "display": "0.1 m"
+          }
+        }
+      },
+      {
+        "id": "p",
+        "kind": "charged_particle",
+        "label": "Charged particle",
+        "model3d": "particle.glb",
+        "tags": [
+          "charge_source",
+          "electrostatic",
+          "source",
+          "movable",
+          "projectile"
+        ],
+        "given": {
+          "p.em.charge": {
+            "value": 1e-09,
+            "unit": "C",
+            "dimension": {
+              "s": "1",
+              "A": "1"
+            },
+            "rank": "scalar",
+            "display": "1.000e-9 C"
+          },
+          "p.geometry.cross_section": {
+            "value": 0.0,
+            "unit": "m²",
+            "dimension": {
+              "m": "2"
+            },
+            "rank": "scalar",
+            "display": "0 m²"
+          },
+          "p.mechanics.drag_coefficient": {
+            "value": 0.47,
+            "unit": "",
+            "dimension": {},
+            "rank": "scalar",
+            "display": "0.47"
+          },
+          "p.mechanics.mass": {
+            "value": 1e-06,
+            "unit": "kg",
+            "dimension": {
+              "kg": "1"
+            },
+            "rank": "scalar",
+            "display": "1.000e-6 kg"
+          }
+        }
+      },
+      {
+        "id": "env",
+        "kind": "environment",
+        "label": "Environment",
+        "model3d": null,
+        "tags": [
+          "environment",
+          "scene",
+          "settings"
+        ],
+        "given": {
+          "env.env.air_density": {
+            "value": 0.0,
+            "unit": "kg·m⁻³",
+            "dimension": {
+              "kg": "1",
+              "m": "-3"
+            },
+            "rank": "scalar",
+            "display": "0 kg·m⁻³"
+          },
+          "env.env.gravity": {
+            "value": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "unit": "m/s²",
+            "dimension": {
+              "m": "1",
+              "s": "-2"
+            },
+            "rank": "vector",
+            "display": "[0, 0, 0] m/s²"
+          },
+          "env.env.relative_permittivity": {
+            "value": 1.0,
+            "unit": "",
+            "dimension": {},
+            "rank": "scalar",
+            "display": "1"
+          },
+          "env.env.temperature": {
+            "value": 293.15,
+            "unit": "K",
+            "dimension": {
+              "K": "1"
+            },
+            "rank": "scalar",
+            "display": "293.1 K"
+          },
+          "env.env.wind_velocity": {
+            "value": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "unit": "m/s",
+            "dimension": {
+              "m": "1",
+              "s": "-1"
+            },
+            "rank": "vector",
+            "display": "[0, 0, 0] m/s"
+          }
+        }
+      }
+    ],
+    "relations": [
+      {
+        "kind": "inside_cavity_of",
+        "from": "p",
+        "to": "cav",
+        "given": {}
+      }
+    ]
+  },
+  "assumptions": [
+    "uniform_density",
+    "spherical_cavity",
+    "cavity_entirely_inside",
+    "vacuum",
+    "negligible_magnetic_force",
+    "uniform_field",
+    "no_other_forces",
+    "negligible_drag",
+    "constant_mass",
+    "non_relativistic"
+  ],
+  "citations": [
+    "OpenStax University Physics 2, 6.4 + superposition (CC BY)",
+    "OpenStax University Physics 2, 6.4 (CC BY)",
+    "OpenStax College Physics 2e, 18.5 (CC BY)",
+    "OpenStax College Physics 2e, 4.5 (CC BY)",
+    "OpenStax College Physics 2e, 4.6 (CC BY)",
+    "definitional",
+    "OpenStax College Physics 2e, 4.3 (CC BY)"
+  ],
+  "checks": {
+    "dimensions": "pass",
+    "engines": [
+      "chain"
+    ],
+    "paths_found": 1,
+    "paths_agree": true,
+    "path_spread": 0.0
+  },
+  "timeline": [
+    {
+      "beat": 1,
+      "kind": "place",
+      "instance": "p",
+      "component": "charged_particle",
+      "model3d": "particle.glb",
+      "narrate": "Place Charged particle.",
+      "because": {
+        "kind": "scene",
+        "detail": "A charge with mass, free to move. Both a field source and the thing that responds to a field — which is precisely why the field -> force -> trajectory chain needs no special case.",
+        "laws": [
+          "coulombs_law",
+          "lorentz_force",
+          "newton_second_law"
+        ]
+      }
+    },
+    {
+      "beat": 2,
+      "kind": "place",
+      "instance": "cav",
+      "component": "spherical_cavity_in_charged_sphere",
+      "model3d": "cavity_sphere.glb",
+      "narrate": "Place Spherical cavity in a uniformly charged sphere.",
+      "because": {
+        "kind": "scene",
+        "detail": "A spherical hole carved out of a uniformly charged insulating sphere. By superposition the field everywhere inside the cavity is uniform, equal to rho*a/(3*eps0) along the offset vector a from the sphere's centre to the cavity's. This is the flagship case: no simulation library contains it, and a charge released inside undergoes exact constant-acceleration projectile motion.",
+        "laws": [
+          "superposition_electric",
+          "gauss_law_electric"
+        ]
+      }
+    },
+    {
+      "beat": 3,
+      "kind": "place",
+      "instance": "env",
+      "component": "environment",
+      "model3d": null,
+      "narrate": "Place Environment.",
+      "because": {
+        "kind": "scene",
+        "detail": "The surrounding medium and fields. Defaults are an idealised vacuum with no gravity, which is what textbook electrostatics problems assume -- stated here as an editable value instead of a footnote.",
+        "laws": [
+          "newton_gravitation_uniform",
+          "superposition_of_forces",
+          "medium_permittivity"
+        ]
+      }
+    },
+    {
+      "beat": 4,
+      "kind": "relate",
+      "relation": "inside_cavity_of",
+      "from": "p",
+      "to": "cav",
+      "narrate": "p is inside cavity of cav.",
+      "because": {
+        "kind": "scene",
+        "detail": "stated by the problem's geometry"
+      }
+    },
+    {
+      "beat": 5,
+      "kind": "given",
+      "instance": "p",
+      "ref": "p.em.charge",
+      "property": "em.charge",
+      "channel": "charge_glyph",
+      "value": 1e-09,
+      "unit": "C",
+      "dimension": {
+        "s": "1",
+        "A": "1"
+      },
+      "rank": "scalar",
+      "display": "1.000e-9 C",
+      "narrate": "p: charge is 1.000e-9 C, as stated.",
+      "because": {
+        "kind": "given",
+        "detail": "supplied by the problem statement"
+      }
+    },
+    {
+      "beat": 6,
+      "kind": "given",
+      "instance": "cav",
+      "ref": "cav.em.charge_density_volume",
+      "property": "em.charge_density_volume",
+      "channel": "density_shading",
+      "value": 1e-05,
+      "unit": "C/m³",
+      "dimension": {
+        "m": "-3",
+        "s": "1",
+        "A": "1"
+      },
+      "rank": "scalar",
+      "display": "1.000e-5 C/m³",
+      "narrate": "cav: charge density volume is 1.000e-5 C/m³, as stated.",
+      "because": {
+        "kind": "given",
+        "detail": "supplied by the problem statement"
+      }
+    },
+    {
+      "beat": 7,
+      "kind": "given",
+      "instance": "cav",
+      "ref": "cav.geometry.offset",
+      "property": "geometry.offset",
+      "channel": "offset_vector",
+      "value": [
+        0.02,
+        0.0,
+        0.0
+      ],
+      "unit": "m",
+      "dimension": {
+        "m": "1"
+      },
+      "rank": "vector",
+      "display": "[0.02, 0, 0] m",
+      "narrate": "cav: offset is [0.02, 0, 0] m, as stated.",
+      "because": {
+        "kind": "given",
+        "detail": "supplied by the problem statement"
+      }
+    },
+    {
+      "beat": 8,
+      "kind": "resolve",
+      "instance": "cav",
+      "ref": "cav.em.electric_field",
+      "property": "em.electric_field",
+      "channel": "field_arrows",
+      "value": [
+        7529.393782486794,
+        0.0,
+        0.0
+      ],
+      "unit": "V/m",
+      "dimension": {
+        "kg": "1",
+        "m": "1",
+        "s": "-3",
+        "A": "-1"
+      },
+      "rank": "vector",
+      "display": "[7529, 0, 0] V/m",
+      "narrate": "cav: electric field resolves to [7529, 0, 0] V/m.",
+      "because": {
+        "kind": "derived",
+        "formula": "cavity.E_vec_uniform",
+        "expression": "rho * a / (3 * epsilon_0)",
+        "substituted": "([0.02, 0, 0] m)*(1.000e-5 C/m³)/(3*(8.854e-12 kg⁻¹·m⁻³·s⁴·A²))",
+        "law": "superposition_electric",
+        "law_label": "Superposition of electric fields",
+        "law_statement": "The field of a composite distribution is the vector sum of the fields of its parts. This is what makes the cavity construction legitimate: a sphere with a cavity is a full sphere plus a negative sphere filling the cavity.",
+        "assumes": [
+          "uniform_density",
+          "spherical_cavity",
+          "cavity_entirely_inside",
+          "vacuum"
+        ],
+        "cite": "OpenStax University Physics 2, 6.4 + superposition (CC BY)",
+        "inputs": [
+          {
+            "symbol": "rho",
+            "from": "cav.em.charge_density_volume",
+            "value": 1e-05,
+            "unit": "C/m³",
+            "dimension": {
+              "m": "-3",
+              "s": "1",
+              "A": "1"
+            },
+            "rank": "scalar",
+            "display": "1.000e-5 C/m³"
+          },
+          {
+            "symbol": "a",
+            "from": "cav.geometry.offset",
+            "value": [
+              0.02,
+              0.0,
+              0.0
+            ],
+            "unit": "m",
+            "dimension": {
+              "m": "1"
+            },
+            "rank": "vector",
+            "display": "[0.02, 0, 0] m"
+          },
+          {
+            "symbol": "epsilon_0",
+            "from": "epsilon_0",
+            "value": 8.8541878128e-12,
+            "unit": "kg⁻¹·m⁻³·s⁴·A²",
+            "dimension": {
+              "kg": "-1",
+              "m": "-3",
+              "s": "4",
+              "A": "2"
+            },
+            "rank": "scalar",
+            "display": "8.854e-12 kg⁻¹·m⁻³·s⁴·A²"
+          }
+        ]
+      }
+    },
+    {
+      "beat": 9,
+      "kind": "resolve",
+      "instance": "p",
+      "ref": "p.em.electric_field",
+      "property": "em.electric_field",
+      "channel": "field_arrows",
+      "value": [
+        7529.393782486794,
+        0.0,
+        0.0
+      ],
+      "unit": "V/m",
+      "dimension": {
+        "kg": "1",
+        "m": "1",
+        "s": "-3",
+        "A": "-1"
+      },
+      "rank": "vector",
+      "display": "[7529, 0, 0] V/m",
+      "narrate": "p: electric field resolves to [7529, 0, 0] V/m.",
+      "because": {
+        "kind": "derived",
+        "formula": "cavity.E_vec_at_particle",
+        "expression": "E",
+        "substituted": "([7529, 0, 0] V/m)",
+        "law": "superposition_electric",
+        "law_label": "Superposition of electric fields",
+        "law_statement": "The field of a composite distribution is the vector sum of the fields of its parts. This is what makes the cavity construction legitimate: a sphere with a cavity is a full sphere plus a negative sphere filling the cavity.",
+        "assumes": [
+          "cavity_entirely_inside"
+        ],
+        "cite": "OpenStax University Physics 2, 6.4 (CC BY)",
+        "inputs": [
+          {
+            "symbol": "E",
+            "from": "cav.em.electric_field",
+            "value": [
+              7529.393782486794,
+              0.0,
+              0.0
+            ],
+            "unit": "V/m",
+            "dimension": {
+              "kg": "1",
+              "m": "1",
+              "s": "-3",
+              "A": "-1"
+            },
+            "rank": "vector",
+            "display": "[7529, 0, 0] V/m"
+          }
+        ]
+      }
+    },
+    {
+      "beat": 10,
+      "kind": "resolve",
+      "instance": "p",
+      "ref": "p.mechanics.force_em",
+      "property": "mechanics.force_em",
+      "channel": null,
+      "value": [
+        7.529393782486795e-06,
+        0.0,
+        0.0
+      ],
+      "unit": "N",
+      "dimension": {
+        "kg": "1",
+        "m": "1",
+        "s": "-2"
+      },
+      "rank": "vector",
+      "display": "[7.529e-6, 0, 0] N",
+      "narrate": "p: force em resolves to [7.529e-6, 0, 0] N.",
+      "because": {
+        "kind": "derived",
+        "formula": "lorentz.F_vec_electric",
+        "expression": "q * E",
+        "substituted": "([7529, 0, 0] V/m)*(1.000e-9 C)",
+        "law": "lorentz_force",
+        "law_label": "Lorentz force law",
+        "law_statement": "A charge q moving with velocity v through fields E and B experiences force q(E + v x B).",
+        "assumes": [
+          "negligible_magnetic_force"
+        ],
+        "cite": "OpenStax College Physics 2e, 18.5 (CC BY)",
+        "inputs": [
+          {
+            "symbol": "q",
+            "from": "p.em.charge",
+            "value": 1e-09,
+            "unit": "C",
+            "dimension": {
+              "s": "1",
+              "A": "1"
+            },
+            "rank": "scalar",
+            "display": "1.000e-9 C"
+          },
+          {
+            "symbol": "E",
+            "from": "p.em.electric_field",
+            "value": [
+              7529.393782486794,
+              0.0,
+              0.0
+            ],
+            "unit": "V/m",
+            "dimension": {
+              "kg": "1",
+              "m": "1",
+              "s": "-3",
+              "A": "-1"
+            },
+            "rank": "vector",
+            "display": "[7529, 0, 0] V/m"
+          }
+        ]
+      }
+    },
+    {
+      "beat": 11,
+      "kind": "given",
+      "instance": "p",
+      "ref": "p.mechanics.mass",
+      "property": "mechanics.mass",
+      "channel": "mass_label",
+      "value": 1e-06,
+      "unit": "kg",
+      "dimension": {
+        "kg": "1"
+      },
+      "rank": "scalar",
+      "display": "1.000e-6 kg",
+      "narrate": "p: mass is 1.000e-6 kg, as stated.",
+      "because": {
+        "kind": "given",
+        "detail": "supplied by the problem statement"
+      }
+    },
+    {
+      "beat": 12,
+      "kind": "given",
+      "instance": "env",
+      "ref": "env.env.gravity",
+      "property": "env.gravity",
+      "channel": null,
+      "value": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "unit": "m/s²",
+      "dimension": {
+        "m": "1",
+        "s": "-2"
+      },
+      "rank": "vector",
+      "display": "[0, 0, 0] m/s²",
+      "narrate": "env: gravity is [0, 0, 0] m/s², as stated.",
+      "because": {
+        "kind": "given",
+        "detail": "supplied by the problem statement"
+      }
+    },
+    {
+      "beat": 13,
+      "kind": "resolve",
+      "instance": "p",
+      "ref": "p.mechanics.force_gravity",
+      "property": "mechanics.force_gravity",
+      "channel": null,
+      "value": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "unit": "N",
+      "dimension": {
+        "kg": "1",
+        "m": "1",
+        "s": "-2"
+      },
+      "rank": "vector",
+      "display": "[0, 0, 0] N",
+      "narrate": "p: force gravity resolves to [0, 0, 0] N.",
+      "because": {
+        "kind": "derived",
+        "formula": "gravity.F_vec_from_env",
+        "expression": "m * g",
+        "substituted": "([0, 0, 0] m/s²)*(1.000e-6 kg)",
+        "law": "newton_gravitation_uniform",
+        "law_label": "Weight in a uniform gravitational field",
+        "law_statement": "A body of mass m in a uniform gravitational field g experiences a force m*g directed along the field. Uniform is the right idealisation on a bench: g varies by less than a part in a million across a desk.",
+        "assumes": [
+          "uniform_field"
+        ],
+        "cite": "OpenStax College Physics 2e, 4.5 (CC BY)",
+        "inputs": [
+          {
+            "symbol": "m",
+            "from": "p.mechanics.mass",
+            "value": 1e-06,
+            "unit": "kg",
+            "dimension": {
+              "kg": "1"
+            },
+            "rank": "scalar",
+            "display": "1.000e-6 kg"
+          },
+          {
+            "symbol": "g",
+            "from": "env.env.gravity",
+            "value": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "unit": "m/s²",
+            "dimension": {
+              "m": "1",
+              "s": "-2"
+            },
+            "rank": "vector",
+            "display": "[0, 0, 0] m/s²"
+          }
+        ]
+      }
+    },
+    {
+      "beat": 14,
+      "kind": "resolve",
+      "instance": "p",
+      "ref": "p.mechanics.force",
+      "property": "mechanics.force",
+      "channel": "force_vector",
+      "value": [
+        7.529393782486795e-06,
+        0.0,
+        0.0
+      ],
+      "unit": "N",
+      "dimension": {
+        "kg": "1",
+        "m": "1",
+        "s": "-2"
+      },
+      "rank": "vector",
+      "display": "[7.529e-6, 0, 0] N",
+      "narrate": "p: force resolves to [7.529e-6, 0, 0] N.",
+      "because": {
+        "kind": "derived",
+        "formula": "force.net_from_contributions",
+        "expression": "F_em + F_g",
+        "substituted": "([7.529e-6, 0, 0] N) + ([0, 0, 0] N)",
+        "law": "superposition_of_forces",
+        "law_label": "Superposition of forces",
+        "law_statement": "The net force on a body is the vector sum of the forces acting on it, each computed as if the others were absent. This is why an electric force and a weight can be derived independently and then added.",
+        "assumes": [
+          "no_other_forces",
+          "negligible_drag"
+        ],
+        "cite": "OpenStax College Physics 2e, 4.6 (CC BY)",
+        "inputs": [
+          {
+            "symbol": "F_em",
+            "from": "p.mechanics.force_em",
+            "value": [
+              7.529393782486795e-06,
+              0.0,
+              0.0
+            ],
+            "unit": "N",
+            "dimension": {
+              "kg": "1",
+              "m": "1",
+              "s": "-2"
+            },
+            "rank": "vector",
+            "display": "[7.529e-6, 0, 0] N"
+          },
+          {
+            "symbol": "F_g",
+            "from": "p.mechanics.force_gravity",
+            "value": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "unit": "N",
+            "dimension": {
+              "kg": "1",
+              "m": "1",
+              "s": "-2"
+            },
+            "rank": "vector",
+            "display": "[0, 0, 0] N"
+          }
+        ]
+      }
+    },
+    {
+      "beat": 15,
+      "kind": "resolve",
+      "instance": "p",
+      "ref": "p.mechanics.force_magnitude",
+      "property": "mechanics.force_magnitude",
+      "channel": "force_vector",
+      "value": 7.529393782486795e-06,
+      "unit": "N",
+      "dimension": {
+        "kg": "1",
+        "m": "1",
+        "s": "-2"
+      },
+      "rank": "scalar",
+      "display": "7.529e-6 N",
+      "narrate": "p: force magnitude resolves to 7.529e-6 N.",
+      "because": {
+        "kind": "derived",
+        "formula": "force.magnitude_from_vector",
+        "expression": "mag(F)",
+        "substituted": "mag(([7.529e-6, 0, 0] N))",
+        "law": "definition_magnitude",
+        "law_label": "Magnitude of a vector quantity",
+        "law_statement": "A scalar magnitude property is the Euclidean norm of its vector counterpart. Bookkeeping, not physics, but it must be cited like anything else so no trace step is unexplained.",
+        "assumes": [],
+        "cite": "definitional",
+        "inputs": [
+          {
+            "symbol": "F",
+            "from": "p.mechanics.force",
+            "value": [
+              7.529393782486795e-06,
+              0.0,
+              0.0
+            ],
+            "unit": "N",
+            "dimension": {
+              "kg": "1",
+              "m": "1",
+              "s": "-2"
+            },
+            "rank": "vector",
+            "display": "[7.529e-6, 0, 0] N"
+          }
+        ]
+      }
+    },
+    {
+      "beat": 16,
+      "kind": "resolve",
+      "instance": "p",
+      "ref": "p.kinematics.acceleration_magnitude",
+      "property": "kinematics.acceleration_magnitude",
+      "channel": "acceleration_vector",
+      "value": 7.529393782486795,
+      "unit": "m/s²",
+      "dimension": {
+        "m": "1",
+        "s": "-2"
+      },
+      "rank": "scalar",
+      "display": "7.529 m/s²",
+      "narrate": "p: acceleration magnitude resolves to 7.529 m/s².",
+      "because": {
+        "kind": "derived",
+        "formula": "newton.a_mag_from_F",
+        "expression": "F / m",
+        "substituted": "(7.529e-6 N)/(1.000e-6 kg)",
+        "law": "newton_second_law",
+        "law_label": "Newton's second law",
+        "law_statement": "The net force on a body equals its mass times its acceleration.",
+        "assumes": [
+          "constant_mass",
+          "non_relativistic"
+        ],
+        "cite": "OpenStax College Physics 2e, 4.3 (CC BY)",
+        "inputs": [
+          {
+            "symbol": "F",
+            "from": "p.mechanics.force_magnitude",
+            "value": 7.529393782486795e-06,
+            "unit": "N",
+            "dimension": {
+              "kg": "1",
+              "m": "1",
+              "s": "-2"
+            },
+            "rank": "scalar",
+            "display": "7.529e-6 N"
+          },
+          {
+            "symbol": "m",
+            "from": "p.mechanics.mass",
+            "value": 1e-06,
+            "unit": "kg",
+            "dimension": {
+              "kg": "1"
+            },
+            "rank": "scalar",
+            "display": "1.000e-6 kg"
+          }
+        ]
+      }
+    },
+    {
+      "beat": 17,
+      "kind": "answer",
+      "ref": "p.kinematics.acceleration_magnitude",
+      "property": "kinematics.acceleration_magnitude",
+      "value": 7.529393782486795,
+      "unit": "m/s²",
+      "dimension": {
+        "m": "1",
+        "s": "-2"
+      },
+      "rank": "scalar",
+      "display": "7.529 m/s²",
+      "narrate": "Answer: 7.529 m/s².",
+      "because": {
+        "kind": "summary",
+        "laws": [
+          "definition_magnitude",
+          "lorentz_force",
+          "newton_gravitation_uniform",
+          "newton_second_law",
+          "superposition_electric",
+          "superposition_of_forces"
+        ],
+        "paths_found": 1
+      }
+    }
+  ],
+  "paths": [
+    {
+      "cost": 7,
+      "laws": [
+        "definition_magnitude",
+        "lorentz_force",
+        "newton_gravitation_uniform",
+        "newton_second_law",
+        "superposition_electric",
+        "superposition_of_forces"
+      ],
+      "formulas": [
+        "cavity.E_vec_uniform",
+        "cavity.E_vec_at_particle",
+        "lorentz.F_vec_electric",
+        "gravity.F_vec_from_env",
+        "force.net_from_contributions",
+        "force.magnitude_from_vector",
+        "newton.a_mag_from_F"
+      ],
+      "value": {
+        "value": 7.529393782486795,
+        "unit": "m/s²",
+        "dimension": {
+          "m": "1",
+          "s": "-2"
+        },
+        "rank": "scalar",
+        "display": "7.529 m/s²"
+      },
+      "assumptions": [
+        "uniform_density",
+        "spherical_cavity",
+        "cavity_entirely_inside",
+        "vacuum",
+        "negligible_magnetic_force",
+        "uniform_field",
+        "no_other_forces",
+        "negligible_drag",
+        "constant_mass",
+        "non_relativistic"
+      ],
+      "citations": [
+        "OpenStax University Physics 2, 6.4 + superposition (CC BY)",
+        "OpenStax University Physics 2, 6.4 (CC BY)",
+        "OpenStax College Physics 2e, 18.5 (CC BY)",
+        "OpenStax College Physics 2e, 4.5 (CC BY)",
+        "OpenStax College Physics 2e, 4.6 (CC BY)",
+        "definitional",
+        "OpenStax College Physics 2e, 4.3 (CC BY)"
+      ],
+      "steps": [
+        {
+          "ref": "p.em.charge",
+          "property": "em.charge",
+          "value": 1e-09,
+          "unit": "C",
+          "dimension": {
+            "s": "1",
+            "A": "1"
+          },
+          "rank": "scalar",
+          "display": "1.000e-9 C",
+          "because": {
+            "kind": "given",
+            "detail": "supplied by the problem statement"
+          }
+        },
+        {
+          "ref": "cav.em.charge_density_volume",
+          "property": "em.charge_density_volume",
+          "value": 1e-05,
+          "unit": "C/m³",
+          "dimension": {
+            "m": "-3",
+            "s": "1",
+            "A": "1"
+          },
+          "rank": "scalar",
+          "display": "1.000e-5 C/m³",
+          "because": {
+            "kind": "given",
+            "detail": "supplied by the problem statement"
+          }
+        },
+        {
+          "ref": "cav.geometry.offset",
+          "property": "geometry.offset",
+          "value": [
+            0.02,
+            0.0,
+            0.0
+          ],
+          "unit": "m",
+          "dimension": {
+            "m": "1"
+          },
+          "rank": "vector",
+          "display": "[0.02, 0, 0] m",
+          "because": {
+            "kind": "given",
+            "detail": "supplied by the problem statement"
+          }
+        },
+        {
+          "ref": "cav.em.electric_field",
+          "property": "em.electric_field",
+          "value": [
+            7529.393782486794,
+            0.0,
+            0.0
+          ],
+          "unit": "V/m",
+          "dimension": {
+            "kg": "1",
+            "m": "1",
+            "s": "-3",
+            "A": "-1"
+          },
+          "rank": "vector",
+          "display": "[7529, 0, 0] V/m",
+          "because": {
+            "kind": "derived",
+            "formula": "cavity.E_vec_uniform",
+            "expression": "rho * a / (3 * epsilon_0)",
+            "substituted": "([0.02, 0, 0] m)*(1.000e-5 C/m³)/(3*(8.854e-12 kg⁻¹·m⁻³·s⁴·A²))",
+            "law": "superposition_electric",
+            "law_label": "Superposition of electric fields",
+            "law_statement": "The field of a composite distribution is the vector sum of the fields of its parts. This is what makes the cavity construction legitimate: a sphere with a cavity is a full sphere plus a negative sphere filling the cavity.",
+            "assumes": [
+              "uniform_density",
+              "spherical_cavity",
+              "cavity_entirely_inside",
+              "vacuum"
+            ],
+            "cite": "OpenStax University Physics 2, 6.4 + superposition (CC BY)",
+            "inputs": [
+              {
+                "symbol": "rho",
+                "from": "cav.em.charge_density_volume",
+                "value": 1e-05,
+                "unit": "C/m³",
+                "dimension": {
+                  "m": "-3",
+                  "s": "1",
+                  "A": "1"
+                },
+                "rank": "scalar",
+                "display": "1.000e-5 C/m³"
+              },
+              {
+                "symbol": "a",
+                "from": "cav.geometry.offset",
+                "value": [
+                  0.02,
+                  0.0,
+                  0.0
+                ],
+                "unit": "m",
+                "dimension": {
+                  "m": "1"
+                },
+                "rank": "vector",
+                "display": "[0.02, 0, 0] m"
+              },
+              {
+                "symbol": "epsilon_0",
+                "from": "epsilon_0",
+                "value": 8.8541878128e-12,
+                "unit": "kg⁻¹·m⁻³·s⁴·A²",
+                "dimension": {
+                  "kg": "-1",
+                  "m": "-3",
+                  "s": "4",
+                  "A": "2"
+                },
+                "rank": "scalar",
+                "display": "8.854e-12 kg⁻¹·m⁻³·s⁴·A²"
+              }
+            ]
+          }
+        },
+        {
+          "ref": "p.em.electric_field",
+          "property": "em.electric_field",
+          "value": [
+            7529.393782486794,
+            0.0,
+            0.0
+          ],
+          "unit": "V/m",
+          "dimension": {
+            "kg": "1",
+            "m": "1",
+            "s": "-3",
+            "A": "-1"
+          },
+          "rank": "vector",
+          "display": "[7529, 0, 0] V/m",
+          "because": {
+            "kind": "derived",
+            "formula": "cavity.E_vec_at_particle",
+            "expression": "E",
+            "substituted": "([7529, 0, 0] V/m)",
+            "law": "superposition_electric",
+            "law_label": "Superposition of electric fields",
+            "law_statement": "The field of a composite distribution is the vector sum of the fields of its parts. This is what makes the cavity construction legitimate: a sphere with a cavity is a full sphere plus a negative sphere filling the cavity.",
+            "assumes": [
+              "cavity_entirely_inside"
+            ],
+            "cite": "OpenStax University Physics 2, 6.4 (CC BY)",
+            "inputs": [
+              {
+                "symbol": "E",
+                "from": "cav.em.electric_field",
+                "value": [
+                  7529.393782486794,
+                  0.0,
+                  0.0
+                ],
+                "unit": "V/m",
+                "dimension": {
+                  "kg": "1",
+                  "m": "1",
+                  "s": "-3",
+                  "A": "-1"
+                },
+                "rank": "vector",
+                "display": "[7529, 0, 0] V/m"
+              }
+            ]
+          }
+        },
+        {
+          "ref": "p.mechanics.force_em",
+          "property": "mechanics.force_em",
+          "value": [
+            7.529393782486795e-06,
+            0.0,
+            0.0
+          ],
+          "unit": "N",
+          "dimension": {
+            "kg": "1",
+            "m": "1",
+            "s": "-2"
+          },
+          "rank": "vector",
+          "display": "[7.529e-6, 0, 0] N",
+          "because": {
+            "kind": "derived",
+            "formula": "lorentz.F_vec_electric",
+            "expression": "q * E",
+            "substituted": "([7529, 0, 0] V/m)*(1.000e-9 C)",
+            "law": "lorentz_force",
+            "law_label": "Lorentz force law",
+            "law_statement": "A charge q moving with velocity v through fields E and B experiences force q(E + v x B).",
+            "assumes": [
+              "negligible_magnetic_force"
+            ],
+            "cite": "OpenStax College Physics 2e, 18.5 (CC BY)",
+            "inputs": [
+              {
+                "symbol": "q",
+                "from": "p.em.charge",
+                "value": 1e-09,
+                "unit": "C",
+                "dimension": {
+                  "s": "1",
+                  "A": "1"
+                },
+                "rank": "scalar",
+                "display": "1.000e-9 C"
+              },
+              {
+                "symbol": "E",
+                "from": "p.em.electric_field",
+                "value": [
+                  7529.393782486794,
+                  0.0,
+                  0.0
+                ],
+                "unit": "V/m",
+                "dimension": {
+                  "kg": "1",
+                  "m": "1",
+                  "s": "-3",
+                  "A": "-1"
+                },
+                "rank": "vector",
+                "display": "[7529, 0, 0] V/m"
+              }
+            ]
+          }
+        },
+        {
+          "ref": "p.mechanics.mass",
+          "property": "mechanics.mass",
+          "value": 1e-06,
+          "unit": "kg",
+          "dimension": {
+            "kg": "1"
+          },
+          "rank": "scalar",
+          "display": "1.000e-6 kg",
+          "because": {
+            "kind": "given",
+            "detail": "supplied by the problem statement"
+          }
+        },
+        {
+          "ref": "env.env.gravity",
+          "property": "env.gravity",
+          "value": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "unit": "m/s²",
+          "dimension": {
+            "m": "1",
+            "s": "-2"
+          },
+          "rank": "vector",
+          "display": "[0, 0, 0] m/s²",
+          "because": {
+            "kind": "given",
+            "detail": "supplied by the problem statement"
+          }
+        },
+        {
+          "ref": "p.mechanics.force_gravity",
+          "property": "mechanics.force_gravity",
+          "value": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "unit": "N",
+          "dimension": {
+            "kg": "1",
+            "m": "1",
+            "s": "-2"
+          },
+          "rank": "vector",
+          "display": "[0, 0, 0] N",
+          "because": {
+            "kind": "derived",
+            "formula": "gravity.F_vec_from_env",
+            "expression": "m * g",
+            "substituted": "([0, 0, 0] m/s²)*(1.000e-6 kg)",
+            "law": "newton_gravitation_uniform",
+            "law_label": "Weight in a uniform gravitational field",
+            "law_statement": "A body of mass m in a uniform gravitational field g experiences a force m*g directed along the field. Uniform is the right idealisation on a bench: g varies by less than a part in a million across a desk.",
+            "assumes": [
+              "uniform_field"
+            ],
+            "cite": "OpenStax College Physics 2e, 4.5 (CC BY)",
+            "inputs": [
+              {
+                "symbol": "m",
+                "from": "p.mechanics.mass",
+                "value": 1e-06,
+                "unit": "kg",
+                "dimension": {
+                  "kg": "1"
+                },
+                "rank": "scalar",
+                "display": "1.000e-6 kg"
+              },
+              {
+                "symbol": "g",
+                "from": "env.env.gravity",
+                "value": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "unit": "m/s²",
+                "dimension": {
+                  "m": "1",
+                  "s": "-2"
+                },
+                "rank": "vector",
+                "display": "[0, 0, 0] m/s²"
+              }
+            ]
+          }
+        },
+        {
+          "ref": "p.mechanics.force",
+          "property": "mechanics.force",
+          "value": [
+            7.529393782486795e-06,
+            0.0,
+            0.0
+          ],
+          "unit": "N",
+          "dimension": {
+            "kg": "1",
+            "m": "1",
+            "s": "-2"
+          },
+          "rank": "vector",
+          "display": "[7.529e-6, 0, 0] N",
+          "because": {
+            "kind": "derived",
+            "formula": "force.net_from_contributions",
+            "expression": "F_em + F_g",
+            "substituted": "([7.529e-6, 0, 0] N) + ([0, 0, 0] N)",
+            "law": "superposition_of_forces",
+            "law_label": "Superposition of forces",
+            "law_statement": "The net force on a body is the vector sum of the forces acting on it, each computed as if the others were absent. This is why an electric force and a weight can be derived independently and then added.",
+            "assumes": [
+              "no_other_forces",
+              "negligible_drag"
+            ],
+            "cite": "OpenStax College Physics 2e, 4.6 (CC BY)",
+            "inputs": [
+              {
+                "symbol": "F_em",
+                "from": "p.mechanics.force_em",
+                "value": [
+                  7.529393782486795e-06,
+                  0.0,
+                  0.0
+                ],
+                "unit": "N",
+                "dimension": {
+                  "kg": "1",
+                  "m": "1",
+                  "s": "-2"
+                },
+                "rank": "vector",
+                "display": "[7.529e-6, 0, 0] N"
+              },
+              {
+                "symbol": "F_g",
+                "from": "p.mechanics.force_gravity",
+                "value": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "unit": "N",
+                "dimension": {
+                  "kg": "1",
+                  "m": "1",
+                  "s": "-2"
+                },
+                "rank": "vector",
+                "display": "[0, 0, 0] N"
+              }
+            ]
+          }
+        },
+        {
+          "ref": "p.mechanics.force_magnitude",
+          "property": "mechanics.force_magnitude",
+          "value": 7.529393782486795e-06,
+          "unit": "N",
+          "dimension": {
+            "kg": "1",
+            "m": "1",
+            "s": "-2"
+          },
+          "rank": "scalar",
+          "display": "7.529e-6 N",
+          "because": {
+            "kind": "derived",
+            "formula": "force.magnitude_from_vector",
+            "expression": "mag(F)",
+            "substituted": "mag(([7.529e-6, 0, 0] N))",
+            "law": "definition_magnitude",
+            "law_label": "Magnitude of a vector quantity",
+            "law_statement": "A scalar magnitude property is the Euclidean norm of its vector counterpart. Bookkeeping, not physics, but it must be cited like anything else so no trace step is unexplained.",
+            "assumes": [],
+            "cite": "definitional",
+            "inputs": [
+              {
+                "symbol": "F",
+                "from": "p.mechanics.force",
+                "value": [
+                  7.529393782486795e-06,
+                  0.0,
+                  0.0
+                ],
+                "unit": "N",
+                "dimension": {
+                  "kg": "1",
+                  "m": "1",
+                  "s": "-2"
+                },
+                "rank": "vector",
+                "display": "[7.529e-6, 0, 0] N"
+              }
+            ]
+          }
+        },
+        {
+          "ref": "p.kinematics.acceleration_magnitude",
+          "property": "kinematics.acceleration_magnitude",
+          "value": 7.529393782486795,
+          "unit": "m/s²",
+          "dimension": {
+            "m": "1",
+            "s": "-2"
+          },
+          "rank": "scalar",
+          "display": "7.529 m/s²",
+          "because": {
+            "kind": "derived",
+            "formula": "newton.a_mag_from_F",
+            "expression": "F / m",
+            "substituted": "(7.529e-6 N)/(1.000e-6 kg)",
+            "law": "newton_second_law",
+            "law_label": "Newton's second law",
+            "law_statement": "The net force on a body equals its mass times its acceleration.",
+            "assumes": [
+              "constant_mass",
+              "non_relativistic"
+            ],
+            "cite": "OpenStax College Physics 2e, 4.3 (CC BY)",
+            "inputs": [
+              {
+                "symbol": "F",
+                "from": "p.mechanics.force_magnitude",
+                "value": 7.529393782486795e-06,
+                "unit": "N",
+                "dimension": {
+                  "kg": "1",
+                  "m": "1",
+                  "s": "-2"
+                },
+                "rank": "scalar",
+                "display": "7.529e-6 N"
+              },
+              {
+                "symbol": "m",
+                "from": "p.mechanics.mass",
+                "value": 1e-06,
+                "unit": "kg",
+                "dimension": {
+                  "kg": "1"
+                },
+                "rank": "scalar",
+                "display": "1.000e-6 kg"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

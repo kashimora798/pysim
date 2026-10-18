@@ -1,0 +1,27 @@
+id: p012
+title: Charge between plates, with gravity switched on
+source: "After OpenStax College Physics 2e, 19.4 + 4.6 (CC BY)"
+tags: [electrostatics, environment, gravity, superposition]
+text: |
+  A 2.0 nC charge of mass 1.0 mg sits between parallel plates held at 200 V across a 5.0 cm gap,
+  with the field pointing downward. This time the experiment is on Earth rather than in an
+  idealised weightless vacuum. What is the magnitude of the net force on the charge?
+scene:
+  instances:
+    - id: env
+      kind: environment
+      set:
+        env.gravity: "[0, -9.80665, 0] m/s^2"
+    - {id: cap, kind: parallel_plate_capacitor, set: {em.potential_difference: "200 V", geometry.separation_plates: "5.0 cm", geometry.direction: "[0, -1, 0]"}}
+    - {id: p, kind: charged_particle, set: {em.charge: "2.0 nC", mechanics.mass: "1.0e-6 kg"}}
+  relations:
+    - {kind: inside, from: p, to: cap}
+target: {instance: p, prop: mechanics.force_magnitude}
+expect:
+  value: 1.780665e-5
+  unit: N
+  tol: 0.001
+  note: >
+    The same scene as p008 but with gravity declared. Electric force 8.0 uN down plus weight
+    9.81 uN down gives 17.8 uN, against p008's 8.0 uN. The environment is not decoration: it is
+    bound into the derivation, and the trace shows both contributions being summed.

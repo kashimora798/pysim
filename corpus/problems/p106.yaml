@@ -1,0 +1,27 @@
+id: p106
+title: Voltage across one resistor of a series pair
+source: "After OpenStax College Physics 2e, 21.1 (CC BY)"
+tags: [circuits, series, sharing, chapter1]
+text: |
+  A 10 ohm resistor is in series with a 20 ohm resistor across a 9.0 V battery. What is the
+  potential difference across the 10 ohm resistor alone?
+scene:
+  instances:
+    - {id: bat, kind: battery, set: {electric.emf: "9.0 V"}}
+    - {id: r1, kind: resistor, set: {electric.resistance: "10 ohm"}}
+    - {id: r2, kind: resistor, set: {electric.resistance: "20 ohm"}}
+    - {id: sp, kind: series_pair}
+    - {id: loop, kind: circuit_loop}
+  relations:
+    - {kind: series_a, from: sp, to: r1}
+    - {kind: series_b, from: sp, to: r2}
+    - {kind: driven_by, from: loop, to: bat}
+    - {kind: loads, from: loop, to: sp}
+target: {instance: r1, prop: em.potential_difference}
+expect:
+  value: 3.0
+  unit: V
+  tol: 0.001
+  note: >
+    The answer has to travel back DOWN the reduction tree: loop current -> shared into the series
+    pair -> shared into the member -> Ohm's law on that member. Three sharing links and a law.

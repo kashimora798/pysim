@@ -1,0 +1,22 @@
+# The surroundings as a placeable component.
+#
+# One instance per scene. If a problem does not declare one, the scene builder injects an implicit
+# `env` with these defaults, so every existing problem keeps working while the medium is always
+# available for a formula to bind. That is what lets the XR panel change gravity or the medium and
+# have the derived answer actually change.
+components:
+  environment:
+    label: Environment
+    tags: [environment, scene, settings]
+    description: >
+      The surrounding medium and fields. Defaults are an idealised vacuum with no gravity, which
+      is what textbook electrostatics problems assume -- stated here as an editable value instead
+      of a footnote.
+    laws: [newton_gravitation_uniform, superposition_of_forces, medium_permittivity]
+    model3d: null
+    properties:
+      env.gravity:                {role: settable, default: "[0, 0, 0] m/s^2"}
+      env.wind_velocity:          {role: settable, default: "[0, 0, 0] m/s"}
+      env.relative_permittivity:  {role: settable, default: "1"}
+      env.air_density:            {role: settable, default: "0 kg/m^3"}
+      env.temperature:            {role: settable, default: "293.15 K"}

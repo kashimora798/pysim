@@ -1,0 +1,677 @@
+{
+  "fieldforge": "0.1",
+  "problem": {
+    "id": "p014",
+    "title": "Drag on a charged sphere moving into a headwind",
+    "text": "A charged sphere of cross-sectional area 20 cm^2 and drag coefficient 0.47 moves east at\n10 m/s through air of density 1.225 kg/m^3. The air itself is moving west at 5 m/s, so the\nsphere meets a 15 m/s headwind. What is the magnitude of the drag force on it?",
+    "source": "After OpenStax College Physics 2e, 5.2 (CC BY)",
+    "tags": [
+      "environment",
+      "wind",
+      "drag",
+      "mechanics"
+    ]
+  },
+  "target": "ball.mechanics.force_drag",
+  "answer": {
+    "value": [
+      -0.12954374999999999,
+      -0.0,
+      -0.0
+    ],
+    "unit": "N",
+    "dimension": {
+      "kg": "1",
+      "m": "1",
+      "s": "-2"
+    },
+    "rank": "vector",
+    "display": "[-0.1295, 0, 0] N"
+  },
+  "scene": {
+    "instances": [
+      {
+        "id": "air",
+        "kind": "environment",
+        "label": "Environment",
+        "model3d": null,
+        "tags": [
+          "environment",
+          "scene",
+          "settings"
+        ],
+        "given": {
+          "air.env.air_density": {
+            "value": 1.225,
+            "unit": "kg·m⁻³",
+            "dimension": {
+              "kg": "1",
+              "m": "-3"
+            },
+            "rank": "scalar",
+            "display": "1.225 kg·m⁻³"
+          },
+          "air.env.gravity": {
+            "value": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "unit": "m/s²",
+            "dimension": {
+              "m": "1",
+              "s": "-2"
+            },
+            "rank": "vector",
+            "display": "[0, 0, 0] m/s²"
+          },
+          "air.env.relative_permittivity": {
+            "value": 1.0,
+            "unit": "",
+            "dimension": {},
+            "rank": "scalar",
+            "display": "1"
+          },
+          "air.env.temperature": {
+            "value": 293.15,
+            "unit": "K",
+            "dimension": {
+              "K": "1"
+            },
+            "rank": "scalar",
+            "display": "293.1 K"
+          },
+          "air.env.wind_velocity": {
+            "value": [
+              -5.0,
+              0.0,
+              0.0
+            ],
+            "unit": "m/s",
+            "dimension": {
+              "m": "1",
+              "s": "-1"
+            },
+            "rank": "vector",
+            "display": "[-5, 0, 0] m/s"
+          }
+        }
+      },
+      {
+        "id": "ball",
+        "kind": "charged_particle",
+        "label": "Charged particle",
+        "model3d": "particle.glb",
+        "tags": [
+          "charge_source",
+          "electrostatic",
+          "source",
+          "movable",
+          "projectile"
+        ],
+        "given": {
+          "ball.em.charge": {
+            "value": 1e-09,
+            "unit": "C",
+            "dimension": {
+              "s": "1",
+              "A": "1"
+            },
+            "rank": "scalar",
+            "display": "1.000e-9 C"
+          },
+          "ball.geometry.cross_section": {
+            "value": 0.002,
+            "unit": "m²",
+            "dimension": {
+              "m": "2"
+            },
+            "rank": "scalar",
+            "display": "0.002 m²"
+          },
+          "ball.kinematics.velocity": {
+            "value": [
+              10.0,
+              0.0,
+              0.0
+            ],
+            "unit": "m/s",
+            "dimension": {
+              "m": "1",
+              "s": "-1"
+            },
+            "rank": "vector",
+            "display": "[10, 0, 0] m/s"
+          },
+          "ball.mechanics.drag_coefficient": {
+            "value": 0.47,
+            "unit": "",
+            "dimension": {},
+            "rank": "scalar",
+            "display": "0.47"
+          },
+          "ball.mechanics.mass": {
+            "value": 0.01,
+            "unit": "kg",
+            "dimension": {
+              "kg": "1"
+            },
+            "rank": "scalar",
+            "display": "0.01 kg"
+          }
+        }
+      }
+    ],
+    "relations": []
+  },
+  "assumptions": [
+    "rigid_body",
+    "subsonic",
+    "no_lift"
+  ],
+  "citations": [
+    "OpenStax College Physics 2e, 5.2 (CC BY)"
+  ],
+  "checks": {
+    "dimensions": "pass",
+    "engines": [
+      "chain"
+    ],
+    "paths_found": 1,
+    "paths_agree": true,
+    "path_spread": 0.0
+  },
+  "timeline": [
+    {
+      "beat": 1,
+      "kind": "place",
+      "instance": "air",
+      "component": "environment",
+      "model3d": null,
+      "narrate": "Place Environment.",
+      "because": {
+        "kind": "scene",
+        "detail": "The surrounding medium and fields. Defaults are an idealised vacuum with no gravity, which is what textbook electrostatics problems assume -- stated here as an editable value instead of a footnote.",
+        "laws": [
+          "newton_gravitation_uniform",
+          "superposition_of_forces",
+          "medium_permittivity"
+        ]
+      }
+    },
+    {
+      "beat": 2,
+      "kind": "place",
+      "instance": "ball",
+      "component": "charged_particle",
+      "model3d": "particle.glb",
+      "narrate": "Place Charged particle.",
+      "because": {
+        "kind": "scene",
+        "detail": "A charge with mass, free to move. Both a field source and the thing that responds to a field — which is precisely why the field -> force -> trajectory chain needs no special case.",
+        "laws": [
+          "coulombs_law",
+          "lorentz_force",
+          "newton_second_law"
+        ]
+      }
+    },
+    {
+      "beat": 3,
+      "kind": "given",
+      "instance": "air",
+      "ref": "air.env.air_density",
+      "property": "env.air_density",
+      "channel": null,
+      "value": 1.225,
+      "unit": "kg·m⁻³",
+      "dimension": {
+        "kg": "1",
+        "m": "-3"
+      },
+      "rank": "scalar",
+      "display": "1.225 kg·m⁻³",
+      "narrate": "air: air density is 1.225 kg·m⁻³, as stated.",
+      "because": {
+        "kind": "given",
+        "detail": "supplied by the problem statement"
+      }
+    },
+    {
+      "beat": 4,
+      "kind": "given",
+      "instance": "air",
+      "ref": "air.env.wind_velocity",
+      "property": "env.wind_velocity",
+      "channel": null,
+      "value": [
+        -5.0,
+        0.0,
+        0.0
+      ],
+      "unit": "m/s",
+      "dimension": {
+        "m": "1",
+        "s": "-1"
+      },
+      "rank": "vector",
+      "display": "[-5, 0, 0] m/s",
+      "narrate": "air: wind velocity is [-5, 0, 0] m/s, as stated.",
+      "because": {
+        "kind": "given",
+        "detail": "supplied by the problem statement"
+      }
+    },
+    {
+      "beat": 5,
+      "kind": "given",
+      "instance": "ball",
+      "ref": "ball.mechanics.drag_coefficient",
+      "property": "mechanics.drag_coefficient",
+      "channel": null,
+      "value": 0.47,
+      "unit": "",
+      "dimension": {},
+      "rank": "scalar",
+      "display": "0.47",
+      "narrate": "ball: drag coefficient is 0.47, as stated.",
+      "because": {
+        "kind": "given",
+        "detail": "supplied by the problem statement"
+      }
+    },
+    {
+      "beat": 6,
+      "kind": "given",
+      "instance": "ball",
+      "ref": "ball.geometry.cross_section",
+      "property": "geometry.cross_section",
+      "channel": null,
+      "value": 0.002,
+      "unit": "m²",
+      "dimension": {
+        "m": "2"
+      },
+      "rank": "scalar",
+      "display": "0.002 m²",
+      "narrate": "ball: cross section is 0.002 m², as stated.",
+      "because": {
+        "kind": "given",
+        "detail": "supplied by the problem statement"
+      }
+    },
+    {
+      "beat": 7,
+      "kind": "given",
+      "instance": "ball",
+      "ref": "ball.kinematics.velocity",
+      "property": "kinematics.velocity",
+      "channel": "velocity_vector",
+      "value": [
+        10.0,
+        0.0,
+        0.0
+      ],
+      "unit": "m/s",
+      "dimension": {
+        "m": "1",
+        "s": "-1"
+      },
+      "rank": "vector",
+      "display": "[10, 0, 0] m/s",
+      "narrate": "ball: velocity is [10, 0, 0] m/s, as stated.",
+      "because": {
+        "kind": "given",
+        "detail": "supplied by the problem statement"
+      }
+    },
+    {
+      "beat": 8,
+      "kind": "resolve",
+      "instance": "ball",
+      "ref": "ball.mechanics.force_drag",
+      "property": "mechanics.force_drag",
+      "channel": null,
+      "value": [
+        -0.12954374999999999,
+        -0.0,
+        -0.0
+      ],
+      "unit": "N",
+      "dimension": {
+        "kg": "1",
+        "m": "1",
+        "s": "-2"
+      },
+      "rank": "vector",
+      "display": "[-0.1295, 0, 0] N",
+      "narrate": "ball: force drag resolves to [-0.1295, 0, 0] N.",
+      "because": {
+        "kind": "derived",
+        "formula": "drag.F_vec_from_env",
+        "expression": "-0.5 * rho * Cd * A * mag(v - v_wind) * (v - v_wind)",
+        "substituted": "-0.5*(0.002 m²)*(0.47)*(1.225 kg·m⁻³)*(([10, 0, 0] m/s) - ([-5, 0, 0] m/s))*mag(([10, 0, 0] m/s) - ([-5, 0, 0] m/s))",
+        "law": "quadratic_drag",
+        "law_label": "Quadratic drag through a medium",
+        "law_statement": "A body moving at velocity v through a medium of density rho, with the medium itself moving at v_wind, feels a force -0.5*rho*C_d*A*|v - v_wind|*(v - v_wind): opposing the RELATIVE motion and growing with its square. Wind enters only through that relative velocity, which is why a body moving with the wind feels no drag at all.",
+        "assumes": [
+          "rigid_body",
+          "subsonic",
+          "no_lift"
+        ],
+        "cite": "OpenStax College Physics 2e, 5.2 (CC BY)",
+        "inputs": [
+          {
+            "symbol": "rho",
+            "from": "air.env.air_density",
+            "value": 1.225,
+            "unit": "kg·m⁻³",
+            "dimension": {
+              "kg": "1",
+              "m": "-3"
+            },
+            "rank": "scalar",
+            "display": "1.225 kg·m⁻³"
+          },
+          {
+            "symbol": "v_wind",
+            "from": "air.env.wind_velocity",
+            "value": [
+              -5.0,
+              0.0,
+              0.0
+            ],
+            "unit": "m/s",
+            "dimension": {
+              "m": "1",
+              "s": "-1"
+            },
+            "rank": "vector",
+            "display": "[-5, 0, 0] m/s"
+          },
+          {
+            "symbol": "Cd",
+            "from": "ball.mechanics.drag_coefficient",
+            "value": 0.47,
+            "unit": "",
+            "dimension": {},
+            "rank": "scalar",
+            "display": "0.47"
+          },
+          {
+            "symbol": "A",
+            "from": "ball.geometry.cross_section",
+            "value": 0.002,
+            "unit": "m²",
+            "dimension": {
+              "m": "2"
+            },
+            "rank": "scalar",
+            "display": "0.002 m²"
+          },
+          {
+            "symbol": "v",
+            "from": "ball.kinematics.velocity",
+            "value": [
+              10.0,
+              0.0,
+              0.0
+            ],
+            "unit": "m/s",
+            "dimension": {
+              "m": "1",
+              "s": "-1"
+            },
+            "rank": "vector",
+            "display": "[10, 0, 0] m/s"
+          }
+        ]
+      }
+    },
+    {
+      "beat": 9,
+      "kind": "answer",
+      "ref": "ball.mechanics.force_drag",
+      "property": "mechanics.force_drag",
+      "value": [
+        -0.12954374999999999,
+        -0.0,
+        -0.0
+      ],
+      "unit": "N",
+      "dimension": {
+        "kg": "1",
+        "m": "1",
+        "s": "-2"
+      },
+      "rank": "vector",
+      "display": "[-0.1295, 0, 0] N",
+      "narrate": "Answer: [-0.1295, 0, 0] N.",
+      "because": {
+        "kind": "summary",
+        "laws": [
+          "quadratic_drag"
+        ],
+        "paths_found": 1
+      }
+    }
+  ],
+  "paths": [
+    {
+      "cost": 1,
+      "laws": [
+        "quadratic_drag"
+      ],
+      "formulas": [
+        "drag.F_vec_from_env"
+      ],
+      "value": {
+        "value": [
+          -0.12954374999999999,
+          -0.0,
+          -0.0
+        ],
+        "unit": "N",
+        "dimension": {
+          "kg": "1",
+          "m": "1",
+          "s": "-2"
+        },
+        "rank": "vector",
+        "display": "[-0.1295, 0, 0] N"
+      },
+      "assumptions": [
+        "rigid_body",
+        "subsonic",
+        "no_lift"
+      ],
+      "citations": [
+        "OpenStax College Physics 2e, 5.2 (CC BY)"
+      ],
+      "steps": [
+        {
+          "ref": "air.env.air_density",
+          "property": "env.air_density",
+          "value": 1.225,
+          "unit": "kg·m⁻³",
+          "dimension": {
+            "kg": "1",
+            "m": "-3"
+          },
+          "rank": "scalar",
+          "display": "1.225 kg·m⁻³",
+          "because": {
+            "kind": "given",
+            "detail": "supplied by the problem statement"
+          }
+        },
+        {
+          "ref": "air.env.wind_velocity",
+          "property": "env.wind_velocity",
+          "value": [
+            -5.0,
+            0.0,
+            0.0
+          ],
+          "unit": "m/s",
+          "dimension": {
+            "m": "1",
+            "s": "-1"
+          },
+          "rank": "vector",
+          "display": "[-5, 0, 0] m/s",
+          "because": {
+            "kind": "given",
+            "detail": "supplied by the problem statement"
+          }
+        },
+        {
+          "ref": "ball.mechanics.drag_coefficient",
+          "property": "mechanics.drag_coefficient",
+          "value": 0.47,
+          "unit": "",
+          "dimension": {},
+          "rank": "scalar",
+          "display": "0.47",
+          "because": {
+            "kind": "given",
+            "detail": "supplied by the problem statement"
+          }
+        },
+        {
+          "ref": "ball.geometry.cross_section",
+          "property": "geometry.cross_section",
+          "value": 0.002,
+          "unit": "m²",
+          "dimension": {
+            "m": "2"
+          },
+          "rank": "scalar",
+          "display": "0.002 m²",
+          "because": {
+            "kind": "given",
+            "detail": "supplied by the problem statement"
+          }
+        },
+        {
+          "ref": "ball.kinematics.velocity",
+          "property": "kinematics.velocity",
+          "value": [
+            10.0,
+            0.0,
+            0.0
+          ],
+          "unit": "m/s",
+          "dimension": {
+            "m": "1",
+            "s": "-1"
+          },
+          "rank": "vector",
+          "display": "[10, 0, 0] m/s",
+          "because": {
+            "kind": "given",
+            "detail": "supplied by the problem statement"
+          }
+        },
+        {
+          "ref": "ball.mechanics.force_drag",
+          "property": "mechanics.force_drag",
+          "value": [
+            -0.12954374999999999,
+            -0.0,
+            -0.0
+          ],
+          "unit": "N",
+          "dimension": {
+            "kg": "1",
+            "m": "1",
+            "s": "-2"
+          },
+          "rank": "vector",
+          "display": "[-0.1295, 0, 0] N",
+          "because": {
+            "kind": "derived",
+            "formula": "drag.F_vec_from_env",
+            "expression": "-0.5 * rho * Cd * A * mag(v - v_wind) * (v - v_wind)",
+            "substituted": "-0.5*(0.002 m²)*(0.47)*(1.225 kg·m⁻³)*(([10, 0, 0] m/s) - ([-5, 0, 0] m/s))*mag(([10, 0, 0] m/s) - ([-5, 0, 0] m/s))",
+            "law": "quadratic_drag",
+            "law_label": "Quadratic drag through a medium",
+            "law_statement": "A body moving at velocity v through a medium of density rho, with the medium itself moving at v_wind, feels a force -0.5*rho*C_d*A*|v - v_wind|*(v - v_wind): opposing the RELATIVE motion and growing with its square. Wind enters only through that relative velocity, which is why a body moving with the wind feels no drag at all.",
+            "assumes": [
+              "rigid_body",
+              "subsonic",
+              "no_lift"
+            ],
+            "cite": "OpenStax College Physics 2e, 5.2 (CC BY)",
+            "inputs": [
+              {
+                "symbol": "rho",
+                "from": "air.env.air_density",
+                "value": 1.225,
+                "unit": "kg·m⁻³",
+                "dimension": {
+                  "kg": "1",
+                  "m": "-3"
+                },
+                "rank": "scalar",
+                "display": "1.225 kg·m⁻³"
+              },
+              {
+                "symbol": "v_wind",
+                "from": "air.env.wind_velocity",
+                "value": [
+                  -5.0,
+                  0.0,
+                  0.0
+                ],
+                "unit": "m/s",
+                "dimension": {
+                  "m": "1",
+                  "s": "-1"
+                },
+                "rank": "vector",
+                "display": "[-5, 0, 0] m/s"
+              },
+              {
+                "symbol": "Cd",
+                "from": "ball.mechanics.drag_coefficient",
+                "value": 0.47,
+                "unit": "",
+                "dimension": {},
+                "rank": "scalar",
+                "display": "0.47"
+              },
+              {
+                "symbol": "A",
+                "from": "ball.geometry.cross_section",
+                "value": 0.002,
+                "unit": "m²",
+                "dimension": {
+                  "m": "2"
+                },
+                "rank": "scalar",
+                "display": "0.002 m²"
+              },
+              {
+                "symbol": "v",
+                "from": "ball.kinematics.velocity",
+                "value": [
+                  10.0,
+                  0.0,
+                  0.0
+                ],
+                "unit": "m/s",
+                "dimension": {
+                  "m": "1",
+                  "s": "-1"
+                },
+                "rank": "vector",
+                "display": "[10, 0, 0] m/s"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

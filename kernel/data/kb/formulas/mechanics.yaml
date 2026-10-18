@@ -1,0 +1,406 @@
+# Force, acceleration, kinematics and energy.
+#
+# These are what turn a field into a trajectory. Nothing here mentions electromagnetism, and
+# nothing in electrostatics.yaml mentions mechanics -- they meet only through shared property
+# keys. That is the cross-domain claim, and it is structural rather than special-cased.
+formulas:
+
+  # ---------------------------------------------------------------- force
+
+  lorentz.F_vec_electric:
+    solves_for: mechanics.force_em
+    scope: self
+    bindings:
+      q: {prop: em.charge}
+      E: {prop: em.electric_field}
+    expr: "q * E"
+    law: lorentz_force
+    assumes: [negligible_magnetic_force]
+    cite: "OpenStax College Physics 2e, 18.5 (CC BY)"
+    cost: 1
+    note: >
+      The link that makes the whole project cross-domain. `q` is electromagnetic, the result is
+      mechanical, and the formula knows about neither domain -- only about property keys.
+
+  lorentz.F_vec_magnetic:
+    solves_for: mechanics.force_em
+    scope: self
+    bindings:
+      q: {prop: em.charge}
+      v: {prop: kinematics.velocity}
+      B: {prop: em.magnetic_field}
+    expr: "q * cross(v, B)"
+    law: lorentz_force
+    assumes: [no_electric_field]
+    cite: "OpenStax University Physics 2, 11.2 (CC BY)"
+    cost: 2
+
+  gravity.F_vec_from_env:
+    solves_for: mechanics.force_gravity
+    scope: pair
+    roles:
+      env: {scene: true, kinds: [environment]}
+    bindings:
+      m: {prop: mechanics.mass, from: self}
+      g: {prop: env.gravity, from: env}
+    expr: "m * g"
+    law: newton_gravitation_uniform
+    assumes: [uniform_field]
+    cite: "OpenStax College Physics 2e, 4.5 (CC BY)"
+    cost: 1
+    note: >
+      Binds the scene's environment rather than a constant, so the weight a body feels is whatever
+      the user has set gravity to. With the default [0,0,0] this is exactly zero, which is the
+      idealisation textbook electrostatics problems assume.
+
+  drag.F_vec_from_env:
+    solves_for: mechanics.force_drag
+    scope: pair
+    roles:
+      env: {scene: true, kinds: [environment]}
+    bindings:
+      rho:    {prop: env.air_density, from: env}
+      v_wind: {prop: env.wind_velocity, from: env}
+      Cd:     {prop: mechanics.drag_coefficient, from: self}
+      A:      {prop: geometry.cross_section, from: self}
+      v:      {prop: kinematics.velocity, from: self}
+    expr: "-0.5 * rho * Cd * A * mag(v - v_wind) * (v - v_wind)"
+    law: quadratic_drag
+    assumes: [rigid_body, subsonic, no_lift]
+    cite: "OpenStax College Physics 2e, 5.2 (CC BY)"
+    cost: 1
+    note: >
+      Wind acts only through the RELATIVE velocity v - v_wind, so a body drifting with the wind
+      feels nothing. Both air density and cross-section default to zero, which makes drag opt-in:
+      every existing problem gets exactly zero without having to say so.
+
+  force.net_from_contributions:
+    solves_for: mechanics.force
+    scope: self
+    bindings:
+      F_em: {prop: mechanics.force_em}
+      F_g:  {prop: mechanics.force_gravity}
+    expr: "F_em + F_g"
+    law: superposition_of_forces
+    assumes: [no_other_forces, negligible_drag]
+    cite: "OpenStax College Physics 2e, 4.6 (CC BY)"
+    cost: 1
+    note: >
+      Superposition as an actual sum. Separating the electric and gravitational contributions is
+      what keeps this ONE derivation instead of two rival paths that would disagree the moment
+      gravity stopped being zero.
+
+      Drag is deliberately NOT in this sum. It only exists when the scene states a velocity, an
+      area and a medium density, and a chain resolver cannot express "include this term only if it
+      resolves" -- an optional contribution would either manufacture a phantom zero path or make
+      two net formulas disagree. `mechanics.force_drag` is therefore derivable on its own and
+      visualised on its own, and folding it in is work for the equation assembler (Engine B),
+      where contributions are collected rather than chained. Honest limitation, recorded here
+      rather than papered over.
+
+  force.magnitude_from_vector:
+    solves_for: mechanics.force_magnitude
+    scope: self
+    bindings:
+      F: {prop: mechanics.force}
+    expr: "mag(F)"
+    law: definition_magnitude
+    cite: "definitional"
+    cost: 1
+
+  # ---------------------------------------------------------------- Newton II
+
+  newton.a_vec_from_F:
+    solves_for: kinematics.acceleration
+    scope: self
+    bindings:
+      F: {prop: mechanics.force}
+      m: {prop: mechanics.mass}
+    expr: "F / m"
+    law: newton_second_law
+    assumes: [constant_mass, non_relativistic]
+    cite: "OpenStax College Physics 2e, 4.3 (CC BY)"
+    cost: 1
+
+  newton.a_mag_from_F:
+    solves_for: kinematics.acceleration_magnitude
+    scope: self
+    bindings:
+      F: {prop: mechanics.force_magnitude}
+      m: {prop: mechanics.mass}
+    expr: "F / m"
+    law: newton_second_law
+    assumes: [constant_mass, non_relativistic]
+    cite: "OpenStax College Physics 2e, 4.3 (CC BY)"
+    cost: 1
+
+  accel.magnitude_from_vector:
+    solves_for: kinematics.acceleration_magnitude
+    scope: self
+    bindings:
+      a: {prop: kinematics.acceleration}
+    expr: "mag(a)"
+    law: definition_magnitude
+    cite: "definitional"
+    cost: 1
+
+  # ---------------------------------------------------------------- kinematics
+
+  kin.v_final_from_u_a_t:
+    solves_for: kinematics.speed
+    produces_state: final
+    scope: self
+    bindings:
+      u: {prop: kinematics.speed, state: initial}
+      a: {prop: kinematics.acceleration_magnitude}
+      t: {prop: kinematics.time}
+    expr: "u + a * t"
+    law: kinematics_constant_acceleration
+    assumes: [constant_acceleration, straight_line]
+    cite: "OpenStax College Physics 2e, 2.5 (CC BY)"
+    cost: 1
+
+  kin.v_final_from_u_a_s:
+    solves_for: kinematics.speed
+    produces_state: final
+    scope: self
+    bindings:
+      u: {prop: kinematics.speed, state: initial}
+      a: {prop: kinematics.acceleration_magnitude}
+      s: {prop: kinematics.distance}
+    expr: "sqrt(u**2 + 2 * a * s)"
+    law: kinematics_constant_acceleration
+    assumes: [constant_acceleration, straight_line]
+    cite: "OpenStax College Physics 2e, 2.5 (CC BY)"
+    cost: 1
+    note: >
+      The time-free form. Where the energy route is also available this gives a second, genuinely
+      different derivation of the same answer -- a real alternative path, not an algebraic
+      rearrangement, because it cites kinematics where the other cites energy conservation.
+
+  kin.s_from_u_a_t:
+    solves_for: kinematics.distance
+    scope: self
+    bindings:
+      u: {prop: kinematics.speed, state: initial}
+      a: {prop: kinematics.acceleration_magnitude}
+      t: {prop: kinematics.time}
+    expr: "u * t + a * t**2 / 2"
+    law: kinematics_constant_acceleration
+    assumes: [constant_acceleration, straight_line]
+    cite: "OpenStax College Physics 2e, 2.5 (CC BY)"
+    cost: 1
+
+  kin.t_from_u_v_a:
+    solves_for: kinematics.time
+    scope: self
+    bindings:
+      u: {prop: kinematics.speed, state: initial}
+      v: {prop: kinematics.speed, state: final}
+      a: {prop: kinematics.acceleration_magnitude}
+    expr: "(v - u) / a"
+    law: kinematics_constant_acceleration
+    assumes: [constant_acceleration, straight_line]
+    cite: "OpenStax College Physics 2e, 2.5 (CC BY)"
+    cost: 1
+
+  kin.t_from_s_a_rest:
+    solves_for: kinematics.time
+    scope: self
+    bindings:
+      s: {prop: kinematics.distance}
+      a: {prop: kinematics.acceleration_magnitude}
+    expr: "sqrt(2 * s / a)"
+    law: kinematics_constant_acceleration
+    assumes: [constant_acceleration, straight_line, starts_from_rest]
+    cite: "OpenStax College Physics 2e, 2.5 (CC BY)"
+    cost: 2
+
+  kin.speed_from_velocity:
+    solves_for: kinematics.speed
+    scope: self
+    bindings:
+      v: {prop: kinematics.velocity, state: same}
+    expr: "mag(v)"
+    law: definition_magnitude
+    cite: "definitional"
+    cost: 1
+
+  kin.distance_from_displacement:
+    solves_for: kinematics.distance
+    scope: self
+    bindings:
+      s: {prop: kinematics.displacement}
+    expr: "mag(s)"
+    law: definition_magnitude
+    cite: "definitional"
+    cost: 1
+
+  kin.distance_across_plates:
+    solves_for: kinematics.distance
+    scope: pair
+    via: inside
+    role: region
+    role_kinds: [parallel_plate_capacitor]
+    bindings:
+      d: {prop: geometry.separation_plates, from: region}
+    expr: "d"
+    law: kinematics_constant_acceleration
+    assumes: [full_traverse, released_at_one_plate]
+    cite: "geometry of the problem"
+    cost: 2
+    note: >
+      A charge released at one plate and arriving at the other has travelled the gap. Geometry
+      rather than physics, but it has to be a cited step or the kinematics route to final speed
+      would contain an unexplained number.
+
+  kin.displacement_from_u_a_t:
+    solves_for: kinematics.displacement
+    scope: self
+    bindings:
+      u: {prop: kinematics.velocity, state: initial}
+      a: {prop: kinematics.acceleration}
+      t: {prop: kinematics.time}
+    expr: "u * t + a * t**2 / 2"
+    law: kinematics_constant_acceleration
+    assumes: [constant_acceleration]
+    cite: "OpenStax College Physics 2e, 2.5 (CC BY)"
+    cost: 1
+    note: The vector form -- this is what the renderer samples to draw a curved trajectory.
+
+  kin.velocity_final_from_u_a_t:
+    solves_for: kinematics.velocity
+    produces_state: final
+    scope: self
+    bindings:
+      u: {prop: kinematics.velocity, state: initial}
+      a: {prop: kinematics.acceleration}
+      t: {prop: kinematics.time}
+    expr: "u + a * t"
+    law: kinematics_constant_acceleration
+    assumes: [constant_acceleration]
+    cite: "OpenStax College Physics 2e, 2.5 (CC BY)"
+    cost: 1
+
+  # ---------------------------------------------------------------- energy
+
+  energy.K_from_m_v:
+    solves_for: energy.kinetic
+    scope: self
+    bindings:
+      m: {prop: mechanics.mass}
+      v: {prop: kinematics.speed, state: same}
+    expr: "m * v**2 / 2"
+    law: work_energy_theorem
+    assumes: [non_relativistic]
+    cite: "OpenStax College Physics 2e, 7.2 (CC BY)"
+    cost: 1
+
+  energy.v_from_K_m:
+    solves_for: kinematics.speed
+    produces_state: final
+    scope: self
+    bindings:
+      K: {prop: energy.kinetic}
+      m: {prop: mechanics.mass}
+    expr: "sqrt(2 * K / m)"
+    law: work_energy_theorem
+    assumes: [non_relativistic]
+    cite: "OpenStax College Physics 2e, 7.2 (CC BY)"
+    cost: 1
+
+  energy.K_from_work_at_rest:
+    solves_for: energy.kinetic
+    scope: self
+    bindings:
+      W: {prop: mechanics.work}
+    expr: "W"
+    law: work_energy_theorem
+    assumes: [starts_from_rest, no_other_forces]
+    cite: "OpenStax College Physics 2e, 7.2 (CC BY)"
+    cost: 1
+
+  energy.work_from_q_pd:
+    solves_for: mechanics.work
+    scope: pair
+    via: inside
+    role: region
+    role_kinds: [parallel_plate_capacitor, uniform_field_region]
+    bindings:
+      Q: {prop: em.charge_magnitude, from: self}
+      V: {prop: em.potential_difference, from: region}
+    expr: "Q * V"
+    law: electric_potential_definition
+    assumes: [full_traverse, no_other_forces]
+    cite: "OpenStax College Physics 2e, 19.1 (CC BY)"
+    cost: 1
+    note: >
+      Work done on a charge crossing the full gap. Pairs with energy.K_from_work_at_rest and
+      energy.v_from_K_m to give the energy route to final speed -- the alternative to the
+      kinematics route, citing a different law.
+
+  energy.U_from_q_V:
+    solves_for: energy.potential_electric
+    scope: self
+    bindings:
+      q: {prop: em.charge}
+      V: {prop: em.electric_potential}
+    expr: "q * V"
+    law: electric_potential_definition
+    assumes: [zero_at_infinity]
+    cite: "OpenStax College Physics 2e, 19.1 (CC BY)"
+    cost: 1
+
+  energy.work_from_force_distance:
+    solves_for: mechanics.work
+    scope: self
+    bindings:
+      F: {prop: mechanics.force_magnitude}
+      d: {prop: kinematics.distance}
+    expr: "F * d"
+    law: work_energy_theorem
+    assumes: [constant_force, force_along_displacement]
+    cite: "OpenStax College Physics 2e, 7.1 (CC BY)"
+    cost: 2
+
+  # ---------------------------------------------------------------- momentum, circular motion
+
+  momentum.p_from_m_v:
+    solves_for: mechanics.momentum
+    scope: self
+    bindings:
+      m: {prop: mechanics.mass}
+      v: {prop: kinematics.velocity}
+    expr: "m * v"
+    law: newton_second_law
+    assumes: [non_relativistic]
+    cite: "OpenStax College Physics 2e, 8.1 (CC BY)"
+    cost: 1
+
+  cyclotron.radius:
+    solves_for: em.cyclotron_radius
+    scope: self
+    bindings:
+      m: {prop: mechanics.mass}
+      v: {prop: kinematics.speed}
+      Q: {prop: em.charge_magnitude}
+      B: {prop: em.magnetic_field_magnitude}
+    expr: "m * v / (Q * B)"
+    law: circular_motion_magnetic
+    assumes: [velocity_perpendicular_to_B, non_relativistic]
+    cite: "OpenStax University Physics 2, 11.3 (CC BY)"
+    cost: 1
+
+  cyclotron.period:
+    solves_for: em.cyclotron_period
+    scope: self
+    bindings:
+      m: {prop: mechanics.mass}
+      Q: {prop: em.charge_magnitude}
+      B: {prop: em.magnetic_field_magnitude}
+    expr: "2 * pi * m / (Q * B)"
+    law: circular_motion_magnetic
+    assumes: [velocity_perpendicular_to_B, non_relativistic]
+    cite: "OpenStax University Physics 2, 11.3 (CC BY)"
+    cost: 1
+    note: Independent of speed -- the fact that makes the cyclotron work.

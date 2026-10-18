@@ -1,0 +1,271 @@
+# Electrostatic field and potential.
+#
+# `scope: pair` formulas bind across a relation: `src` is the other end, `rel` is the relation
+# itself (which owns the separation), `self` is the instance being solved for. A separation
+# belongs to the pair, not to either object — so it binds from `rel`.
+formulas:
+
+  coulomb.E_mag_from_point_charge:
+    solves_for: em.electric_field_magnitude
+    scope: pair
+    roles:
+      src: {via: acts_on, kinds: [point_charge, charged_particle, electron, conducting_shell]}
+      env: {scene: true, kinds: [environment]}
+    bindings:
+      k_e:   {const: k_e}
+      Q:     {prop: em.charge_magnitude, from: src}
+      r:     {prop: geometry.separation, from: rel.src}
+      eps_r: {prop: env.relative_permittivity, from: env}
+    expr: "k_e * Q / (eps_r * r**2)"
+    law: coulombs_law
+    assumes: [point_source, vacuum, outside_any_conductor]
+    cite: "OpenStax College Physics 2e, 18.5 (CC BY)"
+    cost: 1
+    note: >
+      The inverse square is the whole claim. A 1/r**3 slip here is dimensionally detectable, which
+      is why the compiler compares this expression's inferred dimension against the declared
+      solves_for property before the formula is ever used.
+
+  coulomb.V_from_point_charge:
+    solves_for: em.electric_potential
+    scope: pair
+    roles:
+      src: {via: acts_on, kinds: [point_charge, charged_particle, electron, conducting_shell]}
+      env: {scene: true, kinds: [environment]}
+    bindings:
+      k_e:   {const: k_e}
+      q:     {prop: em.charge, from: src}
+      r:     {prop: geometry.separation, from: rel.src}
+      eps_r: {prop: env.relative_permittivity, from: env}
+    expr: "k_e * q / (eps_r * r)"
+    law: coulombs_law
+    assumes: [point_source, vacuum, zero_at_infinity]
+    cite: "OpenStax College Physics 2e, 19.3 (CC BY)"
+    cost: 1
+
+  plates.E_mag_from_pd:
+    solves_for: em.electric_field_magnitude
+    scope: self
+    bindings:
+      V: {prop: em.potential_difference}
+      d: {prop: geometry.separation_plates}
+    expr: "V / d"
+    law: uniform_field_between_plates
+    assumes: [uniform_field, edge_effects_neglected]
+    cite: "OpenStax College Physics 2e, 19.4 (CC BY)"
+    cost: 1
+
+  plates.E_mag_at_charge:
+    solves_for: em.electric_field_magnitude
+    scope: pair
+    via: inside
+    role: region
+    role_kinds: [parallel_plate_capacitor, uniform_field_region, infinite_charged_plane]
+    bindings:
+      E: {prop: em.electric_field_magnitude, from: region}
+    expr: "E"
+    law: uniform_field_between_plates
+    assumes: [uniform_field]
+    cite: "OpenStax College Physics 2e, 19.4 (CC BY)"
+    cost: 1
+    note: >
+      In a uniform region the field at an enclosed object is the region's field. Trivial as
+      algebra, essential as a link: it is what carries a field value across the `inside` relation.
+
+  plane.E_mag_from_sigma:
+    solves_for: em.electric_field_magnitude
+    scope: self
+    bindings:
+      sigma:     {prop: em.charge_density_surface}
+      epsilon_0: {const: epsilon_0}
+    expr: "Abs(sigma) / (2 * epsilon_0)"
+    law: gauss_law_electric
+    assumes: [infinite_plane, vacuum]
+    cite: "OpenStax University Physics 2, 6.4 (CC BY)"
+    cost: 1
+
+  line.E_mag_from_lambda:
+    solves_for: em.electric_field_magnitude
+    scope: pair
+    via: acts_on
+    role: src
+    role_kinds: [infinite_charged_line]
+    bindings:
+      lam:       {prop: em.charge_density_linear, from: src}
+      r:         {prop: geometry.separation, from: rel}
+      epsilon_0: {const: epsilon_0}
+    expr: "Abs(lam) / (2 * pi * epsilon_0 * r)"
+    law: gauss_law_electric
+    assumes: [infinite_line, vacuum]
+    cite: "OpenStax University Physics 2, 6.4 (CC BY)"
+    cost: 1
+
+  sphere.E_mag_outside:
+    solves_for: em.electric_field_magnitude
+    scope: pair
+    via: acts_on
+    role: src
+    role_kinds: [uniform_charged_sphere]
+    bindings:
+      k_e: {const: k_e}
+      Q:   {prop: em.charge_magnitude, from: src}
+      r:   {prop: geometry.separation, from: rel}
+    expr: "k_e * Q / r**2"
+    law: gauss_law_electric
+    assumes: [outside_sphere, spherical_symmetry, vacuum]
+    cite: "OpenStax University Physics 2, 6.4 (CC BY)"
+    cost: 2
+    note: Outside a spherically symmetric charge, the field is that of a point charge at its centre.
+
+  sphere.charge_from_density:
+    solves_for: em.charge
+    scope: self
+    bindings:
+      rho: {prop: em.charge_density_volume}
+      Vol: {prop: geometry.volume}
+    expr: "rho * Vol"
+    law: gauss_law_electric
+    assumes: [uniform_density]
+    cite: "definitional"
+    cost: 1
+
+  sphere.volume_from_radius:
+    solves_for: geometry.volume
+    scope: self
+    bindings:
+      R: {prop: geometry.radius}
+    expr: "4 * pi * R**3 / 3"
+    law: null
+    assumes: [sphere]
+    cite: "geometry"
+    cost: 1
+
+  # ---------------------------------------------------------------- the flagship case
+
+  cavity.E_vec_uniform:
+    solves_for: em.electric_field
+    scope: self
+    bindings:
+      rho:       {prop: em.charge_density_volume}
+      a:         {prop: geometry.offset}
+      epsilon_0: {const: epsilon_0}
+    expr: "rho * a / (3 * epsilon_0)"
+    law: superposition_electric
+    assumes: [uniform_density, spherical_cavity, cavity_entirely_inside, vacuum]
+    cite: "OpenStax University Physics 2, 6.4 + superposition (CC BY)"
+    cost: 1
+    note: >
+      The cavity field. Treat the holed sphere as a full sphere of density rho plus a sphere of
+      density -rho filling the cavity. Inside a uniform sphere E = rho*r/(3*eps0) measured from its
+      own centre, so the two contributions leave exactly rho*a/(3*eps0) along the offset a --
+      independent of position. Uniform field inside the hole, hence exact projectile motion for a
+      charge released there. This is the case the market has no simulation for.
+
+  cavity.E_vec_at_particle:
+    solves_for: em.electric_field
+    scope: pair
+    via: inside_cavity_of
+    role: host
+    role_kinds: [spherical_cavity_in_charged_sphere]
+    bindings:
+      E: {prop: em.electric_field, from: host}
+    expr: "E"
+    law: superposition_electric
+    assumes: [cavity_entirely_inside]
+    cite: "OpenStax University Physics 2, 6.4 (CC BY)"
+    cost: 1
+
+  shield.E_mag_inside_conductor_cavity:
+    solves_for: em.electric_field_magnitude
+    scope: pair
+    via: inside_cavity_of
+    role: host
+    role_kinds: [conducting_shell]
+    bindings: {}
+    expr: "0"
+    law: shielding_conductor_cavity
+    assumes: [electrostatic_equilibrium, no_charge_in_cavity]
+    cite: "OpenStax University Physics 2, 6.5 (CC BY)"
+    cost: 1
+    note: >
+      Exactly zero, whatever the shell carries and whatever surrounds it. The formula needs no
+      inputs at all: its entire precondition is the `inside_cavity_of` relation to a conductor,
+      which scope/via/role_kinds already state. A literal zero is dimensionally polymorphic -- the
+      zero element belongs to every dimension space -- so the dimension checker admits it against
+      a V/m target without weakening anything else.
+
+  field.E_vec_from_magnitude_and_direction:
+    solves_for: em.electric_field
+    scope: self
+    bindings:
+      E: {prop: em.electric_field_magnitude}
+      n: {prop: geometry.direction}
+    expr: "E * n"
+    law: uniform_field_between_plates
+    assumes: [uniform_field]
+    cite: "OpenStax College Physics 2e, 19.4 (CC BY)"
+    cost: 1
+    note: >
+      A magnitude plus a direction is a vector. Trivial, but it is what reconnects the scalar
+      plate-field chain to the vector force chain, and the renderer samples the result to draw
+      field arrows.
+
+  plates.E_vec_at_charge:
+    solves_for: em.electric_field
+    scope: pair
+    roles:
+      region: {via: inside, kinds: [parallel_plate_capacitor, uniform_field_region]}
+    bindings:
+      E: {prop: em.electric_field, from: region}
+    expr: "E"
+    law: uniform_field_between_plates
+    assumes: [uniform_field]
+    cite: "OpenStax College Physics 2e, 19.4 (CC BY)"
+    cost: 1
+
+  # ---------------------------------------------------------------- magnitude links
+
+  field.E_mag_from_vector:
+    solves_for: em.electric_field_magnitude
+    scope: self
+    bindings:
+      E: {prop: em.electric_field}
+    expr: "mag(E)"
+    law: definition_magnitude
+    assumes: []
+    cite: "definitional"
+    cost: 1
+
+  field.B_mag_from_vector:
+    solves_for: em.magnetic_field_magnitude
+    scope: self
+    bindings:
+      B: {prop: em.magnetic_field}
+    expr: "mag(B)"
+    law: definition_magnitude
+    cite: "definitional"
+    cost: 1
+
+  charge.magnitude_from_signed:
+    solves_for: em.charge_magnitude
+    scope: self
+    bindings:
+      q: {prop: em.charge}
+    expr: "Abs(q)"
+    law: definition_magnitude
+    cite: "definitional"
+    cost: 1
+
+  field.B_mag_at_particle:
+    solves_for: em.magnetic_field_magnitude
+    scope: pair
+    via: inside
+    role: region
+    role_kinds: [uniform_magnetic_field_region]
+    bindings:
+      B: {prop: em.magnetic_field_magnitude, from: region}
+    expr: "B"
+    law: circular_motion_magnetic
+    assumes: [uniform_field]
+    cite: "OpenStax University Physics 2, 11.3 (CC BY)"
+    cost: 1

@@ -1,0 +1,23 @@
+id: p104
+title: Power dissipated by a lamp
+source: "After OpenStax College Physics 2e, 20.4 (CC BY)"
+tags: [circuits, power, chapter1]
+text: |
+  A lamp of resistance 6.0 ohm is connected directly across a 12 V battery. At what rate does it
+  dissipate energy?
+scene:
+  instances:
+    - {id: bat, kind: battery, set: {electric.emf: "12 V"}}
+    - {id: lamp1, kind: lamp, set: {electric.resistance: "6.0 ohm"}}
+    - {id: loop, kind: circuit_loop}
+  relations:
+    - {kind: driven_by, from: loop, to: bat}
+    - {kind: loads, from: loop, to: lamp1}
+target: {instance: lamp1, prop: electric.power}
+expect:
+  value: 24.0
+  unit: W
+  tol: 0.001
+  note: >
+    The loop current must first reach the lamp through the `loads` relation, then power follows.
+    A lamp rather than a resistor on purpose: the answer is something you can see brighten.

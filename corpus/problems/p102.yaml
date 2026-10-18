@@ -1,0 +1,25 @@
+id: p102
+title: Two resistors in series
+source: "After OpenStax College Physics 2e, 21.1 (CC BY)"
+tags: [circuits, series, reduction, chapter1]
+text: |
+  A 10 ohm resistor and a 20 ohm resistor are wired end to end across a 9.0 V battery. What
+  current flows?
+scene:
+  instances:
+    - {id: bat, kind: battery, set: {electric.emf: "9.0 V"}}
+    - {id: r1, kind: resistor, set: {electric.resistance: "10 ohm"}}
+    - {id: r2, kind: resistor, set: {electric.resistance: "20 ohm"}}
+    - {id: sp, kind: series_pair}
+    - {id: loop, kind: circuit_loop}
+  relations:
+    - {kind: series_a, from: sp, to: r1}
+    - {kind: series_b, from: sp, to: r2}
+    - {kind: driven_by, from: loop, to: bat}
+    - {kind: loads, from: loop, to: sp}
+target: {instance: loop, prop: electric.current}
+expect:
+  value: 0.3
+  unit: A
+  tol: 0.001
+  note: "Reduction first: 10 + 20 = 30 ohm, then 9/30. The series pair is what the student wires."

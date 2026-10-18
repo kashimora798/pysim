@@ -1,0 +1,387 @@
+{
+  "fieldforge": "0.1",
+  "problem": {
+    "id": "p005",
+    "title": "Field of an infinite charged plane",
+    "text": "A very large flat sheet carries a uniform surface charge density of 1.0 uC/m^2. What is the\nmagnitude of the electric field near the sheet?",
+    "source": "After OpenStax University Physics 2, 6.4 (CC BY)",
+    "tags": [
+      "electrostatics",
+      "gauss"
+    ]
+  },
+  "target": "sheet.em.electric_field_magnitude",
+  "answer": {
+    "value": 56470.45336865095,
+    "unit": "V/m",
+    "dimension": {
+      "kg": "1",
+      "m": "1",
+      "s": "-3",
+      "A": "-1"
+    },
+    "rank": "scalar",
+    "display": "56470 V/m"
+  },
+  "scene": {
+    "instances": [
+      {
+        "id": "sheet",
+        "kind": "infinite_charged_plane",
+        "label": "Infinite charged plane",
+        "model3d": "plane.glb",
+        "tags": [
+          "charge_source",
+          "electrostatic",
+          "source",
+          "uniform_field"
+        ],
+        "given": {
+          "sheet.em.charge_density_surface": {
+            "value": 1e-06,
+            "unit": "C/m²",
+            "dimension": {
+              "m": "-2",
+              "s": "1",
+              "A": "1"
+            },
+            "rank": "scalar",
+            "display": "1.000e-6 C/m²"
+          }
+        }
+      },
+      {
+        "id": "env",
+        "kind": "environment",
+        "label": "Environment",
+        "model3d": null,
+        "tags": [
+          "environment",
+          "scene",
+          "settings"
+        ],
+        "given": {
+          "env.env.air_density": {
+            "value": 0.0,
+            "unit": "kg·m⁻³",
+            "dimension": {
+              "kg": "1",
+              "m": "-3"
+            },
+            "rank": "scalar",
+            "display": "0 kg·m⁻³"
+          },
+          "env.env.gravity": {
+            "value": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "unit": "m/s²",
+            "dimension": {
+              "m": "1",
+              "s": "-2"
+            },
+            "rank": "vector",
+            "display": "[0, 0, 0] m/s²"
+          },
+          "env.env.relative_permittivity": {
+            "value": 1.0,
+            "unit": "",
+            "dimension": {},
+            "rank": "scalar",
+            "display": "1"
+          },
+          "env.env.temperature": {
+            "value": 293.15,
+            "unit": "K",
+            "dimension": {
+              "K": "1"
+            },
+            "rank": "scalar",
+            "display": "293.1 K"
+          },
+          "env.env.wind_velocity": {
+            "value": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "unit": "m/s",
+            "dimension": {
+              "m": "1",
+              "s": "-1"
+            },
+            "rank": "vector",
+            "display": "[0, 0, 0] m/s"
+          }
+        }
+      }
+    ],
+    "relations": []
+  },
+  "assumptions": [
+    "infinite_plane",
+    "vacuum"
+  ],
+  "citations": [
+    "OpenStax University Physics 2, 6.4 (CC BY)"
+  ],
+  "checks": {
+    "dimensions": "pass",
+    "engines": [
+      "chain"
+    ],
+    "paths_found": 1,
+    "paths_agree": true,
+    "path_spread": 0.0
+  },
+  "timeline": [
+    {
+      "beat": 1,
+      "kind": "place",
+      "instance": "sheet",
+      "component": "infinite_charged_plane",
+      "model3d": "plane.glb",
+      "narrate": "Place Infinite charged plane.",
+      "because": {
+        "kind": "scene",
+        "detail": "An infinite sheet of uniform surface charge density. Its field is uniform and independent of distance, which is why it is the standard idealisation for a large plate.",
+        "laws": [
+          "gauss_law_electric"
+        ]
+      }
+    },
+    {
+      "beat": 2,
+      "kind": "place",
+      "instance": "env",
+      "component": "environment",
+      "model3d": null,
+      "narrate": "Place Environment.",
+      "because": {
+        "kind": "scene",
+        "detail": "The surrounding medium and fields. Defaults are an idealised vacuum with no gravity, which is what textbook electrostatics problems assume -- stated here as an editable value instead of a footnote.",
+        "laws": [
+          "newton_gravitation_uniform",
+          "superposition_of_forces",
+          "medium_permittivity"
+        ]
+      }
+    },
+    {
+      "beat": 3,
+      "kind": "given",
+      "instance": "sheet",
+      "ref": "sheet.em.charge_density_surface",
+      "property": "em.charge_density_surface",
+      "channel": "density_shading",
+      "value": 1e-06,
+      "unit": "C/m²",
+      "dimension": {
+        "m": "-2",
+        "s": "1",
+        "A": "1"
+      },
+      "rank": "scalar",
+      "display": "1.000e-6 C/m²",
+      "narrate": "sheet: charge density surface is 1.000e-6 C/m², as stated.",
+      "because": {
+        "kind": "given",
+        "detail": "supplied by the problem statement"
+      }
+    },
+    {
+      "beat": 4,
+      "kind": "resolve",
+      "instance": "sheet",
+      "ref": "sheet.em.electric_field_magnitude",
+      "property": "em.electric_field_magnitude",
+      "channel": "field_intensity",
+      "value": 56470.45336865095,
+      "unit": "V/m",
+      "dimension": {
+        "kg": "1",
+        "m": "1",
+        "s": "-3",
+        "A": "-1"
+      },
+      "rank": "scalar",
+      "display": "56470 V/m",
+      "narrate": "sheet: electric field magnitude resolves to 56470 V/m.",
+      "because": {
+        "kind": "derived",
+        "formula": "plane.E_mag_from_sigma",
+        "expression": "Abs(sigma) / (2 * epsilon_0)",
+        "substituted": "Abs((1.000e-6 C/m²))/(2*(8.854e-12 kg⁻¹·m⁻³·s⁴·A²))",
+        "law": "gauss_law_electric",
+        "law_label": "Gauss's law for electricity",
+        "law_statement": "The electric flux through any closed surface equals the enclosed charge divided by the vacuum permittivity. Its consequences fix the field of every symmetric charge distribution.",
+        "assumes": [
+          "infinite_plane",
+          "vacuum"
+        ],
+        "cite": "OpenStax University Physics 2, 6.4 (CC BY)",
+        "inputs": [
+          {
+            "symbol": "sigma",
+            "from": "sheet.em.charge_density_surface",
+            "value": 1e-06,
+            "unit": "C/m²",
+            "dimension": {
+              "m": "-2",
+              "s": "1",
+              "A": "1"
+            },
+            "rank": "scalar",
+            "display": "1.000e-6 C/m²"
+          },
+          {
+            "symbol": "epsilon_0",
+            "from": "epsilon_0",
+            "value": 8.8541878128e-12,
+            "unit": "kg⁻¹·m⁻³·s⁴·A²",
+            "dimension": {
+              "kg": "-1",
+              "m": "-3",
+              "s": "4",
+              "A": "2"
+            },
+            "rank": "scalar",
+            "display": "8.854e-12 kg⁻¹·m⁻³·s⁴·A²"
+          }
+        ]
+      }
+    },
+    {
+      "beat": 5,
+      "kind": "answer",
+      "ref": "sheet.em.electric_field_magnitude",
+      "property": "em.electric_field_magnitude",
+      "value": 56470.45336865095,
+      "unit": "V/m",
+      "dimension": {
+        "kg": "1",
+        "m": "1",
+        "s": "-3",
+        "A": "-1"
+      },
+      "rank": "scalar",
+      "display": "56470 V/m",
+      "narrate": "Answer: 56470 V/m.",
+      "because": {
+        "kind": "summary",
+        "laws": [
+          "gauss_law_electric"
+        ],
+        "paths_found": 1
+      }
+    }
+  ],
+  "paths": [
+    {
+      "cost": 1,
+      "laws": [
+        "gauss_law_electric"
+      ],
+      "formulas": [
+        "plane.E_mag_from_sigma"
+      ],
+      "value": {
+        "value": 56470.45336865095,
+        "unit": "V/m",
+        "dimension": {
+          "kg": "1",
+          "m": "1",
+          "s": "-3",
+          "A": "-1"
+        },
+        "rank": "scalar",
+        "display": "56470 V/m"
+      },
+      "assumptions": [
+        "infinite_plane",
+        "vacuum"
+      ],
+      "citations": [
+        "OpenStax University Physics 2, 6.4 (CC BY)"
+      ],
+      "steps": [
+        {
+          "ref": "sheet.em.charge_density_surface",
+          "property": "em.charge_density_surface",
+          "value": 1e-06,
+          "unit": "C/m²",
+          "dimension": {
+            "m": "-2",
+            "s": "1",
+            "A": "1"
+          },
+          "rank": "scalar",
+          "display": "1.000e-6 C/m²",
+          "because": {
+            "kind": "given",
+            "detail": "supplied by the problem statement"
+          }
+        },
+        {
+          "ref": "sheet.em.electric_field_magnitude",
+          "property": "em.electric_field_magnitude",
+          "value": 56470.45336865095,
+          "unit": "V/m",
+          "dimension": {
+            "kg": "1",
+            "m": "1",
+            "s": "-3",
+            "A": "-1"
+          },
+          "rank": "scalar",
+          "display": "56470 V/m",
+          "because": {
+            "kind": "derived",
+            "formula": "plane.E_mag_from_sigma",
+            "expression": "Abs(sigma) / (2 * epsilon_0)",
+            "substituted": "Abs((1.000e-6 C/m²))/(2*(8.854e-12 kg⁻¹·m⁻³·s⁴·A²))",
+            "law": "gauss_law_electric",
+            "law_label": "Gauss's law for electricity",
+            "law_statement": "The electric flux through any closed surface equals the enclosed charge divided by the vacuum permittivity. Its consequences fix the field of every symmetric charge distribution.",
+            "assumes": [
+              "infinite_plane",
+              "vacuum"
+            ],
+            "cite": "OpenStax University Physics 2, 6.4 (CC BY)",
+            "inputs": [
+              {
+                "symbol": "sigma",
+                "from": "sheet.em.charge_density_surface",
+                "value": 1e-06,
+                "unit": "C/m²",
+                "dimension": {
+                  "m": "-2",
+                  "s": "1",
+                  "A": "1"
+                },
+                "rank": "scalar",
+                "display": "1.000e-6 C/m²"
+              },
+              {
+                "symbol": "epsilon_0",
+                "from": "epsilon_0",
+                "value": 8.8541878128e-12,
+                "unit": "kg⁻¹·m⁻³·s⁴·A²",
+                "dimension": {
+                  "kg": "-1",
+                  "m": "-3",
+                  "s": "4",
+                  "A": "2"
+                },
+                "rank": "scalar",
+                "display": "8.854e-12 kg⁻¹·m⁻³·s⁴·A²"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

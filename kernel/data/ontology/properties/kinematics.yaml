@@ -1,0 +1,65 @@
+# Kinematic properties.
+#
+# Vector and scalar variants are separate properties on purpose: velocity and speed are
+# genuinely different quantities, and keeping them distinct lets the resolver chain through
+# `mag()` explicitly rather than silently discarding direction.
+#
+# `state` qualifiers (initial / final) are applied per binding, not baked into the key, so one
+# property serves every instant of a problem.
+domain: kinematics
+properties:
+  kinematics.time:
+    symbol: t
+    dim: time
+    rank: scalar
+    kind: lumped
+    si_unit: s
+    description: Elapsed time.
+
+  kinematics.displacement:
+    symbol: s
+    dim: length
+    rank: vector
+    kind: lumped
+    si_unit: m
+    description: Change in position.
+
+  kinematics.distance:
+    symbol: d
+    dim: length
+    rank: scalar
+    kind: lumped
+    si_unit: m
+    description: Path length or magnitude of displacement.
+
+  kinematics.velocity:
+    symbol: v
+    dim: velocity
+    rank: vector
+    kind: lumped
+    si_unit: m/s
+    description: Rate of change of position, with direction.
+
+  kinematics.speed:
+    symbol: v
+    dim: velocity
+    rank: scalar
+    kind: lumped
+    si_unit: m/s
+    description: Magnitude of velocity.
+
+  kinematics.acceleration:
+    symbol: a
+    dim: acceleration
+    rank: vector
+    kind: lumped
+    si_unit: m/s^2
+    description: Rate of change of velocity, with direction.
+
+  kinematics.acceleration_magnitude:
+    symbol: a
+    dim: acceleration
+    rank: scalar
+    kind: lumped
+    si_unit: m/s^2
+    description: Magnitude of acceleration.

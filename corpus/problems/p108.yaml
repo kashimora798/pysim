@@ -1,0 +1,15 @@
+id: p108
+title: Energy stored in a capacitor's field
+source: "After OpenStax College Physics 2e, 19.7 (CC BY)"
+tags: [circuits, capacitor, energy, chapter1]
+text: |
+  A 100 uF capacitor is charged to 12 V. How much energy is stored in its field?
+scene:
+  instances:
+    - id: c1
+      kind: capacitor
+      set:
+        electric.capacitance: "100 uF"
+        em.potential_difference: "12 V"
+target: {instance: c1, prop: electric.energy_stored}
+expect: {value: 7.2e-3, unit: J, tol: 0.001, note: "U = C*V^2/2."}

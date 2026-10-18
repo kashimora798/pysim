@@ -1,0 +1,27 @@
+id: p007
+title: Potential due to a negative point charge
+source: "After OpenStax College Physics 2e, 19.3 (CC BY)"
+tags: [electrostatics, potential, signed]
+text: |
+  A point charge of -3.0 nC sits in vacuum. What is the electric potential at a point 5.0 cm
+  away, taking the potential to be zero at infinity?
+scene:
+  instances:
+    - id: q1
+      kind: point_charge
+      set:
+        em.charge: "-3.0 nC"
+    - id: p1
+      kind: field_probe
+  relations:
+    - kind: acts_on
+      from: q1
+      to: p1
+      set:
+        geometry.separation: "5.0 cm"
+target: {instance: p1, prop: em.electric_potential}
+expect:
+  value: -539.253
+  unit: V
+  tol: 0.005
+  note: "V = k_e*q/r, and the sign must survive -- potential is signed where field magnitude is not."

@@ -1,0 +1,25 @@
+id: p103
+title: Two resistors in parallel
+source: "After OpenStax College Physics 2e, 21.1 (CC BY)"
+tags: [circuits, parallel, reduction, chapter1]
+text: |
+  A 6.0 ohm resistor and a 3.0 ohm resistor are connected across the same two nodes, driven by a
+  12 V battery. What total current does the battery supply?
+scene:
+  instances:
+    - {id: bat, kind: battery, set: {electric.emf: "12 V"}}
+    - {id: r1, kind: resistor, set: {electric.resistance: "6.0 ohm"}}
+    - {id: r2, kind: resistor, set: {electric.resistance: "3.0 ohm"}}
+    - {id: pp, kind: parallel_pair}
+    - {id: loop, kind: circuit_loop}
+  relations:
+    - {kind: parallel_a, from: pp, to: r1}
+    - {kind: parallel_b, from: pp, to: r2}
+    - {kind: driven_by, from: loop, to: bat}
+    - {kind: loads, from: loop, to: pp}
+target: {instance: loop, prop: electric.current}
+expect:
+  value: 6.0
+  unit: A
+  tol: 0.001
+  note: "6*3/9 = 2 ohm, then 12/2. The combination is smaller than either part."

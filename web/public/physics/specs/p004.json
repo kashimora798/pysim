@@ -1,0 +1,348 @@
+{
+  "fieldforge": "0.1",
+  "problem": {
+    "id": "p004",
+    "title": "Electrostatic shielding inside a charged conducting shell",
+    "text": "A conducting spherical shell of radius 10 cm carries a charge of +5.0 uC. What is the electric\nfield magnitude at a point inside the hollow interior?",
+    "source": "After OpenStax University Physics 2, 6.5 (CC BY)",
+    "tags": [
+      "electrostatics",
+      "conductor",
+      "shielding",
+      "zero-result"
+    ]
+  },
+  "target": "p1.em.electric_field_magnitude",
+  "answer": {
+    "value": 0.0,
+    "unit": "V/m",
+    "dimension": {
+      "kg": "1",
+      "m": "1",
+      "s": "-3",
+      "A": "-1"
+    },
+    "rank": "scalar",
+    "display": "0 V/m"
+  },
+  "scene": {
+    "instances": [
+      {
+        "id": "shell",
+        "kind": "conducting_shell",
+        "label": "Conducting spherical shell",
+        "model3d": "shell.glb",
+        "tags": [
+          "charge_source",
+          "electrostatic",
+          "source",
+          "conductor",
+          "cavity"
+        ],
+        "given": {
+          "shell.em.charge": {
+            "value": 4.9999999999999996e-06,
+            "unit": "C",
+            "dimension": {
+              "s": "1",
+              "A": "1"
+            },
+            "rank": "scalar",
+            "display": "5.000e-6 C"
+          },
+          "shell.geometry.radius": {
+            "value": 0.1,
+            "unit": "m",
+            "dimension": {
+              "m": "1"
+            },
+            "rank": "scalar",
+            "display": "0.1 m"
+          }
+        }
+      },
+      {
+        "id": "p1",
+        "kind": "field_probe",
+        "label": "Field probe",
+        "model3d": "probe.glb",
+        "tags": [
+          "tool",
+          "probe",
+          "test_point"
+        ],
+        "given": {}
+      },
+      {
+        "id": "env",
+        "kind": "environment",
+        "label": "Environment",
+        "model3d": null,
+        "tags": [
+          "environment",
+          "scene",
+          "settings"
+        ],
+        "given": {
+          "env.env.air_density": {
+            "value": 0.0,
+            "unit": "kg·m⁻³",
+            "dimension": {
+              "kg": "1",
+              "m": "-3"
+            },
+            "rank": "scalar",
+            "display": "0 kg·m⁻³"
+          },
+          "env.env.gravity": {
+            "value": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "unit": "m/s²",
+            "dimension": {
+              "m": "1",
+              "s": "-2"
+            },
+            "rank": "vector",
+            "display": "[0, 0, 0] m/s²"
+          },
+          "env.env.relative_permittivity": {
+            "value": 1.0,
+            "unit": "",
+            "dimension": {},
+            "rank": "scalar",
+            "display": "1"
+          },
+          "env.env.temperature": {
+            "value": 293.15,
+            "unit": "K",
+            "dimension": {
+              "K": "1"
+            },
+            "rank": "scalar",
+            "display": "293.1 K"
+          },
+          "env.env.wind_velocity": {
+            "value": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "unit": "m/s",
+            "dimension": {
+              "m": "1",
+              "s": "-1"
+            },
+            "rank": "vector",
+            "display": "[0, 0, 0] m/s"
+          }
+        }
+      }
+    ],
+    "relations": [
+      {
+        "kind": "inside_cavity_of",
+        "from": "p1",
+        "to": "shell",
+        "given": {}
+      }
+    ]
+  },
+  "assumptions": [
+    "electrostatic_equilibrium",
+    "no_charge_in_cavity"
+  ],
+  "citations": [
+    "OpenStax University Physics 2, 6.5 (CC BY)"
+  ],
+  "checks": {
+    "dimensions": "pass",
+    "engines": [
+      "chain"
+    ],
+    "paths_found": 1,
+    "paths_agree": true,
+    "path_spread": 0.0
+  },
+  "timeline": [
+    {
+      "beat": 1,
+      "kind": "place",
+      "instance": "p1",
+      "component": "field_probe",
+      "model3d": "probe.glb",
+      "narrate": "Place Field probe.",
+      "because": {
+        "kind": "scene",
+        "detail": "A massless, chargeless point placed in the world to read the field there. The canonical \"where\" for a field question; carries no charge of its own so it never perturbs the scene.",
+        "laws": []
+      }
+    },
+    {
+      "beat": 2,
+      "kind": "place",
+      "instance": "shell",
+      "component": "conducting_shell",
+      "model3d": "shell.glb",
+      "narrate": "Place Conducting spherical shell.",
+      "because": {
+        "kind": "scene",
+        "detail": "A charged conductor with a hollow interior. The field inside the cavity is exactly zero — electrostatic shielding — whatever the shell's charge or the external field.",
+        "laws": [
+          "shielding_conductor_cavity",
+          "gauss_law_electric"
+        ]
+      }
+    },
+    {
+      "beat": 3,
+      "kind": "place",
+      "instance": "env",
+      "component": "environment",
+      "model3d": null,
+      "narrate": "Place Environment.",
+      "because": {
+        "kind": "scene",
+        "detail": "The surrounding medium and fields. Defaults are an idealised vacuum with no gravity, which is what textbook electrostatics problems assume -- stated here as an editable value instead of a footnote.",
+        "laws": [
+          "newton_gravitation_uniform",
+          "superposition_of_forces",
+          "medium_permittivity"
+        ]
+      }
+    },
+    {
+      "beat": 4,
+      "kind": "relate",
+      "relation": "inside_cavity_of",
+      "from": "p1",
+      "to": "shell",
+      "narrate": "p1 is inside cavity of shell.",
+      "because": {
+        "kind": "scene",
+        "detail": "stated by the problem's geometry"
+      }
+    },
+    {
+      "beat": 5,
+      "kind": "resolve",
+      "instance": "p1",
+      "ref": "p1.em.electric_field_magnitude",
+      "property": "em.electric_field_magnitude",
+      "channel": "field_intensity",
+      "value": 0.0,
+      "unit": "V/m",
+      "dimension": {
+        "kg": "1",
+        "m": "1",
+        "s": "-3",
+        "A": "-1"
+      },
+      "rank": "scalar",
+      "display": "0 V/m",
+      "narrate": "p1: electric field magnitude resolves to 0 V/m.",
+      "because": {
+        "kind": "derived",
+        "formula": "shield.E_mag_inside_conductor_cavity",
+        "expression": "0",
+        "substituted": "0",
+        "law": "shielding_conductor_cavity",
+        "law_label": "Electrostatic shielding",
+        "law_statement": "The electrostatic field inside a cavity within a conductor, with no charge in the cavity, is exactly zero regardless of the external field or the conductor's own charge.",
+        "assumes": [
+          "electrostatic_equilibrium",
+          "no_charge_in_cavity"
+        ],
+        "cite": "OpenStax University Physics 2, 6.5 (CC BY)",
+        "inputs": []
+      }
+    },
+    {
+      "beat": 6,
+      "kind": "answer",
+      "ref": "p1.em.electric_field_magnitude",
+      "property": "em.electric_field_magnitude",
+      "value": 0.0,
+      "unit": "V/m",
+      "dimension": {
+        "kg": "1",
+        "m": "1",
+        "s": "-3",
+        "A": "-1"
+      },
+      "rank": "scalar",
+      "display": "0 V/m",
+      "narrate": "Answer: 0 V/m.",
+      "because": {
+        "kind": "summary",
+        "laws": [
+          "shielding_conductor_cavity"
+        ],
+        "paths_found": 1
+      }
+    }
+  ],
+  "paths": [
+    {
+      "cost": 1,
+      "laws": [
+        "shielding_conductor_cavity"
+      ],
+      "formulas": [
+        "shield.E_mag_inside_conductor_cavity"
+      ],
+      "value": {
+        "value": 0.0,
+        "unit": "V/m",
+        "dimension": {
+          "kg": "1",
+          "m": "1",
+          "s": "-3",
+          "A": "-1"
+        },
+        "rank": "scalar",
+        "display": "0 V/m"
+      },
+      "assumptions": [
+        "electrostatic_equilibrium",
+        "no_charge_in_cavity"
+      ],
+      "citations": [
+        "OpenStax University Physics 2, 6.5 (CC BY)"
+      ],
+      "steps": [
+        {
+          "ref": "p1.em.electric_field_magnitude",
+          "property": "em.electric_field_magnitude",
+          "value": 0.0,
+          "unit": "V/m",
+          "dimension": {
+            "kg": "1",
+            "m": "1",
+            "s": "-3",
+            "A": "-1"
+          },
+          "rank": "scalar",
+          "display": "0 V/m",
+          "because": {
+            "kind": "derived",
+            "formula": "shield.E_mag_inside_conductor_cavity",
+            "expression": "0",
+            "substituted": "0",
+            "law": "shielding_conductor_cavity",
+            "law_label": "Electrostatic shielding",
+            "law_statement": "The electrostatic field inside a cavity within a conductor, with no charge in the cavity, is exactly zero regardless of the external field or the conductor's own charge.",
+            "assumes": [
+              "electrostatic_equilibrium",
+              "no_charge_in_cavity"
+            ],
+            "cite": "OpenStax University Physics 2, 6.5 (CC BY)",
+            "inputs": []
+          }
+        }
+      ]
+    }
+  ]
+}

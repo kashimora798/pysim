@@ -1,0 +1,323 @@
+# Circuit formulas.
+#
+# The two-role reduction rules below are what the multi-role formula schema was built for. A
+# series pair reaches BOTH of its members (`roles: a, b`) and sums their resistances; because the
+# pair itself carries `electric.resistance`, it can in turn be a member of another pair. An
+# arbitrary series/parallel network therefore reduces by composition, with no n-ary formula and no
+# matrix solve — and the reduction tree is the same tree the student built with their hands.
+formulas:
+
+  # ---------------------------------------------------------------- reduction (two roles)
+
+  series.R_from_members:
+    solves_for: electric.resistance
+    scope: pair
+    roles:
+      a: {via: series_a, kinds: [resistor, lamp, series_pair, parallel_pair]}
+      b: {via: series_b, kinds: [resistor, lamp, series_pair, parallel_pair]}
+    bindings:
+      Ra: {prop: electric.resistance, from: a}
+      Rb: {prop: electric.resistance, from: b}
+    expr: "Ra + Rb"
+    law: series_resistance
+    assumes: [same_current_through_both, ideal_wires]
+    cite: "OpenStax College Physics 2e, 21.1 (CC BY)"
+    cost: 1
+
+  parallel.R_from_members:
+    solves_for: electric.resistance
+    scope: pair
+    roles:
+      a: {via: parallel_a, kinds: [resistor, lamp, series_pair, parallel_pair]}
+      b: {via: parallel_b, kinds: [resistor, lamp, series_pair, parallel_pair]}
+    bindings:
+      Ra: {prop: electric.resistance, from: a}
+      Rb: {prop: electric.resistance, from: b}
+    expr: "Ra * Rb / (Ra + Rb)"
+    law: parallel_resistance
+    assumes: [same_voltage_across_both, ideal_wires]
+    cite: "OpenStax College Physics 2e, 21.1 (CC BY)"
+    cost: 1
+    note: >
+      The product-over-sum form rather than the reciprocal sum, because it is one expression
+      instead of two and the dimension checker can verify it directly.
+
+  series.C_from_members:
+    solves_for: electric.capacitance
+    scope: pair
+    roles:
+      a: {via: series_a, kinds: [capacitor, series_pair, parallel_pair]}
+      b: {via: series_b, kinds: [capacitor, series_pair, parallel_pair]}
+    bindings:
+      Ca: {prop: electric.capacitance, from: a}
+      Cb: {prop: electric.capacitance, from: b}
+    expr: "Ca * Cb / (Ca + Cb)"
+    law: capacitor_definition
+    assumes: [same_charge_on_both]
+    cite: "OpenStax College Physics 2e, 19.6 (CC BY)"
+    cost: 1
+    note: Capacitors combine the opposite way round to resistors — in series they reduce.
+
+  parallel.C_from_members:
+    solves_for: electric.capacitance
+    scope: pair
+    roles:
+      a: {via: parallel_a, kinds: [capacitor, series_pair, parallel_pair]}
+      b: {via: parallel_b, kinds: [capacitor, series_pair, parallel_pair]}
+    bindings:
+      Ca: {prop: electric.capacitance, from: a}
+      Cb: {prop: electric.capacitance, from: b}
+    expr: "Ca + Cb"
+    law: capacitor_definition
+    assumes: [same_voltage_across_both]
+    cite: "OpenStax College Physics 2e, 19.6 (CC BY)"
+    cost: 1
+
+  # ---------------------------------------------------------------- the closed loop
+
+  loop.R_from_load:
+    solves_for: electric.resistance
+    scope: pair
+    roles:
+      load: {via: loads, kinds: [resistor, lamp, series_pair, parallel_pair]}
+    bindings:
+      R: {prop: electric.resistance, from: load}
+    expr: "R"
+    law: series_resistance
+    assumes: [ideal_wires, ideal_source]
+    cite: "OpenStax College Physics 2e, 21.1 (CC BY)"
+    cost: 1
+    note: >
+      The loop's total resistance is its load's, whatever that load reduced from. Trivial as
+      algebra, essential as a link: it is what carries a reduced network's resistance into the loop
+      where the current lives.
+
+  loop.V_from_source:
+    solves_for: em.potential_difference
+    scope: pair
+    roles:
+      src: {via: driven_by, kinds: [battery]}
+    bindings:
+      emf: {prop: electric.emf, from: src}
+    expr: "emf"
+    law: kirchhoff_voltage_law
+    assumes: [ideal_source, no_internal_resistance]
+    cite: "OpenStax College Physics 2e, 21.2 (CC BY)"
+    cost: 1
+
+  loop.I_from_V_R:
+    solves_for: electric.current
+    scope: self
+    bindings:
+      V: {prop: em.potential_difference}
+      R: {prop: electric.resistance}
+    expr: "V / R"
+    law: ohms_law
+    assumes: [steady_state, ohmic_load]
+    cite: "OpenStax College Physics 2e, 20.2 (CC BY)"
+    cost: 1
+    note: The whole chapter in one line — once the network has reduced, the current falls out.
+
+  # ---------------------------------------------------------------- Ohm's law, every rearrangement
+
+  ohm.I_from_V_R:
+    solves_for: electric.current
+    scope: self
+    bindings:
+      V: {prop: em.potential_difference}
+      R: {prop: electric.resistance}
+    expr: "V / R"
+    law: ohms_law
+    assumes: [ohmic, steady_state]
+    cite: "OpenStax College Physics 2e, 20.2 (CC BY)"
+    cost: 2
+
+  ohm.V_from_I_R:
+    solves_for: em.potential_difference
+    scope: self
+    bindings:
+      I: {prop: electric.current}
+      R: {prop: electric.resistance}
+    expr: "I * R"
+    law: ohms_law
+    assumes: [ohmic, steady_state]
+    cite: "OpenStax College Physics 2e, 20.2 (CC BY)"
+    cost: 2
+
+  ohm.R_from_V_I:
+    solves_for: electric.resistance
+    scope: self
+    bindings:
+      V: {prop: em.potential_difference}
+      I: {prop: electric.current}
+    expr: "V / I"
+    law: ohms_law
+    assumes: [ohmic, steady_state]
+    cite: "OpenStax College Physics 2e, 20.2 (CC BY)"
+    cost: 3
+
+  # ---------------------------------------------------------------- current and voltage sharing
+
+  series.I_shared_to_member:
+    solves_for: electric.current
+    scope: pair
+    roles:
+      group: {via: series_a, kinds: [series_pair]}
+    bindings:
+      I: {prop: electric.current, from: group}
+    expr: "I"
+    law: kirchhoff_current_law
+    assumes: [same_current_through_both]
+    cite: "OpenStax College Physics 2e, 21.1 (CC BY)"
+    cost: 2
+    note: >
+      In series the current is common, so a member inherits the group's current. Together with the
+      member_b variant this is how a reading on one element reaches the other.
+
+  series.I_shared_to_member_b:
+    solves_for: electric.current
+    scope: pair
+    roles:
+      group: {via: series_b, kinds: [series_pair]}
+    bindings:
+      I: {prop: electric.current, from: group}
+    expr: "I"
+    law: kirchhoff_current_law
+    assumes: [same_current_through_both]
+    cite: "OpenStax College Physics 2e, 21.1 (CC BY)"
+    cost: 2
+
+  parallel.V_shared_to_member:
+    solves_for: em.potential_difference
+    scope: pair
+    roles:
+      group: {via: parallel_a, kinds: [parallel_pair]}
+    bindings:
+      V: {prop: em.potential_difference, from: group}
+    expr: "V"
+    law: kirchhoff_voltage_law
+    assumes: [same_voltage_across_both]
+    cite: "OpenStax College Physics 2e, 21.1 (CC BY)"
+    cost: 2
+
+  parallel.V_shared_to_member_b:
+    solves_for: em.potential_difference
+    scope: pair
+    roles:
+      group: {via: parallel_b, kinds: [parallel_pair]}
+    bindings:
+      V: {prop: em.potential_difference, from: group}
+    expr: "V"
+    law: kirchhoff_voltage_law
+    assumes: [same_voltage_across_both]
+    cite: "OpenStax College Physics 2e, 21.1 (CC BY)"
+    cost: 2
+
+  loop.I_shared_to_load:
+    solves_for: electric.current
+    scope: pair
+    roles:
+      loop: {via: loads, kinds: [circuit_loop]}
+    bindings:
+      I: {prop: electric.current, from: loop}
+    expr: "I"
+    law: kirchhoff_current_law
+    assumes: [single_loop]
+    cite: "OpenStax College Physics 2e, 21.1 (CC BY)"
+    cost: 2
+    note: A single loop's current passes through its load, which is how the answer reaches a part.
+
+  loop.V_shared_to_load:
+    solves_for: em.potential_difference
+    scope: pair
+    roles:
+      loop: {via: loads, kinds: [circuit_loop]}
+    bindings:
+      V: {prop: em.potential_difference, from: loop}
+    expr: "V"
+    law: kirchhoff_voltage_law
+    assumes: [ideal_wires, single_loop]
+    cite: "OpenStax College Physics 2e, 21.2 (CC BY)"
+    cost: 3
+
+  # ---------------------------------------------------------------- power, three ways
+
+  power.P_from_I_V:
+    solves_for: electric.power
+    scope: self
+    bindings:
+      I: {prop: electric.current}
+      V: {prop: em.potential_difference}
+    expr: "I * V"
+    law: joule_heating
+    assumes: [steady_state]
+    cite: "OpenStax College Physics 2e, 20.4 (CC BY)"
+    cost: 1
+
+  power.P_from_I_R:
+    solves_for: electric.power
+    scope: self
+    bindings:
+      I: {prop: electric.current}
+      R: {prop: electric.resistance}
+    expr: "I**2 * R"
+    law: joule_heating
+    assumes: [steady_state, ohmic]
+    cite: "OpenStax College Physics 2e, 20.4 (CC BY)"
+    cost: 1
+
+  power.P_from_V_R:
+    solves_for: electric.power
+    scope: self
+    bindings:
+      V: {prop: em.potential_difference}
+      R: {prop: electric.resistance}
+    expr: "V**2 / R"
+    law: joule_heating
+    assumes: [steady_state, ohmic]
+    cite: "OpenStax College Physics 2e, 20.4 (CC BY)"
+    cost: 1
+    note: >
+      Three forms of the same law. They are NOT alternative paths in the multi-path sense — all
+      three cite joule_heating, so the resolver's law-set dedup collapses them to one. That is
+      correct: picking V^2/R over I^2*R is an algebraic convenience, not different physics.
+
+  # ---------------------------------------------------------------- capacitors
+
+  cap.Q_from_C_V:
+    solves_for: electric.charge_stored
+    scope: self
+    bindings:
+      C: {prop: electric.capacitance}
+      V: {prop: em.potential_difference}
+    expr: "C * V"
+    law: capacitor_definition
+    assumes: [linear_dielectric]
+    cite: "OpenStax College Physics 2e, 19.5 (CC BY)"
+    cost: 1
+
+  cap.U_from_C_V:
+    solves_for: electric.energy_stored
+    scope: self
+    bindings:
+      C: {prop: electric.capacitance}
+      V: {prop: em.potential_difference}
+    expr: "C * V**2 / 2"
+    law: capacitor_definition
+    assumes: [linear_dielectric]
+    cite: "OpenStax College Physics 2e, 19.7 (CC BY)"
+    cost: 1
+
+  rc.tau_from_R_C:
+    solves_for: electric.time_constant
+    scope: pair
+    roles:
+      r: {via: charged_through, kinds: [resistor, series_pair, parallel_pair]}
+    bindings:
+      C: {prop: electric.capacitance, from: self}
+      R: {prop: electric.resistance, from: r}
+    expr: "R * C"
+    law: rc_time_constant
+    assumes: [single_rc_branch]
+    cite: "OpenStax College Physics 2e, 21.6 (CC BY)"
+    cost: 1

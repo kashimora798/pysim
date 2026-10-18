@@ -1,0 +1,1513 @@
+{
+  "fieldforge": "0.1",
+  "problem": {
+    "id": "p001",
+    "title": "Electron accelerated across a parallel-plate gap",
+    "text": "An electron is released from rest at the negative plate of a parallel-plate capacitor with a\npotential difference of 100 V across a 2.0 cm gap. How fast is it moving when it reaches the\npositive plate?",
+    "source": "After OpenStax College Physics 2e, 19.2 (CC BY)",
+    "tags": [
+      "electrostatics",
+      "energy",
+      "kinematics",
+      "two-paths"
+    ]
+  },
+  "target": "e1.kinematics.speed@final",
+  "answer": {
+    "value": 5930969.584768014,
+    "unit": "m/s",
+    "dimension": {
+      "m": "1",
+      "s": "-1"
+    },
+    "rank": "scalar",
+    "display": "5.931e6 m/s"
+  },
+  "scene": {
+    "instances": [
+      {
+        "id": "cap",
+        "kind": "parallel_plate_capacitor",
+        "label": "Parallel-plate capacitor",
+        "model3d": "parallel_plates.glb",
+        "tags": [
+          "field_region",
+          "electrostatic",
+          "source",
+          "uniform_field"
+        ],
+        "given": {
+          "cap.em.potential_difference": {
+            "value": 100.0,
+            "unit": "V",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-1"
+            },
+            "rank": "scalar",
+            "display": "100 V"
+          },
+          "cap.geometry.direction": {
+            "value": [
+              0.0,
+              -1.0,
+              0.0
+            ],
+            "unit": "",
+            "dimension": {},
+            "rank": "vector",
+            "display": "[0, -1, 0]"
+          },
+          "cap.geometry.separation_plates": {
+            "value": 0.02,
+            "unit": "m",
+            "dimension": {
+              "m": "1"
+            },
+            "rank": "scalar",
+            "display": "0.02 m"
+          }
+        }
+      },
+      {
+        "id": "e1",
+        "kind": "electron",
+        "label": "Electron",
+        "model3d": "electron.glb",
+        "tags": [
+          "charge_source",
+          "electrostatic",
+          "source",
+          "movable",
+          "projectile"
+        ],
+        "given": {
+          "e1.em.charge": {
+            "value": -1.602176634e-19,
+            "unit": "C",
+            "dimension": {
+              "s": "1",
+              "A": "1"
+            },
+            "rank": "scalar",
+            "display": "-1.602e-19 C"
+          },
+          "e1.em.charge_magnitude": {
+            "value": 1.602176634e-19,
+            "unit": "C",
+            "dimension": {
+              "s": "1",
+              "A": "1"
+            },
+            "rank": "scalar",
+            "display": "1.602e-19 C"
+          },
+          "e1.geometry.cross_section": {
+            "value": 0.0,
+            "unit": "m²",
+            "dimension": {
+              "m": "2"
+            },
+            "rank": "scalar",
+            "display": "0 m²"
+          },
+          "e1.kinematics.speed@initial": {
+            "value": 0.0,
+            "unit": "m/s",
+            "dimension": {
+              "m": "1",
+              "s": "-1"
+            },
+            "rank": "scalar",
+            "display": "0 m/s"
+          },
+          "e1.mechanics.drag_coefficient": {
+            "value": 0.47,
+            "unit": "",
+            "dimension": {},
+            "rank": "scalar",
+            "display": "0.47"
+          },
+          "e1.mechanics.mass": {
+            "value": 9.1093837015e-31,
+            "unit": "kg",
+            "dimension": {
+              "kg": "1"
+            },
+            "rank": "scalar",
+            "display": "9.109e-31 kg"
+          }
+        }
+      },
+      {
+        "id": "env",
+        "kind": "environment",
+        "label": "Environment",
+        "model3d": null,
+        "tags": [
+          "environment",
+          "scene",
+          "settings"
+        ],
+        "given": {
+          "env.env.air_density": {
+            "value": 0.0,
+            "unit": "kg·m⁻³",
+            "dimension": {
+              "kg": "1",
+              "m": "-3"
+            },
+            "rank": "scalar",
+            "display": "0 kg·m⁻³"
+          },
+          "env.env.gravity": {
+            "value": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "unit": "m/s²",
+            "dimension": {
+              "m": "1",
+              "s": "-2"
+            },
+            "rank": "vector",
+            "display": "[0, 0, 0] m/s²"
+          },
+          "env.env.relative_permittivity": {
+            "value": 1.0,
+            "unit": "",
+            "dimension": {},
+            "rank": "scalar",
+            "display": "1"
+          },
+          "env.env.temperature": {
+            "value": 293.15,
+            "unit": "K",
+            "dimension": {
+              "K": "1"
+            },
+            "rank": "scalar",
+            "display": "293.1 K"
+          },
+          "env.env.wind_velocity": {
+            "value": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "unit": "m/s",
+            "dimension": {
+              "m": "1",
+              "s": "-1"
+            },
+            "rank": "vector",
+            "display": "[0, 0, 0] m/s"
+          }
+        }
+      }
+    ],
+    "relations": [
+      {
+        "kind": "inside",
+        "from": "e1",
+        "to": "cap",
+        "given": {}
+      }
+    ]
+  },
+  "assumptions": [
+    "full_traverse",
+    "no_other_forces",
+    "starts_from_rest",
+    "non_relativistic"
+  ],
+  "citations": [
+    "OpenStax College Physics 2e, 19.1 (CC BY)",
+    "OpenStax College Physics 2e, 7.2 (CC BY)"
+  ],
+  "checks": {
+    "dimensions": "pass",
+    "engines": [
+      "chain"
+    ],
+    "paths_found": 2,
+    "paths_agree": true,
+    "path_spread": 1.5702703601908735e-16
+  },
+  "timeline": [
+    {
+      "beat": 1,
+      "kind": "place",
+      "instance": "e1",
+      "component": "electron",
+      "model3d": "electron.glb",
+      "narrate": "Place Electron.",
+      "because": {
+        "kind": "scene",
+        "detail": "An electron, with charge and mass fixed by nature rather than by the problem.",
+        "laws": [
+          "coulombs_law",
+          "lorentz_force",
+          "newton_second_law"
+        ]
+      }
+    },
+    {
+      "beat": 2,
+      "kind": "place",
+      "instance": "cap",
+      "component": "parallel_plate_capacitor",
+      "model3d": "parallel_plates.glb",
+      "narrate": "Place Parallel-plate capacitor.",
+      "because": {
+        "kind": "scene",
+        "detail": "Two oppositely charged plates. Away from the edges the field between them is uniform, which makes this the standard way to produce a known constant field in a problem.",
+        "laws": [
+          "uniform_field_between_plates",
+          "gauss_law_electric"
+        ]
+      }
+    },
+    {
+      "beat": 3,
+      "kind": "place",
+      "instance": "env",
+      "component": "environment",
+      "model3d": null,
+      "narrate": "Place Environment.",
+      "because": {
+        "kind": "scene",
+        "detail": "The surrounding medium and fields. Defaults are an idealised vacuum with no gravity, which is what textbook electrostatics problems assume -- stated here as an editable value instead of a footnote.",
+        "laws": [
+          "newton_gravitation_uniform",
+          "superposition_of_forces",
+          "medium_permittivity"
+        ]
+      }
+    },
+    {
+      "beat": 4,
+      "kind": "relate",
+      "relation": "inside",
+      "from": "e1",
+      "to": "cap",
+      "narrate": "e1 is inside cap.",
+      "because": {
+        "kind": "scene",
+        "detail": "stated by the problem's geometry"
+      }
+    },
+    {
+      "beat": 5,
+      "kind": "given",
+      "instance": "e1",
+      "ref": "e1.em.charge_magnitude",
+      "property": "em.charge_magnitude",
+      "channel": "charge_glyph",
+      "value": 1.602176634e-19,
+      "unit": "C",
+      "dimension": {
+        "s": "1",
+        "A": "1"
+      },
+      "rank": "scalar",
+      "display": "1.602e-19 C",
+      "narrate": "e1: charge magnitude is 1.602e-19 C, as stated.",
+      "because": {
+        "kind": "given",
+        "detail": "supplied by the problem statement"
+      }
+    },
+    {
+      "beat": 6,
+      "kind": "given",
+      "instance": "cap",
+      "ref": "cap.em.potential_difference",
+      "property": "em.potential_difference",
+      "channel": "potential_shading",
+      "value": 100.0,
+      "unit": "V",
+      "dimension": {
+        "kg": "1",
+        "m": "2",
+        "s": "-3",
+        "A": "-1"
+      },
+      "rank": "scalar",
+      "display": "100 V",
+      "narrate": "cap: potential difference is 100 V, as stated.",
+      "because": {
+        "kind": "given",
+        "detail": "supplied by the problem statement"
+      }
+    },
+    {
+      "beat": 7,
+      "kind": "resolve",
+      "instance": "e1",
+      "ref": "e1.mechanics.work",
+      "property": "mechanics.work",
+      "channel": "energy_bar",
+      "value": 1.602176634e-17,
+      "unit": "J",
+      "dimension": {
+        "kg": "1",
+        "m": "2",
+        "s": "-2"
+      },
+      "rank": "scalar",
+      "display": "1.602e-17 J",
+      "narrate": "e1: work resolves to 1.602e-17 J.",
+      "because": {
+        "kind": "derived",
+        "formula": "energy.work_from_q_pd",
+        "expression": "Q * V",
+        "substituted": "(1.602e-19 C)*(100 V)",
+        "law": "electric_potential_definition",
+        "law_label": "Definition of electric potential",
+        "law_statement": "Potential is potential energy per unit charge; the work to move a charge between two points is the charge times the potential difference.",
+        "assumes": [
+          "full_traverse",
+          "no_other_forces"
+        ],
+        "cite": "OpenStax College Physics 2e, 19.1 (CC BY)",
+        "inputs": [
+          {
+            "symbol": "Q",
+            "from": "e1.em.charge_magnitude",
+            "value": 1.602176634e-19,
+            "unit": "C",
+            "dimension": {
+              "s": "1",
+              "A": "1"
+            },
+            "rank": "scalar",
+            "display": "1.602e-19 C"
+          },
+          {
+            "symbol": "V",
+            "from": "cap.em.potential_difference",
+            "value": 100.0,
+            "unit": "V",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-1"
+            },
+            "rank": "scalar",
+            "display": "100 V"
+          }
+        ]
+      }
+    },
+    {
+      "beat": 8,
+      "kind": "resolve",
+      "instance": "e1",
+      "ref": "e1.energy.kinetic",
+      "property": "energy.kinetic",
+      "channel": "energy_bar",
+      "value": 1.602176634e-17,
+      "unit": "J",
+      "dimension": {
+        "kg": "1",
+        "m": "2",
+        "s": "-2"
+      },
+      "rank": "scalar",
+      "display": "1.602e-17 J",
+      "narrate": "e1: kinetic resolves to 1.602e-17 J.",
+      "because": {
+        "kind": "derived",
+        "formula": "energy.K_from_work_at_rest",
+        "expression": "W",
+        "substituted": "(1.602e-17 J)",
+        "law": "work_energy_theorem",
+        "law_label": "Work-energy theorem",
+        "law_statement": "The work done by the net force on a body equals the change in its kinetic energy.",
+        "assumes": [
+          "starts_from_rest",
+          "no_other_forces"
+        ],
+        "cite": "OpenStax College Physics 2e, 7.2 (CC BY)",
+        "inputs": [
+          {
+            "symbol": "W",
+            "from": "e1.mechanics.work",
+            "value": 1.602176634e-17,
+            "unit": "J",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-2"
+            },
+            "rank": "scalar",
+            "display": "1.602e-17 J"
+          }
+        ]
+      }
+    },
+    {
+      "beat": 9,
+      "kind": "given",
+      "instance": "e1",
+      "ref": "e1.mechanics.mass",
+      "property": "mechanics.mass",
+      "channel": "mass_label",
+      "value": 9.1093837015e-31,
+      "unit": "kg",
+      "dimension": {
+        "kg": "1"
+      },
+      "rank": "scalar",
+      "display": "9.109e-31 kg",
+      "narrate": "e1: mass is 9.109e-31 kg, as stated.",
+      "because": {
+        "kind": "given",
+        "detail": "supplied by the problem statement"
+      }
+    },
+    {
+      "beat": 10,
+      "kind": "resolve",
+      "instance": "e1",
+      "ref": "e1.kinematics.speed@final",
+      "property": "kinematics.speed",
+      "channel": "velocity_vector",
+      "value": 5930969.584768014,
+      "unit": "m/s",
+      "dimension": {
+        "m": "1",
+        "s": "-1"
+      },
+      "rank": "scalar",
+      "display": "5.931e6 m/s",
+      "narrate": "e1: speed resolves to 5.931e6 m/s.",
+      "because": {
+        "kind": "derived",
+        "formula": "energy.v_from_K_m",
+        "expression": "sqrt(2 * K / m)",
+        "substituted": "sqrt(2)*sqrt((1.602e-17 J)/(9.109e-31 kg))",
+        "law": "work_energy_theorem",
+        "law_label": "Work-energy theorem",
+        "law_statement": "The work done by the net force on a body equals the change in its kinetic energy.",
+        "assumes": [
+          "non_relativistic"
+        ],
+        "cite": "OpenStax College Physics 2e, 7.2 (CC BY)",
+        "inputs": [
+          {
+            "symbol": "K",
+            "from": "e1.energy.kinetic",
+            "value": 1.602176634e-17,
+            "unit": "J",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-2"
+            },
+            "rank": "scalar",
+            "display": "1.602e-17 J"
+          },
+          {
+            "symbol": "m",
+            "from": "e1.mechanics.mass",
+            "value": 9.1093837015e-31,
+            "unit": "kg",
+            "dimension": {
+              "kg": "1"
+            },
+            "rank": "scalar",
+            "display": "9.109e-31 kg"
+          }
+        ]
+      }
+    },
+    {
+      "beat": 11,
+      "kind": "answer",
+      "ref": "e1.kinematics.speed@final",
+      "property": "kinematics.speed",
+      "value": 5930969.584768014,
+      "unit": "m/s",
+      "dimension": {
+        "m": "1",
+        "s": "-1"
+      },
+      "rank": "scalar",
+      "display": "5.931e6 m/s",
+      "narrate": "Answer: 5.931e6 m/s.",
+      "because": {
+        "kind": "summary",
+        "laws": [
+          "electric_potential_definition",
+          "work_energy_theorem"
+        ],
+        "paths_found": 2
+      }
+    }
+  ],
+  "paths": [
+    {
+      "cost": 3,
+      "laws": [
+        "electric_potential_definition",
+        "work_energy_theorem"
+      ],
+      "formulas": [
+        "energy.work_from_q_pd",
+        "energy.K_from_work_at_rest",
+        "energy.v_from_K_m"
+      ],
+      "value": {
+        "value": 5930969.584768014,
+        "unit": "m/s",
+        "dimension": {
+          "m": "1",
+          "s": "-1"
+        },
+        "rank": "scalar",
+        "display": "5.931e6 m/s"
+      },
+      "assumptions": [
+        "full_traverse",
+        "no_other_forces",
+        "starts_from_rest",
+        "non_relativistic"
+      ],
+      "citations": [
+        "OpenStax College Physics 2e, 19.1 (CC BY)",
+        "OpenStax College Physics 2e, 7.2 (CC BY)"
+      ],
+      "steps": [
+        {
+          "ref": "e1.em.charge_magnitude",
+          "property": "em.charge_magnitude",
+          "value": 1.602176634e-19,
+          "unit": "C",
+          "dimension": {
+            "s": "1",
+            "A": "1"
+          },
+          "rank": "scalar",
+          "display": "1.602e-19 C",
+          "because": {
+            "kind": "given",
+            "detail": "supplied by the problem statement"
+          }
+        },
+        {
+          "ref": "cap.em.potential_difference",
+          "property": "em.potential_difference",
+          "value": 100.0,
+          "unit": "V",
+          "dimension": {
+            "kg": "1",
+            "m": "2",
+            "s": "-3",
+            "A": "-1"
+          },
+          "rank": "scalar",
+          "display": "100 V",
+          "because": {
+            "kind": "given",
+            "detail": "supplied by the problem statement"
+          }
+        },
+        {
+          "ref": "e1.mechanics.work",
+          "property": "mechanics.work",
+          "value": 1.602176634e-17,
+          "unit": "J",
+          "dimension": {
+            "kg": "1",
+            "m": "2",
+            "s": "-2"
+          },
+          "rank": "scalar",
+          "display": "1.602e-17 J",
+          "because": {
+            "kind": "derived",
+            "formula": "energy.work_from_q_pd",
+            "expression": "Q * V",
+            "substituted": "(1.602e-19 C)*(100 V)",
+            "law": "electric_potential_definition",
+            "law_label": "Definition of electric potential",
+            "law_statement": "Potential is potential energy per unit charge; the work to move a charge between two points is the charge times the potential difference.",
+            "assumes": [
+              "full_traverse",
+              "no_other_forces"
+            ],
+            "cite": "OpenStax College Physics 2e, 19.1 (CC BY)",
+            "inputs": [
+              {
+                "symbol": "Q",
+                "from": "e1.em.charge_magnitude",
+                "value": 1.602176634e-19,
+                "unit": "C",
+                "dimension": {
+                  "s": "1",
+                  "A": "1"
+                },
+                "rank": "scalar",
+                "display": "1.602e-19 C"
+              },
+              {
+                "symbol": "V",
+                "from": "cap.em.potential_difference",
+                "value": 100.0,
+                "unit": "V",
+                "dimension": {
+                  "kg": "1",
+                  "m": "2",
+                  "s": "-3",
+                  "A": "-1"
+                },
+                "rank": "scalar",
+                "display": "100 V"
+              }
+            ]
+          }
+        },
+        {
+          "ref": "e1.energy.kinetic",
+          "property": "energy.kinetic",
+          "value": 1.602176634e-17,
+          "unit": "J",
+          "dimension": {
+            "kg": "1",
+            "m": "2",
+            "s": "-2"
+          },
+          "rank": "scalar",
+          "display": "1.602e-17 J",
+          "because": {
+            "kind": "derived",
+            "formula": "energy.K_from_work_at_rest",
+            "expression": "W",
+            "substituted": "(1.602e-17 J)",
+            "law": "work_energy_theorem",
+            "law_label": "Work-energy theorem",
+            "law_statement": "The work done by the net force on a body equals the change in its kinetic energy.",
+            "assumes": [
+              "starts_from_rest",
+              "no_other_forces"
+            ],
+            "cite": "OpenStax College Physics 2e, 7.2 (CC BY)",
+            "inputs": [
+              {
+                "symbol": "W",
+                "from": "e1.mechanics.work",
+                "value": 1.602176634e-17,
+                "unit": "J",
+                "dimension": {
+                  "kg": "1",
+                  "m": "2",
+                  "s": "-2"
+                },
+                "rank": "scalar",
+                "display": "1.602e-17 J"
+              }
+            ]
+          }
+        },
+        {
+          "ref": "e1.mechanics.mass",
+          "property": "mechanics.mass",
+          "value": 9.1093837015e-31,
+          "unit": "kg",
+          "dimension": {
+            "kg": "1"
+          },
+          "rank": "scalar",
+          "display": "9.109e-31 kg",
+          "because": {
+            "kind": "given",
+            "detail": "supplied by the problem statement"
+          }
+        },
+        {
+          "ref": "e1.kinematics.speed@final",
+          "property": "kinematics.speed",
+          "value": 5930969.584768014,
+          "unit": "m/s",
+          "dimension": {
+            "m": "1",
+            "s": "-1"
+          },
+          "rank": "scalar",
+          "display": "5.931e6 m/s",
+          "because": {
+            "kind": "derived",
+            "formula": "energy.v_from_K_m",
+            "expression": "sqrt(2 * K / m)",
+            "substituted": "sqrt(2)*sqrt((1.602e-17 J)/(9.109e-31 kg))",
+            "law": "work_energy_theorem",
+            "law_label": "Work-energy theorem",
+            "law_statement": "The work done by the net force on a body equals the change in its kinetic energy.",
+            "assumes": [
+              "non_relativistic"
+            ],
+            "cite": "OpenStax College Physics 2e, 7.2 (CC BY)",
+            "inputs": [
+              {
+                "symbol": "K",
+                "from": "e1.energy.kinetic",
+                "value": 1.602176634e-17,
+                "unit": "J",
+                "dimension": {
+                  "kg": "1",
+                  "m": "2",
+                  "s": "-2"
+                },
+                "rank": "scalar",
+                "display": "1.602e-17 J"
+              },
+              {
+                "symbol": "m",
+                "from": "e1.mechanics.mass",
+                "value": 9.1093837015e-31,
+                "unit": "kg",
+                "dimension": {
+                  "kg": "1"
+                },
+                "rank": "scalar",
+                "display": "9.109e-31 kg"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "cost": 10,
+      "laws": [
+        "definition_magnitude",
+        "kinematics_constant_acceleration",
+        "lorentz_force",
+        "newton_gravitation_uniform",
+        "newton_second_law",
+        "superposition_of_forces",
+        "uniform_field_between_plates"
+      ],
+      "formulas": [
+        "plates.E_mag_from_pd",
+        "field.E_vec_from_magnitude_and_direction",
+        "plates.E_vec_at_charge",
+        "lorentz.F_vec_electric",
+        "gravity.F_vec_from_env",
+        "force.net_from_contributions",
+        "force.magnitude_from_vector",
+        "newton.a_mag_from_F",
+        "kin.distance_across_plates",
+        "kin.v_final_from_u_a_s"
+      ],
+      "value": {
+        "value": 5930969.584768013,
+        "unit": "m/s",
+        "dimension": {
+          "m": "1",
+          "s": "-1"
+        },
+        "rank": "scalar",
+        "display": "5.931e6 m/s"
+      },
+      "assumptions": [
+        "uniform_field",
+        "edge_effects_neglected",
+        "negligible_magnetic_force",
+        "no_other_forces",
+        "negligible_drag",
+        "constant_mass",
+        "non_relativistic",
+        "full_traverse",
+        "released_at_one_plate",
+        "constant_acceleration",
+        "straight_line"
+      ],
+      "citations": [
+        "OpenStax College Physics 2e, 19.4 (CC BY)",
+        "OpenStax College Physics 2e, 18.5 (CC BY)",
+        "OpenStax College Physics 2e, 4.5 (CC BY)",
+        "OpenStax College Physics 2e, 4.6 (CC BY)",
+        "definitional",
+        "OpenStax College Physics 2e, 4.3 (CC BY)",
+        "geometry of the problem",
+        "OpenStax College Physics 2e, 2.5 (CC BY)"
+      ],
+      "steps": [
+        {
+          "ref": "e1.kinematics.speed@initial",
+          "property": "kinematics.speed",
+          "value": 0.0,
+          "unit": "m/s",
+          "dimension": {
+            "m": "1",
+            "s": "-1"
+          },
+          "rank": "scalar",
+          "display": "0 m/s",
+          "because": {
+            "kind": "given",
+            "detail": "supplied by the problem statement"
+          }
+        },
+        {
+          "ref": "e1.em.charge",
+          "property": "em.charge",
+          "value": -1.602176634e-19,
+          "unit": "C",
+          "dimension": {
+            "s": "1",
+            "A": "1"
+          },
+          "rank": "scalar",
+          "display": "-1.602e-19 C",
+          "because": {
+            "kind": "given",
+            "detail": "supplied by the problem statement"
+          }
+        },
+        {
+          "ref": "cap.em.potential_difference",
+          "property": "em.potential_difference",
+          "value": 100.0,
+          "unit": "V",
+          "dimension": {
+            "kg": "1",
+            "m": "2",
+            "s": "-3",
+            "A": "-1"
+          },
+          "rank": "scalar",
+          "display": "100 V",
+          "because": {
+            "kind": "given",
+            "detail": "supplied by the problem statement"
+          }
+        },
+        {
+          "ref": "cap.geometry.separation_plates",
+          "property": "geometry.separation_plates",
+          "value": 0.02,
+          "unit": "m",
+          "dimension": {
+            "m": "1"
+          },
+          "rank": "scalar",
+          "display": "0.02 m",
+          "because": {
+            "kind": "given",
+            "detail": "supplied by the problem statement"
+          }
+        },
+        {
+          "ref": "cap.em.electric_field_magnitude",
+          "property": "em.electric_field_magnitude",
+          "value": 5000.0,
+          "unit": "V/m",
+          "dimension": {
+            "kg": "1",
+            "m": "1",
+            "s": "-3",
+            "A": "-1"
+          },
+          "rank": "scalar",
+          "display": "5000 V/m",
+          "because": {
+            "kind": "derived",
+            "formula": "plates.E_mag_from_pd",
+            "expression": "V / d",
+            "substituted": "(100 V)/(0.02 m)",
+            "law": "uniform_field_between_plates",
+            "law_label": "Uniform field between parallel plates",
+            "law_statement": "Away from the edges, the field between oppositely charged parallel plates is uniform with magnitude equal to the potential difference divided by the separation.",
+            "assumes": [
+              "uniform_field",
+              "edge_effects_neglected"
+            ],
+            "cite": "OpenStax College Physics 2e, 19.4 (CC BY)",
+            "inputs": [
+              {
+                "symbol": "V",
+                "from": "cap.em.potential_difference",
+                "value": 100.0,
+                "unit": "V",
+                "dimension": {
+                  "kg": "1",
+                  "m": "2",
+                  "s": "-3",
+                  "A": "-1"
+                },
+                "rank": "scalar",
+                "display": "100 V"
+              },
+              {
+                "symbol": "d",
+                "from": "cap.geometry.separation_plates",
+                "value": 0.02,
+                "unit": "m",
+                "dimension": {
+                  "m": "1"
+                },
+                "rank": "scalar",
+                "display": "0.02 m"
+              }
+            ]
+          }
+        },
+        {
+          "ref": "cap.geometry.direction",
+          "property": "geometry.direction",
+          "value": [
+            0.0,
+            -1.0,
+            0.0
+          ],
+          "unit": "",
+          "dimension": {},
+          "rank": "vector",
+          "display": "[0, -1, 0]",
+          "because": {
+            "kind": "given",
+            "detail": "supplied by the problem statement"
+          }
+        },
+        {
+          "ref": "cap.em.electric_field",
+          "property": "em.electric_field",
+          "value": [
+            0.0,
+            -5000.0,
+            0.0
+          ],
+          "unit": "V/m",
+          "dimension": {
+            "kg": "1",
+            "m": "1",
+            "s": "-3",
+            "A": "-1"
+          },
+          "rank": "vector",
+          "display": "[0, -5000, 0] V/m",
+          "because": {
+            "kind": "derived",
+            "formula": "field.E_vec_from_magnitude_and_direction",
+            "expression": "E * n",
+            "substituted": "(5000 V/m)*([0, -1, 0])",
+            "law": "uniform_field_between_plates",
+            "law_label": "Uniform field between parallel plates",
+            "law_statement": "Away from the edges, the field between oppositely charged parallel plates is uniform with magnitude equal to the potential difference divided by the separation.",
+            "assumes": [
+              "uniform_field"
+            ],
+            "cite": "OpenStax College Physics 2e, 19.4 (CC BY)",
+            "inputs": [
+              {
+                "symbol": "E",
+                "from": "cap.em.electric_field_magnitude",
+                "value": 5000.0,
+                "unit": "V/m",
+                "dimension": {
+                  "kg": "1",
+                  "m": "1",
+                  "s": "-3",
+                  "A": "-1"
+                },
+                "rank": "scalar",
+                "display": "5000 V/m"
+              },
+              {
+                "symbol": "n",
+                "from": "cap.geometry.direction",
+                "value": [
+                  0.0,
+                  -1.0,
+                  0.0
+                ],
+                "unit": "",
+                "dimension": {},
+                "rank": "vector",
+                "display": "[0, -1, 0]"
+              }
+            ]
+          }
+        },
+        {
+          "ref": "e1.em.electric_field",
+          "property": "em.electric_field",
+          "value": [
+            0.0,
+            -5000.0,
+            0.0
+          ],
+          "unit": "V/m",
+          "dimension": {
+            "kg": "1",
+            "m": "1",
+            "s": "-3",
+            "A": "-1"
+          },
+          "rank": "vector",
+          "display": "[0, -5000, 0] V/m",
+          "because": {
+            "kind": "derived",
+            "formula": "plates.E_vec_at_charge",
+            "expression": "E",
+            "substituted": "([0, -5000, 0] V/m)",
+            "law": "uniform_field_between_plates",
+            "law_label": "Uniform field between parallel plates",
+            "law_statement": "Away from the edges, the field between oppositely charged parallel plates is uniform with magnitude equal to the potential difference divided by the separation.",
+            "assumes": [
+              "uniform_field"
+            ],
+            "cite": "OpenStax College Physics 2e, 19.4 (CC BY)",
+            "inputs": [
+              {
+                "symbol": "E",
+                "from": "cap.em.electric_field",
+                "value": [
+                  0.0,
+                  -5000.0,
+                  0.0
+                ],
+                "unit": "V/m",
+                "dimension": {
+                  "kg": "1",
+                  "m": "1",
+                  "s": "-3",
+                  "A": "-1"
+                },
+                "rank": "vector",
+                "display": "[0, -5000, 0] V/m"
+              }
+            ]
+          }
+        },
+        {
+          "ref": "e1.mechanics.force_em",
+          "property": "mechanics.force_em",
+          "value": [
+            -0.0,
+            8.010883169999999e-16,
+            -0.0
+          ],
+          "unit": "N",
+          "dimension": {
+            "kg": "1",
+            "m": "1",
+            "s": "-2"
+          },
+          "rank": "vector",
+          "display": "[0, 8.011e-16, 0] N",
+          "because": {
+            "kind": "derived",
+            "formula": "lorentz.F_vec_electric",
+            "expression": "q * E",
+            "substituted": "([0, -5000, 0] V/m)*(-1.602e-19 C)",
+            "law": "lorentz_force",
+            "law_label": "Lorentz force law",
+            "law_statement": "A charge q moving with velocity v through fields E and B experiences force q(E + v x B).",
+            "assumes": [
+              "negligible_magnetic_force"
+            ],
+            "cite": "OpenStax College Physics 2e, 18.5 (CC BY)",
+            "inputs": [
+              {
+                "symbol": "q",
+                "from": "e1.em.charge",
+                "value": -1.602176634e-19,
+                "unit": "C",
+                "dimension": {
+                  "s": "1",
+                  "A": "1"
+                },
+                "rank": "scalar",
+                "display": "-1.602e-19 C"
+              },
+              {
+                "symbol": "E",
+                "from": "e1.em.electric_field",
+                "value": [
+                  0.0,
+                  -5000.0,
+                  0.0
+                ],
+                "unit": "V/m",
+                "dimension": {
+                  "kg": "1",
+                  "m": "1",
+                  "s": "-3",
+                  "A": "-1"
+                },
+                "rank": "vector",
+                "display": "[0, -5000, 0] V/m"
+              }
+            ]
+          }
+        },
+        {
+          "ref": "e1.mechanics.mass",
+          "property": "mechanics.mass",
+          "value": 9.1093837015e-31,
+          "unit": "kg",
+          "dimension": {
+            "kg": "1"
+          },
+          "rank": "scalar",
+          "display": "9.109e-31 kg",
+          "because": {
+            "kind": "given",
+            "detail": "supplied by the problem statement"
+          }
+        },
+        {
+          "ref": "env.env.gravity",
+          "property": "env.gravity",
+          "value": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "unit": "m/s²",
+          "dimension": {
+            "m": "1",
+            "s": "-2"
+          },
+          "rank": "vector",
+          "display": "[0, 0, 0] m/s²",
+          "because": {
+            "kind": "given",
+            "detail": "supplied by the problem statement"
+          }
+        },
+        {
+          "ref": "e1.mechanics.force_gravity",
+          "property": "mechanics.force_gravity",
+          "value": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "unit": "N",
+          "dimension": {
+            "kg": "1",
+            "m": "1",
+            "s": "-2"
+          },
+          "rank": "vector",
+          "display": "[0, 0, 0] N",
+          "because": {
+            "kind": "derived",
+            "formula": "gravity.F_vec_from_env",
+            "expression": "m * g",
+            "substituted": "([0, 0, 0] m/s²)*(9.109e-31 kg)",
+            "law": "newton_gravitation_uniform",
+            "law_label": "Weight in a uniform gravitational field",
+            "law_statement": "A body of mass m in a uniform gravitational field g experiences a force m*g directed along the field. Uniform is the right idealisation on a bench: g varies by less than a part in a million across a desk.",
+            "assumes": [
+              "uniform_field"
+            ],
+            "cite": "OpenStax College Physics 2e, 4.5 (CC BY)",
+            "inputs": [
+              {
+                "symbol": "m",
+                "from": "e1.mechanics.mass",
+                "value": 9.1093837015e-31,
+                "unit": "kg",
+                "dimension": {
+                  "kg": "1"
+                },
+                "rank": "scalar",
+                "display": "9.109e-31 kg"
+              },
+              {
+                "symbol": "g",
+                "from": "env.env.gravity",
+                "value": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "unit": "m/s²",
+                "dimension": {
+                  "m": "1",
+                  "s": "-2"
+                },
+                "rank": "vector",
+                "display": "[0, 0, 0] m/s²"
+              }
+            ]
+          }
+        },
+        {
+          "ref": "e1.mechanics.force",
+          "property": "mechanics.force",
+          "value": [
+            0.0,
+            8.010883169999999e-16,
+            0.0
+          ],
+          "unit": "N",
+          "dimension": {
+            "kg": "1",
+            "m": "1",
+            "s": "-2"
+          },
+          "rank": "vector",
+          "display": "[0, 8.011e-16, 0] N",
+          "because": {
+            "kind": "derived",
+            "formula": "force.net_from_contributions",
+            "expression": "F_em + F_g",
+            "substituted": "([0, 8.011e-16, 0] N) + ([0, 0, 0] N)",
+            "law": "superposition_of_forces",
+            "law_label": "Superposition of forces",
+            "law_statement": "The net force on a body is the vector sum of the forces acting on it, each computed as if the others were absent. This is why an electric force and a weight can be derived independently and then added.",
+            "assumes": [
+              "no_other_forces",
+              "negligible_drag"
+            ],
+            "cite": "OpenStax College Physics 2e, 4.6 (CC BY)",
+            "inputs": [
+              {
+                "symbol": "F_em",
+                "from": "e1.mechanics.force_em",
+                "value": [
+                  -0.0,
+                  8.010883169999999e-16,
+                  -0.0
+                ],
+                "unit": "N",
+                "dimension": {
+                  "kg": "1",
+                  "m": "1",
+                  "s": "-2"
+                },
+                "rank": "vector",
+                "display": "[0, 8.011e-16, 0] N"
+              },
+              {
+                "symbol": "F_g",
+                "from": "e1.mechanics.force_gravity",
+                "value": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "unit": "N",
+                "dimension": {
+                  "kg": "1",
+                  "m": "1",
+                  "s": "-2"
+                },
+                "rank": "vector",
+                "display": "[0, 0, 0] N"
+              }
+            ]
+          }
+        },
+        {
+          "ref": "e1.mechanics.force_magnitude",
+          "property": "mechanics.force_magnitude",
+          "value": 8.010883169999999e-16,
+          "unit": "N",
+          "dimension": {
+            "kg": "1",
+            "m": "1",
+            "s": "-2"
+          },
+          "rank": "scalar",
+          "display": "8.011e-16 N",
+          "because": {
+            "kind": "derived",
+            "formula": "force.magnitude_from_vector",
+            "expression": "mag(F)",
+            "substituted": "mag(([0, 8.011e-16, 0] N))",
+            "law": "definition_magnitude",
+            "law_label": "Magnitude of a vector quantity",
+            "law_statement": "A scalar magnitude property is the Euclidean norm of its vector counterpart. Bookkeeping, not physics, but it must be cited like anything else so no trace step is unexplained.",
+            "assumes": [],
+            "cite": "definitional",
+            "inputs": [
+              {
+                "symbol": "F",
+                "from": "e1.mechanics.force",
+                "value": [
+                  0.0,
+                  8.010883169999999e-16,
+                  0.0
+                ],
+                "unit": "N",
+                "dimension": {
+                  "kg": "1",
+                  "m": "1",
+                  "s": "-2"
+                },
+                "rank": "vector",
+                "display": "[0, 8.011e-16, 0] N"
+              }
+            ]
+          }
+        },
+        {
+          "ref": "e1.kinematics.acceleration_magnitude",
+          "property": "kinematics.acceleration_magnitude",
+          "value": 879410005386081.5,
+          "unit": "m/s²",
+          "dimension": {
+            "m": "1",
+            "s": "-2"
+          },
+          "rank": "scalar",
+          "display": "8.794e14 m/s²",
+          "because": {
+            "kind": "derived",
+            "formula": "newton.a_mag_from_F",
+            "expression": "F / m",
+            "substituted": "(8.011e-16 N)/(9.109e-31 kg)",
+            "law": "newton_second_law",
+            "law_label": "Newton's second law",
+            "law_statement": "The net force on a body equals its mass times its acceleration.",
+            "assumes": [
+              "constant_mass",
+              "non_relativistic"
+            ],
+            "cite": "OpenStax College Physics 2e, 4.3 (CC BY)",
+            "inputs": [
+              {
+                "symbol": "F",
+                "from": "e1.mechanics.force_magnitude",
+                "value": 8.010883169999999e-16,
+                "unit": "N",
+                "dimension": {
+                  "kg": "1",
+                  "m": "1",
+                  "s": "-2"
+                },
+                "rank": "scalar",
+                "display": "8.011e-16 N"
+              },
+              {
+                "symbol": "m",
+                "from": "e1.mechanics.mass",
+                "value": 9.1093837015e-31,
+                "unit": "kg",
+                "dimension": {
+                  "kg": "1"
+                },
+                "rank": "scalar",
+                "display": "9.109e-31 kg"
+              }
+            ]
+          }
+        },
+        {
+          "ref": "e1.kinematics.distance",
+          "property": "kinematics.distance",
+          "value": 0.02,
+          "unit": "m",
+          "dimension": {
+            "m": "1"
+          },
+          "rank": "scalar",
+          "display": "0.02 m",
+          "because": {
+            "kind": "derived",
+            "formula": "kin.distance_across_plates",
+            "expression": "d",
+            "substituted": "(0.02 m)",
+            "law": "kinematics_constant_acceleration",
+            "law_label": "Kinematics under constant acceleration",
+            "law_statement": "While acceleration is constant, velocity is linear in time and displacement is quadratic; and v^2 = u^2 + 2*a*s eliminates time entirely.",
+            "assumes": [
+              "full_traverse",
+              "released_at_one_plate"
+            ],
+            "cite": "geometry of the problem",
+            "inputs": [
+              {
+                "symbol": "d",
+                "from": "cap.geometry.separation_plates",
+                "value": 0.02,
+                "unit": "m",
+                "dimension": {
+                  "m": "1"
+                },
+                "rank": "scalar",
+                "display": "0.02 m"
+              }
+            ]
+          }
+        },
+        {
+          "ref": "e1.kinematics.speed@final",
+          "property": "kinematics.speed",
+          "value": 5930969.584768013,
+          "unit": "m/s",
+          "dimension": {
+            "m": "1",
+            "s": "-1"
+          },
+          "rank": "scalar",
+          "display": "5.931e6 m/s",
+          "because": {
+            "kind": "derived",
+            "formula": "kin.v_final_from_u_a_s",
+            "expression": "sqrt(u**2 + 2 * a * s)",
+            "substituted": "sqrt(2*(8.794e14 m/s²)*(0.02 m) + (0 m/s)**2)",
+            "law": "kinematics_constant_acceleration",
+            "law_label": "Kinematics under constant acceleration",
+            "law_statement": "While acceleration is constant, velocity is linear in time and displacement is quadratic; and v^2 = u^2 + 2*a*s eliminates time entirely.",
+            "assumes": [
+              "constant_acceleration",
+              "straight_line"
+            ],
+            "cite": "OpenStax College Physics 2e, 2.5 (CC BY)",
+            "inputs": [
+              {
+                "symbol": "u",
+                "from": "e1.kinematics.speed@initial",
+                "value": 0.0,
+                "unit": "m/s",
+                "dimension": {
+                  "m": "1",
+                  "s": "-1"
+                },
+                "rank": "scalar",
+                "display": "0 m/s"
+              },
+              {
+                "symbol": "a",
+                "from": "e1.kinematics.acceleration_magnitude",
+                "value": 879410005386081.5,
+                "unit": "m/s²",
+                "dimension": {
+                  "m": "1",
+                  "s": "-2"
+                },
+                "rank": "scalar",
+                "display": "8.794e14 m/s²"
+              },
+              {
+                "symbol": "s",
+                "from": "e1.kinematics.distance",
+                "value": 0.02,
+                "unit": "m",
+                "dimension": {
+                  "m": "1"
+                },
+                "rank": "scalar",
+                "display": "0.02 m"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

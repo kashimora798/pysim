@@ -1,0 +1,27 @@
+id: p006
+title: Cyclotron radius of a proton
+source: "After OpenStax University Physics 2, 11.3 (CC BY)"
+tags: [magnetism, circular-motion]
+text: |
+  A proton moves at 1.0e6 m/s perpendicular to a uniform magnetic field of 0.50 T. What is the
+  radius of its circular path?
+scene:
+  instances:
+    - id: region
+      kind: uniform_magnetic_field_region
+      set:
+        em.magnetic_field: "[0, 0, 0.50] T"
+    - id: p
+      kind: charged_particle
+      set:
+        em.charge: "1.602176634e-19 C"
+        mechanics.mass: "1.67262192369e-27 kg"
+        kinematics.velocity: "[1.0e6, 0, 0] m/s"
+  relations:
+    - {kind: inside, from: p, to: region}
+target: {instance: p, prop: em.cyclotron_radius}
+expect:
+  value: 0.0208786
+  unit: m
+  tol: 0.005
+  note: "r = m*v/(q*B). Speed comes from the velocity vector, B from the region's field vector."

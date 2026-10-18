@@ -1,0 +1,67 @@
+# Physical constants.
+#
+# Constants enter expressions as ordinary symbols carrying a dimension, so the dimension checker
+# treats them exactly like any other binding. Values are CODATA 2018 / SI-2019 exact where
+# applicable.
+constants:
+  k_e:
+    value: "8.9875517873681764e9 N*m^2/C^2"
+    symbol: k_e
+    description: Coulomb constant, 1/(4*pi*epsilon_0).
+    cite: "SI 2019 exact (derived from exact c and mu_0 definition)"
+
+  epsilon_0:
+    value: "8.8541878128e-12 F/m"
+    symbol: epsilon_0
+    description: Vacuum electric permittivity.
+    cite: "CODATA 2018"
+
+  mu_0:
+    value: "1.25663706212e-6 T*m/A"
+    symbol: mu_0
+    description: Vacuum magnetic permeability.
+    cite: "CODATA 2018"
+
+  c:
+    value: "299792458 m/s"
+    symbol: c
+    description: Speed of light in vacuum.
+    cite: "SI exact"
+
+  e_charge:
+    value: "1.602176634e-19 C"
+    symbol: e
+    description: Elementary charge.
+    cite: "SI 2019 exact"
+
+  m_e:
+    value: "9.1093837015e-31 kg"
+    symbol: m_e
+    description: Electron rest mass.
+    cite: "CODATA 2018"
+
+  m_p:
+    value: "1.67262192369e-27 kg"
+    symbol: m_p
+    description: Proton rest mass.
+    cite: "CODATA 2018"
+
+  g_n:
+    value: "9.80665 m/s^2"
+    symbol: g
+    description: Standard gravitational acceleration (magnitude).
+    cite: "CGPM 1901 conventional value"
+
+  g_vec:
+    value: "[0, -9.80665, 0] m/s^2"
+    symbol: g_vec
+    description: >
+      Standard gravitational acceleration as a vector. +Y is up, matching the WebXR and three.js
+      convention the renderer uses, so a kernel-computed vector needs no axis swap downstream.
+    cite: "CGPM 1901 conventional value"
+
+  pi_const:
+    value: "3.14159265358979323846"
+    symbol: pi_c
+    description: Circle constant, as a dimensionless binding.
+    cite: "mathematical"

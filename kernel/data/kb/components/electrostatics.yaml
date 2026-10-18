@@ -1,0 +1,199 @@
+# The shop: sources of electrostatic field.
+#
+# Roles are load-bearing. `intrinsic` is fixed by nature, `settable` is what the problem states,
+# `observable` is what solving produces. The audit uses these to tell a missing input from a
+# missing derivation.
+components:
+  point_charge:
+    label: Point charge
+    tags: [charge_source, electrostatic, source]
+    description: >
+      An idealised charge with no extent. The canonical field source; everything else in
+      electrostatics is a superposition of these.
+    laws: [coulombs_law, superposition_electric]
+    model3d: point_charge.glb
+    properties:
+      em.charge:           {role: settable, required: true}
+      em.charge_magnitude: {role: observable}
+      geometry.position:   {role: settable}
+
+  charged_particle:
+    label: Charged particle
+    tags: [charge_source, electrostatic, source, movable, projectile]
+    description: >
+      A charge with mass, free to move. Both a field source and the thing that responds to a
+      field — which is precisely why the field -> force -> trajectory chain needs no special case.
+    laws: [coulombs_law, lorentz_force, newton_second_law]
+    model3d: particle.glb
+    properties:
+      em.charge:                        {role: settable, required: true}
+      em.charge_magnitude:              {role: observable}
+      mechanics.mass:                   {role: settable, required: true}
+      geometry.position:                {role: settable}
+      kinematics.velocity:              {role: settable}
+      kinematics.speed:                 {role: observable}
+      kinematics.acceleration:          {role: observable}
+      kinematics.acceleration_magnitude: {role: observable}
+      kinematics.displacement:          {role: observable}
+      kinematics.distance:              {role: settable, note: "a problem may state the distance travelled"}
+      kinematics.time:                  {role: settable, note: "a problem may state the elapsed time"}
+      mechanics.force:                  {role: observable}
+      mechanics.force_em:               {role: observable}
+      mechanics.force_gravity:          {role: observable}
+      mechanics.force_drag:             {role: observable}
+      mechanics.drag_coefficient:       {role: settable, default: "0.47"}
+      geometry.cross_section:           {role: settable, default: "0 m^2"}
+      mechanics.force_magnitude:        {role: observable}
+      mechanics.momentum:               {role: observable}
+      mechanics.work:                   {role: observable}
+      energy.kinetic:                   {role: observable}
+      energy.potential_electric:        {role: observable}
+      em.electric_field:                {role: observable, note: "field evaluated at the particle"}
+      em.electric_field_magnitude:      {role: observable}
+      em.electric_potential:            {role: observable}
+      em.cyclotron_radius:              {role: observable}
+      em.cyclotron_period:              {role: observable}
+
+  electron:
+    label: Electron
+    tags: [charge_source, electrostatic, source, movable, projectile]
+    description: An electron, with charge and mass fixed by nature rather than by the problem.
+    laws: [coulombs_law, lorentz_force, newton_second_law]
+    model3d: electron.glb
+    properties:
+      em.charge:                        {role: intrinsic, default: "-1.602176634e-19 C"}
+      em.charge_magnitude:              {role: intrinsic, default: "1.602176634e-19 C"}
+      mechanics.mass:                   {role: intrinsic, default: "9.1093837015e-31 kg"}
+      geometry.position:                {role: settable}
+      kinematics.velocity:              {role: settable}
+      kinematics.speed:                 {role: observable}
+      kinematics.acceleration:          {role: observable}
+      kinematics.acceleration_magnitude: {role: observable}
+      kinematics.displacement:          {role: observable}
+      kinematics.distance:              {role: settable, note: "a problem may state the distance travelled"}
+      kinematics.time:                  {role: settable, note: "a problem may state the elapsed time"}
+      mechanics.force:                  {role: observable}
+      mechanics.force_em:               {role: observable}
+      mechanics.force_gravity:          {role: observable}
+      mechanics.force_drag:             {role: observable}
+      mechanics.drag_coefficient:       {role: settable, default: "0.47"}
+      geometry.cross_section:           {role: settable, default: "0 m^2"}
+      mechanics.force_magnitude:        {role: observable}
+      mechanics.momentum:               {role: observable}
+      mechanics.work:                   {role: observable}
+      energy.kinetic:                   {role: observable}
+      energy.potential_electric:        {role: observable}
+      em.electric_field:                {role: observable}
+      em.electric_field_magnitude:      {role: observable}
+      em.cyclotron_radius:              {role: observable}
+      em.cyclotron_period:              {role: observable}
+
+  parallel_plate_capacitor:
+    label: Parallel-plate capacitor
+    tags: [field_region, electrostatic, source, uniform_field]
+    description: >
+      Two oppositely charged plates. Away from the edges the field between them is uniform, which
+      makes this the standard way to produce a known constant field in a problem.
+    laws: [uniform_field_between_plates, gauss_law_electric]
+    model3d: parallel_plates.glb
+    properties:
+      em.potential_difference:     {role: settable, required: true}
+      geometry.separation_plates:  {role: settable, required: true}
+      geometry.area:               {role: settable}
+      em.electric_field_magnitude: {role: observable}
+      em.electric_field:           {role: observable}
+      geometry.direction:          {role: settable, default: "[0, -1, 0]"}
+      em.charge_density_surface:   {role: observable}
+
+  uniform_field_region:
+    label: Uniform field region
+    tags: [field_region, electrostatic, source, uniform_field]
+    description: A region of stated uniform field, for problems that give the field directly.
+    laws: [superposition_electric]
+    model3d: field_region.glb
+    properties:
+      em.electric_field:           {role: settable}
+      em.electric_field_magnitude: {role: observable}
+      geometry.direction:          {role: settable, default: "[0, -1, 0]"}
+
+  uniform_magnetic_field_region:
+    label: Uniform magnetic field region
+    tags: [field_region, magnetostatic, source]
+    description: A region of stated uniform magnetic flux density.
+    laws: [circular_motion_magnetic, lorentz_force]
+    model3d: field_region.glb
+    properties:
+      em.magnetic_field:           {role: settable}
+      em.magnetic_field_magnitude: {role: observable}
+
+  uniform_charged_sphere:
+    label: Uniformly charged insulating sphere
+    tags: [charge_source, electrostatic, source]
+    description: >
+      A sphere of uniform volume charge density. Non-conducting, so the charge stays put and the
+      interior field is non-zero and linear in r.
+    laws: [gauss_law_electric, superposition_electric]
+    model3d: sphere.glb
+    properties:
+      em.charge:                   {role: settable}
+      em.charge_magnitude:         {role: observable}
+      em.charge_density_volume:    {role: settable}
+      geometry.radius:             {role: settable, required: true}
+      geometry.volume:             {role: observable}
+      geometry.position:           {role: settable}
+      em.electric_field_magnitude: {role: observable}
+
+  spherical_cavity_in_charged_sphere:
+    label: Spherical cavity in a uniformly charged sphere
+    tags: [charge_source, electrostatic, source, uniform_field, cavity]
+    description: >
+      A spherical hole carved out of a uniformly charged insulating sphere. By superposition the
+      field everywhere inside the cavity is uniform, equal to rho*a/(3*eps0) along the offset
+      vector a from the sphere's centre to the cavity's. This is the flagship case: no simulation
+      library contains it, and a charge released inside undergoes exact constant-acceleration
+      projectile motion.
+    laws: [superposition_electric, gauss_law_electric]
+    model3d: cavity_sphere.glb
+    properties:
+      em.charge_density_volume:    {role: settable, required: true}
+      geometry.radius:             {role: settable}
+      geometry.offset:             {role: settable, note: "sphere centre -> cavity centre"}
+      em.electric_field:           {role: observable}
+      em.electric_field_magnitude: {role: observable}
+
+  conducting_shell:
+    label: Conducting spherical shell
+    tags: [charge_source, electrostatic, source, conductor, cavity]
+    description: >
+      A charged conductor with a hollow interior. The field inside the cavity is exactly zero —
+      electrostatic shielding — whatever the shell's charge or the external field.
+    laws: [shielding_conductor_cavity, gauss_law_electric]
+    model3d: shell.glb
+    properties:
+      em.charge:                   {role: settable}
+      em.charge_magnitude:         {role: observable}
+      geometry.radius:             {role: settable, required: true}
+      geometry.position:           {role: settable}
+      em.electric_field_magnitude: {role: observable}
+
+  infinite_charged_plane:
+    label: Infinite charged plane
+    tags: [charge_source, electrostatic, source, uniform_field]
+    description: >
+      An infinite sheet of uniform surface charge density. Its field is uniform and independent of
+      distance, which is why it is the standard idealisation for a large plate.
+    laws: [gauss_law_electric]
+    model3d: plane.glb
+    properties:
+      em.charge_density_surface:   {role: settable, required: true}
+      em.electric_field_magnitude: {role: observable}
+
+  infinite_charged_line:
+    label: Infinite charged line
+    tags: [charge_source, electrostatic, source]
+    description: An infinite straight line of uniform linear charge density.
+    laws: [gauss_law_electric]
+    model3d: line.glb
+    properties:
+      em.charge_density_linear:    {role: settable, required: true}
+      em.electric_field_magnitude: {role: observable}

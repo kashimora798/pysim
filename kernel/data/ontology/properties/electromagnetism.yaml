@@ -1,0 +1,118 @@
+# Electromagnetic properties.
+#
+# `kind: field` marks a quantity that is a function of position rather than a value owned by an
+# object. The resolver treats a field as "evaluated at an instance" — which is why a bare field
+# point is a legitimate component in the shop.
+domain: electromagnetism
+properties:
+  em.charge:
+    symbol: q
+    dim: charge
+    rank: scalar
+    kind: lumped
+    si_unit: C
+    description: Signed electric charge.
+
+  em.charge_magnitude:
+    symbol: Q
+    dim: charge
+    rank: scalar
+    kind: lumped
+    si_unit: C
+    description: Magnitude of electric charge.
+
+  em.electric_field:
+    symbol: E
+    dim: electric_field
+    rank: vector
+    kind: field
+    si_unit: V/m
+    description: Electric field vector at a point.
+
+  em.electric_field_magnitude:
+    symbol: E
+    dim: electric_field
+    rank: scalar
+    kind: field
+    si_unit: V/m
+    description: Magnitude of the electric field at a point.
+
+  em.electric_potential:
+    symbol: V
+    dim: voltage
+    rank: scalar
+    kind: field
+    si_unit: V
+    description: Electric potential at a point.
+
+  em.potential_difference:
+    symbol: V
+    dim: voltage
+    rank: scalar
+    kind: lumped
+    si_unit: V
+    description: Potential difference across a pair of points or plates.
+
+  em.magnetic_field:
+    symbol: B
+    dim: magnetic_field
+    rank: vector
+    kind: field
+    si_unit: T
+    description: Magnetic flux density vector at a point.
+
+  em.magnetic_field_magnitude:
+    symbol: B
+    dim: magnetic_field
+    rank: scalar
+    kind: field
+    si_unit: T
+    description: Magnitude of the magnetic flux density.
+
+  em.charge_density_volume:
+    symbol: rho
+    dim: charge_density_volume
+    rank: scalar
+    kind: lumped
+    si_unit: C/m^3
+    description: Charge per unit volume.
+
+  em.charge_density_surface:
+    symbol: sigma
+    dim: charge_density_area
+    rank: scalar
+    kind: lumped
+    si_unit: C/m^2
+    description: Charge per unit area.
+
+  em.charge_density_linear:
+    symbol: lambda
+    dim: charge_density_linear
+    rank: scalar
+    kind: lumped
+    si_unit: C/m
+    description: Charge per unit length.
+
+  em.electric_flux:
+    symbol: Phi
+    dim: electric_flux
+    rank: scalar
+    kind: lumped
+    si_unit: V*m
+    description: Electric flux through a closed surface.
+
+  em.cyclotron_radius:
+    symbol: r_c
+    dim: length
+    rank: scalar
+    kind: lumped
+    si_unit: m
+    description: Radius of the circular path of a charge in a uniform magnetic field.
+
+  em.cyclotron_period:
+    symbol: T_c
+    dim: time
+    rank: scalar
+    kind: lumped
+    si_unit: s
+    description: Period of revolution of a charge in a uniform magnetic field.

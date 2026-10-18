@@ -1,0 +1,658 @@
+{
+ "schema": "1",
+ "contentHash": "5f438303d71ac8fc",
+ "problems": [
+  {
+   "id": "p001",
+   "title": "Electron accelerated across a parallel-plate gap",
+   "text": "An electron is released from rest at the negative plate of a parallel-plate capacitor with a\npotential difference of 100 V across a 2.0 cm gap. How fast is it moving when it reaches the\npositive plate?",
+   "source": "After OpenStax College Physics 2e, 19.2 (CC BY)",
+   "tags": [
+    "electrostatics",
+    "energy",
+    "kinematics",
+    "two-paths"
+   ],
+   "target": "e1.kinematics.speed@final",
+   "answer": "5.931e6 m/s",
+   "beats": 11,
+   "paths": 2,
+   "laws": [
+    "definition_magnitude",
+    "electric_potential_definition",
+    "kinematics_constant_acceleration",
+    "lorentz_force",
+    "newton_gravitation_uniform",
+    "newton_second_law",
+    "superposition_of_forces",
+    "uniform_field_between_plates",
+    "work_energy_theorem"
+   ],
+   "components": [
+    "electron",
+    "environment",
+    "parallel_plate_capacitor"
+   ],
+   "spec": "specs/p001.json"
+  },
+  {
+   "id": "p002",
+   "title": "Field of a point charge",
+   "text": "A point charge of +2.0 uC sits in vacuum. What is the magnitude of the electric field it\nproduces at a point 30 cm away?",
+   "source": "After OpenStax College Physics 2e, 18.5 (CC BY)",
+   "tags": [
+    "electrostatics",
+    "coulomb"
+   ],
+   "target": "p1.em.electric_field_magnitude",
+   "answer": "199723 V/m",
+   "beats": 9,
+   "paths": 1,
+   "laws": [
+    "coulombs_law",
+    "definition_magnitude"
+   ],
+   "components": [
+    "environment",
+    "field_probe",
+    "point_charge"
+   ],
+   "spec": "specs/p002.json"
+  },
+  {
+   "id": "p003",
+   "title": "Charge released in the cavity of a uniformly charged sphere",
+   "text": "A spherical cavity of radius 2.0 cm is carved out of a uniformly charged insulating sphere of\nradius 10 cm whose volume charge density is 1.0e-5 C/m^3. The cavity's centre is offset 2.0 cm\nfrom the sphere's centre. A 1.0 nC charge of mass 1.0 mg is released inside the cavity. What is\nthe magnitude of its acceleration?",
+   "source": "Superposition construction; OpenStax University Physics 2, 6.4 (CC BY)",
+   "tags": [
+    "electrostatics",
+    "superposition",
+    "cavity",
+    "cross-domain",
+    "flagship"
+   ],
+   "target": "p.kinematics.acceleration_magnitude",
+   "answer": "7.529 m/s²",
+   "beats": 17,
+   "paths": 1,
+   "laws": [
+    "definition_magnitude",
+    "lorentz_force",
+    "newton_gravitation_uniform",
+    "newton_second_law",
+    "superposition_electric",
+    "superposition_of_forces"
+   ],
+   "components": [
+    "charged_particle",
+    "environment",
+    "spherical_cavity_in_charged_sphere"
+   ],
+   "spec": "specs/p003.json"
+  },
+  {
+   "id": "p004",
+   "title": "Electrostatic shielding inside a charged conducting shell",
+   "text": "A conducting spherical shell of radius 10 cm carries a charge of +5.0 uC. What is the electric\nfield magnitude at a point inside the hollow interior?",
+   "source": "After OpenStax University Physics 2, 6.5 (CC BY)",
+   "tags": [
+    "electrostatics",
+    "conductor",
+    "shielding",
+    "zero-result"
+   ],
+   "target": "p1.em.electric_field_magnitude",
+   "answer": "0 V/m",
+   "beats": 6,
+   "paths": 1,
+   "laws": [
+    "shielding_conductor_cavity"
+   ],
+   "components": [
+    "conducting_shell",
+    "environment",
+    "field_probe"
+   ],
+   "spec": "specs/p004.json"
+  },
+  {
+   "id": "p005",
+   "title": "Field of an infinite charged plane",
+   "text": "A very large flat sheet carries a uniform surface charge density of 1.0 uC/m^2. What is the\nmagnitude of the electric field near the sheet?",
+   "source": "After OpenStax University Physics 2, 6.4 (CC BY)",
+   "tags": [
+    "electrostatics",
+    "gauss"
+   ],
+   "target": "sheet.em.electric_field_magnitude",
+   "answer": "56470 V/m",
+   "beats": 5,
+   "paths": 1,
+   "laws": [
+    "gauss_law_electric"
+   ],
+   "components": [
+    "environment",
+    "infinite_charged_plane"
+   ],
+   "spec": "specs/p005.json"
+  },
+  {
+   "id": "p006",
+   "title": "Cyclotron radius of a proton",
+   "text": "A proton moves at 1.0e6 m/s perpendicular to a uniform magnetic field of 0.50 T. What is the\nradius of its circular path?",
+   "source": "After OpenStax University Physics 2, 11.3 (CC BY)",
+   "tags": [
+    "magnetism",
+    "circular-motion"
+   ],
+   "target": "p.em.cyclotron_radius",
+   "answer": "0.02088 m",
+   "beats": 14,
+   "paths": 1,
+   "laws": [
+    "circular_motion_magnetic",
+    "definition_magnitude"
+   ],
+   "components": [
+    "charged_particle",
+    "environment",
+    "uniform_magnetic_field_region"
+   ],
+   "spec": "specs/p006.json"
+  },
+  {
+   "id": "p007",
+   "title": "Potential due to a negative point charge",
+   "text": "A point charge of -3.0 nC sits in vacuum. What is the electric potential at a point 5.0 cm\naway, taking the potential to be zero at infinity?",
+   "source": "After OpenStax College Physics 2e, 19.3 (CC BY)",
+   "tags": [
+    "electrostatics",
+    "potential",
+    "signed"
+   ],
+   "target": "p1.em.electric_potential",
+   "answer": "-539.3 V",
+   "beats": 8,
+   "paths": 1,
+   "laws": [
+    "coulombs_law"
+   ],
+   "components": [
+    "environment",
+    "field_probe",
+    "point_charge"
+   ],
+   "spec": "specs/p007.json"
+  },
+  {
+   "id": "p008",
+   "title": "Force on a charge between charged plates",
+   "text": "A 2.0 nC charge sits between parallel plates held at a potential difference of 200 V and\nseparated by 5.0 cm. What is the magnitude of the electric force on it?",
+   "source": "After OpenStax College Physics 2e, 19.4 (CC BY)",
+   "tags": [
+    "electrostatics",
+    "force"
+   ],
+   "target": "p.mechanics.force_magnitude",
+   "answer": "8.000e-6 N",
+   "beats": 18,
+   "paths": 1,
+   "laws": [
+    "definition_magnitude",
+    "lorentz_force",
+    "newton_gravitation_uniform",
+    "superposition_of_forces",
+    "uniform_field_between_plates"
+   ],
+   "components": [
+    "charged_particle",
+    "environment",
+    "parallel_plate_capacitor"
+   ],
+   "spec": "specs/p008.json"
+  },
+  {
+   "id": "p009",
+   "title": "Time of flight for an electron crossing a gap",
+   "text": "An electron is released from rest at one plate of a parallel-plate capacitor with a potential\ndifference of 50 V across a 1.0 cm gap. How long does it take to reach the other plate?",
+   "source": "After OpenStax College Physics 2e, 19.2 (CC BY)",
+   "tags": [
+    "electrostatics",
+    "kinematics",
+    "time"
+   ],
+   "target": "e1.kinematics.time",
+   "answer": "4.769e-9 s",
+   "beats": 21,
+   "paths": 2,
+   "laws": [
+    "definition_magnitude",
+    "electric_potential_definition",
+    "kinematics_constant_acceleration",
+    "lorentz_force",
+    "newton_gravitation_uniform",
+    "newton_second_law",
+    "superposition_of_forces",
+    "uniform_field_between_plates",
+    "work_energy_theorem"
+   ],
+   "components": [
+    "electron",
+    "environment",
+    "parallel_plate_capacitor"
+   ],
+   "spec": "specs/p009.json"
+  },
+  {
+   "id": "p010",
+   "title": "Total charge of a uniformly charged sphere",
+   "text": "An insulating sphere of radius 20 cm carries a uniform volume charge density of 5.0 uC/m^3.\nWhat is its total charge?",
+   "source": "After OpenStax University Physics 2, 6.4 (CC BY)",
+   "tags": [
+    "electrostatics",
+    "geometry"
+   ],
+   "target": "ball.em.charge",
+   "answer": "1.676e-7 C",
+   "beats": 7,
+   "paths": 1,
+   "laws": [
+    "gauss_law_electric"
+   ],
+   "components": [
+    "environment",
+    "uniform_charged_sphere"
+   ],
+   "spec": "specs/p010.json"
+  },
+  {
+   "id": "p011",
+   "title": "Speed gained by a charge crossing a cavity",
+   "text": "In the cavity of p003 -- a 2.0 cm spherical hole offset 2.0 cm from the centre of a uniformly\ncharged insulating sphere of density 1.0e-5 C/m^3 -- a 1.0 nC charge of mass 1.0 mg is released\nfrom rest. How fast is it moving after travelling 2.0 cm across the cavity?",
+   "source": "Superposition construction; OpenStax University Physics 2, 6.4 (CC BY)",
+   "tags": [
+    "electrostatics",
+    "superposition",
+    "cavity",
+    "cross-domain",
+    "flagship",
+    "kinematics"
+   ],
+   "target": "p.kinematics.speed@final",
+   "answer": "0.5488 m/s",
+   "beats": 20,
+   "paths": 2,
+   "laws": [
+    "definition_magnitude",
+    "kinematics_constant_acceleration",
+    "lorentz_force",
+    "newton_gravitation_uniform",
+    "newton_second_law",
+    "superposition_electric",
+    "superposition_of_forces",
+    "work_energy_theorem"
+   ],
+   "components": [
+    "charged_particle",
+    "environment",
+    "spherical_cavity_in_charged_sphere"
+   ],
+   "spec": "specs/p011.json"
+  },
+  {
+   "id": "p012",
+   "title": "Charge between plates, with gravity switched on",
+   "text": "A 2.0 nC charge of mass 1.0 mg sits between parallel plates held at 200 V across a 5.0 cm gap,\nwith the field pointing downward. This time the experiment is on Earth rather than in an\nidealised weightless vacuum. What is the magnitude of the net force on the charge?",
+   "source": "After OpenStax College Physics 2e, 19.4 + 4.6 (CC BY)",
+   "tags": [
+    "electrostatics",
+    "environment",
+    "gravity",
+    "superposition"
+   ],
+   "target": "p.mechanics.force_magnitude",
+   "answer": "1.781e-5 N",
+   "beats": 18,
+   "paths": 1,
+   "laws": [
+    "definition_magnitude",
+    "lorentz_force",
+    "newton_gravitation_uniform",
+    "superposition_of_forces",
+    "uniform_field_between_plates"
+   ],
+   "components": [
+    "charged_particle",
+    "environment",
+    "parallel_plate_capacitor"
+   ],
+   "spec": "specs/p012.json"
+  },
+  {
+   "id": "p013",
+   "title": "The same two charges, immersed in water",
+   "text": "A 2.0 uC point charge sits 30 cm from a test point, exactly as in p002 -- but the whole\narrangement is immersed in water, whose relative permittivity is about 80. What is the field\nmagnitude at the test point now?",
+   "source": "After OpenStax University Physics 2, 5.1 (CC BY)",
+   "tags": [
+    "electrostatics",
+    "environment",
+    "medium",
+    "coulomb"
+   ],
+   "target": "p1.em.electric_field_magnitude",
+   "answer": "2497 V/m",
+   "beats": 9,
+   "paths": 1,
+   "laws": [
+    "coulombs_law",
+    "definition_magnitude"
+   ],
+   "components": [
+    "environment",
+    "field_probe",
+    "point_charge"
+   ],
+   "spec": "specs/p013.json"
+  },
+  {
+   "id": "p014",
+   "title": "Drag on a charged sphere moving into a headwind",
+   "text": "A charged sphere of cross-sectional area 20 cm^2 and drag coefficient 0.47 moves east at\n10 m/s through air of density 1.225 kg/m^3. The air itself is moving west at 5 m/s, so the\nsphere meets a 15 m/s headwind. What is the magnitude of the drag force on it?",
+   "source": "After OpenStax College Physics 2e, 5.2 (CC BY)",
+   "tags": [
+    "environment",
+    "wind",
+    "drag",
+    "mechanics"
+   ],
+   "target": "ball.mechanics.force_drag",
+   "answer": "[-0.1295, 0, 0] N",
+   "beats": 9,
+   "paths": 1,
+   "laws": [
+    "quadratic_drag"
+   ],
+   "components": [
+    "charged_particle",
+    "environment"
+   ],
+   "spec": "specs/p014.json"
+  },
+  {
+   "id": "p101",
+   "title": "Current in a single-resistor loop",
+   "text": "A 12 V battery is connected by ideal wires to a single 4.0 ohm resistor. What current flows\naround the loop?",
+   "source": "After OpenStax College Physics 2e, 20.2 (CC BY)",
+   "tags": [
+    "circuits",
+    "ohm",
+    "chapter1"
+   ],
+   "target": "loop.electric.current",
+   "answer": "3 A",
+   "beats": 12,
+   "paths": 1,
+   "laws": [
+    "kirchhoff_voltage_law",
+    "ohms_law",
+    "series_resistance"
+   ],
+   "components": [
+    "battery",
+    "circuit_loop",
+    "environment",
+    "resistor"
+   ],
+   "spec": "specs/p101.json"
+  },
+  {
+   "id": "p102",
+   "title": "Two resistors in series",
+   "text": "A 10 ohm resistor and a 20 ohm resistor are wired end to end across a 9.0 V battery. What\ncurrent flows?",
+   "source": "After OpenStax College Physics 2e, 21.1 (CC BY)",
+   "tags": [
+    "circuits",
+    "series",
+    "reduction",
+    "chapter1"
+   ],
+   "target": "loop.electric.current",
+   "answer": "0.3 A",
+   "beats": 18,
+   "paths": 1,
+   "laws": [
+    "kirchhoff_voltage_law",
+    "ohms_law",
+    "series_resistance"
+   ],
+   "components": [
+    "battery",
+    "circuit_loop",
+    "environment",
+    "resistor",
+    "series_pair"
+   ],
+   "spec": "specs/p102.json"
+  },
+  {
+   "id": "p103",
+   "title": "Two resistors in parallel",
+   "text": "A 6.0 ohm resistor and a 3.0 ohm resistor are connected across the same two nodes, driven by a\n12 V battery. What total current does the battery supply?",
+   "source": "After OpenStax College Physics 2e, 21.1 (CC BY)",
+   "tags": [
+    "circuits",
+    "parallel",
+    "reduction",
+    "chapter1"
+   ],
+   "target": "loop.electric.current",
+   "answer": "6 A",
+   "beats": 18,
+   "paths": 1,
+   "laws": [
+    "kirchhoff_voltage_law",
+    "ohms_law",
+    "parallel_resistance",
+    "series_resistance"
+   ],
+   "components": [
+    "battery",
+    "circuit_loop",
+    "environment",
+    "parallel_pair",
+    "resistor"
+   ],
+   "spec": "specs/p103.json"
+  },
+  {
+   "id": "p104",
+   "title": "Power dissipated by a lamp",
+   "text": "A lamp of resistance 6.0 ohm is connected directly across a 12 V battery. At what rate does it\ndissipate energy?",
+   "source": "After OpenStax College Physics 2e, 20.4 (CC BY)",
+   "tags": [
+    "circuits",
+    "power",
+    "chapter1"
+   ],
+   "target": "lamp1.electric.power",
+   "answer": "24 W",
+   "beats": 12,
+   "paths": 2,
+   "laws": [
+    "joule_heating",
+    "kirchhoff_voltage_law",
+    "ohms_law"
+   ],
+   "components": [
+    "battery",
+    "circuit_loop",
+    "environment",
+    "lamp"
+   ],
+   "spec": "specs/p104.json"
+  },
+  {
+   "id": "p105",
+   "title": "A series pair in parallel with a third resistor",
+   "text": "A 10 ohm and a 20 ohm resistor are wired in series, and that combination is connected in\nparallel with a 30 ohm resistor. The whole network is driven by a 30 V battery. What current\ndoes the battery supply?",
+   "source": "After OpenStax College Physics 2e, 21.1 (CC BY)",
+   "tags": [
+    "circuits",
+    "series",
+    "parallel",
+    "nested",
+    "reduction",
+    "chapter1",
+    "flagship"
+   ],
+   "target": "loop.electric.current",
+   "answer": "2 A",
+   "beats": 24,
+   "paths": 1,
+   "laws": [
+    "kirchhoff_voltage_law",
+    "ohms_law",
+    "parallel_resistance",
+    "series_resistance"
+   ],
+   "components": [
+    "battery",
+    "circuit_loop",
+    "environment",
+    "parallel_pair",
+    "resistor",
+    "series_pair"
+   ],
+   "spec": "specs/p105.json"
+  },
+  {
+   "id": "p106",
+   "title": "Voltage across one resistor of a series pair",
+   "text": "A 10 ohm resistor is in series with a 20 ohm resistor across a 9.0 V battery. What is the\npotential difference across the 10 ohm resistor alone?",
+   "source": "After OpenStax College Physics 2e, 21.1 (CC BY)",
+   "tags": [
+    "circuits",
+    "series",
+    "sharing",
+    "chapter1"
+   ],
+   "target": "r1.em.potential_difference",
+   "answer": "3 V",
+   "beats": 20,
+   "paths": 1,
+   "laws": [
+    "kirchhoff_current_law",
+    "kirchhoff_voltage_law",
+    "ohms_law",
+    "series_resistance"
+   ],
+   "components": [
+    "battery",
+    "circuit_loop",
+    "environment",
+    "resistor",
+    "series_pair"
+   ],
+   "spec": "specs/p106.json"
+  },
+  {
+   "id": "p107",
+   "title": "Charge stored on a capacitor",
+   "text": "A 100 uF capacitor is held at a potential difference of 12 V. How much charge is stored on it?",
+   "source": "After OpenStax College Physics 2e, 19.5 (CC BY)",
+   "tags": [
+    "circuits",
+    "capacitor",
+    "chapter1"
+   ],
+   "target": "c1.electric.charge_stored",
+   "answer": "0.0012 C",
+   "beats": 6,
+   "paths": 1,
+   "laws": [
+    "capacitor_definition"
+   ],
+   "components": [
+    "capacitor",
+    "environment"
+   ],
+   "spec": "specs/p107.json"
+  },
+  {
+   "id": "p108",
+   "title": "Energy stored in a capacitor's field",
+   "text": "A 100 uF capacitor is charged to 12 V. How much energy is stored in its field?",
+   "source": "After OpenStax College Physics 2e, 19.7 (CC BY)",
+   "tags": [
+    "circuits",
+    "capacitor",
+    "energy",
+    "chapter1"
+   ],
+   "target": "c1.electric.energy_stored",
+   "answer": "0.0072 J",
+   "beats": 6,
+   "paths": 1,
+   "laws": [
+    "capacitor_definition"
+   ],
+   "components": [
+    "capacitor",
+    "environment"
+   ],
+   "spec": "specs/p108.json"
+  },
+  {
+   "id": "p109",
+   "title": "RC time constant",
+   "text": "A 100 uF capacitor is charged through a 10 kohm resistor. What is the time constant of the\ncircuit?",
+   "source": "After OpenStax College Physics 2e, 21.6 (CC BY)",
+   "tags": [
+    "circuits",
+    "capacitor",
+    "rc",
+    "chapter1"
+   ],
+   "target": "c1.electric.time_constant",
+   "answer": "1 s",
+   "beats": 8,
+   "paths": 1,
+   "laws": [
+    "rc_time_constant"
+   ],
+   "components": [
+    "capacitor",
+    "environment",
+    "resistor"
+   ],
+   "spec": "specs/p109.json"
+  },
+  {
+   "id": "p110",
+   "title": "Two capacitors in parallel",
+   "text": "A 2.0 uF and a 3.0 uF capacitor are connected in parallel across a 10 V supply. What is the\ntotal charge stored?",
+   "source": "After OpenStax College Physics 2e, 19.6 (CC BY)",
+   "tags": [
+    "circuits",
+    "capacitor",
+    "parallel",
+    "reduction",
+    "chapter1"
+   ],
+   "target": "pp.electric.charge_stored",
+   "answer": "5.000e-5 C",
+   "beats": 12,
+   "paths": 1,
+   "laws": [
+    "capacitor_definition"
+   ],
+   "components": [
+    "capacitor",
+    "environment",
+    "parallel_pair"
+   ],
+   "spec": "specs/p110.json"
+  }
+ ]
+}

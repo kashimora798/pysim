@@ -1,0 +1,15 @@
+id: p107
+title: Charge stored on a capacitor
+source: "After OpenStax College Physics 2e, 19.5 (CC BY)"
+tags: [circuits, capacitor, chapter1]
+text: |
+  A 100 uF capacitor is held at a potential difference of 12 V. How much charge is stored on it?
+scene:
+  instances:
+    - id: c1
+      kind: capacitor
+      set:
+        electric.capacitance: "100 uF"
+        em.potential_difference: "12 V"
+target: {instance: c1, prop: electric.charge_stored}
+expect: {value: 1.2e-3, unit: C, tol: 0.001, note: "Q = C*V."}

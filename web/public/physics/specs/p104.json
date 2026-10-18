@@ -1,0 +1,1009 @@
+{
+  "fieldforge": "0.1",
+  "problem": {
+    "id": "p104",
+    "title": "Power dissipated by a lamp",
+    "text": "A lamp of resistance 6.0 ohm is connected directly across a 12 V battery. At what rate does it\ndissipate energy?",
+    "source": "After OpenStax College Physics 2e, 20.4 (CC BY)",
+    "tags": [
+      "circuits",
+      "power",
+      "chapter1"
+    ]
+  },
+  "target": "lamp1.electric.power",
+  "answer": {
+    "value": 24.0,
+    "unit": "W",
+    "dimension": {
+      "kg": "1",
+      "m": "2",
+      "s": "-3"
+    },
+    "rank": "scalar",
+    "display": "24 W"
+  },
+  "scene": {
+    "instances": [
+      {
+        "id": "bat",
+        "kind": "battery",
+        "label": "Battery",
+        "model3d": "battery.glb",
+        "tags": [
+          "source",
+          "circuit",
+          "emf"
+        ],
+        "given": {
+          "bat.electric.emf": {
+            "value": 12.0,
+            "unit": "V",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-1"
+            },
+            "rank": "scalar",
+            "display": "12 V"
+          }
+        }
+      },
+      {
+        "id": "lamp1",
+        "kind": "lamp",
+        "label": "Lamp",
+        "model3d": "lamp.glb",
+        "tags": [
+          "passive",
+          "circuit",
+          "resistive",
+          "indicator"
+        ],
+        "given": {
+          "lamp1.electric.resistance": {
+            "value": 6.0,
+            "unit": "Ω",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-2"
+            },
+            "rank": "scalar",
+            "display": "6 Ω"
+          }
+        }
+      },
+      {
+        "id": "loop",
+        "kind": "circuit_loop",
+        "label": "Circuit loop",
+        "model3d": null,
+        "tags": [
+          "circuit",
+          "topology"
+        ],
+        "given": {}
+      },
+      {
+        "id": "env",
+        "kind": "environment",
+        "label": "Environment",
+        "model3d": null,
+        "tags": [
+          "environment",
+          "scene",
+          "settings"
+        ],
+        "given": {
+          "env.env.air_density": {
+            "value": 0.0,
+            "unit": "kg·m⁻³",
+            "dimension": {
+              "kg": "1",
+              "m": "-3"
+            },
+            "rank": "scalar",
+            "display": "0 kg·m⁻³"
+          },
+          "env.env.gravity": {
+            "value": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "unit": "m/s²",
+            "dimension": {
+              "m": "1",
+              "s": "-2"
+            },
+            "rank": "vector",
+            "display": "[0, 0, 0] m/s²"
+          },
+          "env.env.relative_permittivity": {
+            "value": 1.0,
+            "unit": "",
+            "dimension": {},
+            "rank": "scalar",
+            "display": "1"
+          },
+          "env.env.temperature": {
+            "value": 293.15,
+            "unit": "K",
+            "dimension": {
+              "K": "1"
+            },
+            "rank": "scalar",
+            "display": "293.1 K"
+          },
+          "env.env.wind_velocity": {
+            "value": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "unit": "m/s",
+            "dimension": {
+              "m": "1",
+              "s": "-1"
+            },
+            "rank": "vector",
+            "display": "[0, 0, 0] m/s"
+          }
+        }
+      }
+    ],
+    "relations": [
+      {
+        "kind": "driven_by",
+        "from": "loop",
+        "to": "bat",
+        "given": {}
+      },
+      {
+        "kind": "loads",
+        "from": "loop",
+        "to": "lamp1",
+        "given": {}
+      }
+    ]
+  },
+  "assumptions": [
+    "ideal_source",
+    "no_internal_resistance",
+    "ideal_wires",
+    "single_loop",
+    "steady_state",
+    "ohmic"
+  ],
+  "citations": [
+    "OpenStax College Physics 2e, 21.2 (CC BY)",
+    "OpenStax College Physics 2e, 20.4 (CC BY)"
+  ],
+  "checks": {
+    "dimensions": "pass",
+    "engines": [
+      "chain"
+    ],
+    "paths_found": 2,
+    "paths_agree": true,
+    "path_spread": 0.0
+  },
+  "timeline": [
+    {
+      "beat": 1,
+      "kind": "place",
+      "instance": "bat",
+      "component": "battery",
+      "model3d": "battery.glb",
+      "narrate": "Place Battery.",
+      "because": {
+        "kind": "scene",
+        "detail": "An ideal source of constant emf. Two terminals; current leaves the positive one. Ideal here means zero internal resistance, which the assumption list on every formula states plainly.",
+        "laws": [
+          "ohms_law",
+          "kirchhoff_voltage_law"
+        ]
+      }
+    },
+    {
+      "beat": 2,
+      "kind": "place",
+      "instance": "loop",
+      "component": "circuit_loop",
+      "model3d": null,
+      "narrate": "Place Circuit loop.",
+      "because": {
+        "kind": "scene",
+        "detail": "A closed loop: one source driving one resistive thing, which may itself be a whole reduced network. This is the component the wiring interaction produces when the student closes the circuit, and it is where the current the whole chapter is about actually lives.",
+        "laws": [
+          "ohms_law",
+          "kirchhoff_voltage_law"
+        ]
+      }
+    },
+    {
+      "beat": 3,
+      "kind": "place",
+      "instance": "lamp1",
+      "component": "lamp",
+      "model3d": "lamp.glb",
+      "narrate": "Place Lamp.",
+      "because": {
+        "kind": "scene",
+        "detail": "A resistive element that visibly brightens with dissipated power. Physically a resistor; pedagogically much better, because the answer is something you can see rather than read.",
+        "laws": [
+          "ohms_law",
+          "joule_heating"
+        ]
+      }
+    },
+    {
+      "beat": 4,
+      "kind": "place",
+      "instance": "env",
+      "component": "environment",
+      "model3d": null,
+      "narrate": "Place Environment.",
+      "because": {
+        "kind": "scene",
+        "detail": "The surrounding medium and fields. Defaults are an idealised vacuum with no gravity, which is what textbook electrostatics problems assume -- stated here as an editable value instead of a footnote.",
+        "laws": [
+          "newton_gravitation_uniform",
+          "superposition_of_forces",
+          "medium_permittivity"
+        ]
+      }
+    },
+    {
+      "beat": 5,
+      "kind": "relate",
+      "relation": "driven_by",
+      "from": "loop",
+      "to": "bat",
+      "narrate": "loop is driven by bat.",
+      "because": {
+        "kind": "scene",
+        "detail": "stated by the problem's geometry"
+      }
+    },
+    {
+      "beat": 6,
+      "kind": "relate",
+      "relation": "loads",
+      "from": "loop",
+      "to": "lamp1",
+      "narrate": "loop is loads lamp1.",
+      "because": {
+        "kind": "scene",
+        "detail": "stated by the problem's geometry"
+      }
+    },
+    {
+      "beat": 7,
+      "kind": "given",
+      "instance": "bat",
+      "ref": "bat.electric.emf",
+      "property": "electric.emf",
+      "channel": null,
+      "value": 12.0,
+      "unit": "V",
+      "dimension": {
+        "kg": "1",
+        "m": "2",
+        "s": "-3",
+        "A": "-1"
+      },
+      "rank": "scalar",
+      "display": "12 V",
+      "narrate": "bat: emf is 12 V, as stated.",
+      "because": {
+        "kind": "given",
+        "detail": "supplied by the problem statement"
+      }
+    },
+    {
+      "beat": 8,
+      "kind": "resolve",
+      "instance": "loop",
+      "ref": "loop.em.potential_difference",
+      "property": "em.potential_difference",
+      "channel": "potential_shading",
+      "value": 12.0,
+      "unit": "V",
+      "dimension": {
+        "kg": "1",
+        "m": "2",
+        "s": "-3",
+        "A": "-1"
+      },
+      "rank": "scalar",
+      "display": "12 V",
+      "narrate": "loop: potential difference resolves to 12 V.",
+      "because": {
+        "kind": "derived",
+        "formula": "loop.V_from_source",
+        "expression": "emf",
+        "substituted": "(12 V)",
+        "law": "kirchhoff_voltage_law",
+        "law_label": "Kirchhoff's voltage law",
+        "law_statement": "The algebraic sum of potential differences around any closed loop is zero: energy per unit charge returns to where it started. This is what makes voltages add in a series combination.",
+        "assumes": [
+          "ideal_source",
+          "no_internal_resistance"
+        ],
+        "cite": "OpenStax College Physics 2e, 21.2 (CC BY)",
+        "inputs": [
+          {
+            "symbol": "emf",
+            "from": "bat.electric.emf",
+            "value": 12.0,
+            "unit": "V",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-1"
+            },
+            "rank": "scalar",
+            "display": "12 V"
+          }
+        ]
+      }
+    },
+    {
+      "beat": 9,
+      "kind": "resolve",
+      "instance": "lamp1",
+      "ref": "lamp1.em.potential_difference",
+      "property": "em.potential_difference",
+      "channel": "potential_shading",
+      "value": 12.0,
+      "unit": "V",
+      "dimension": {
+        "kg": "1",
+        "m": "2",
+        "s": "-3",
+        "A": "-1"
+      },
+      "rank": "scalar",
+      "display": "12 V",
+      "narrate": "lamp1: potential difference resolves to 12 V.",
+      "because": {
+        "kind": "derived",
+        "formula": "loop.V_shared_to_load",
+        "expression": "V",
+        "substituted": "(12 V)",
+        "law": "kirchhoff_voltage_law",
+        "law_label": "Kirchhoff's voltage law",
+        "law_statement": "The algebraic sum of potential differences around any closed loop is zero: energy per unit charge returns to where it started. This is what makes voltages add in a series combination.",
+        "assumes": [
+          "ideal_wires",
+          "single_loop"
+        ],
+        "cite": "OpenStax College Physics 2e, 21.2 (CC BY)",
+        "inputs": [
+          {
+            "symbol": "V",
+            "from": "loop.em.potential_difference",
+            "value": 12.0,
+            "unit": "V",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-1"
+            },
+            "rank": "scalar",
+            "display": "12 V"
+          }
+        ]
+      }
+    },
+    {
+      "beat": 10,
+      "kind": "given",
+      "instance": "lamp1",
+      "ref": "lamp1.electric.resistance",
+      "property": "electric.resistance",
+      "channel": null,
+      "value": 6.0,
+      "unit": "Ω",
+      "dimension": {
+        "kg": "1",
+        "m": "2",
+        "s": "-3",
+        "A": "-2"
+      },
+      "rank": "scalar",
+      "display": "6 Ω",
+      "narrate": "lamp1: resistance is 6 Ω, as stated.",
+      "because": {
+        "kind": "given",
+        "detail": "supplied by the problem statement"
+      }
+    },
+    {
+      "beat": 11,
+      "kind": "resolve",
+      "instance": "lamp1",
+      "ref": "lamp1.electric.power",
+      "property": "electric.power",
+      "channel": null,
+      "value": 24.0,
+      "unit": "W",
+      "dimension": {
+        "kg": "1",
+        "m": "2",
+        "s": "-3"
+      },
+      "rank": "scalar",
+      "display": "24 W",
+      "narrate": "lamp1: power resolves to 24 W.",
+      "because": {
+        "kind": "derived",
+        "formula": "power.P_from_V_R",
+        "expression": "V**2 / R",
+        "substituted": "(12 V)**2/(6 Ω)",
+        "law": "joule_heating",
+        "law_label": "Joule heating",
+        "law_statement": "A resistive element dissipates electrical energy as heat at a rate P = I*V, equivalently I^2*R or V^2/R. Which of the three forms the resolver reaches for depends only on what the problem happens to give.",
+        "assumes": [
+          "steady_state",
+          "ohmic"
+        ],
+        "cite": "OpenStax College Physics 2e, 20.4 (CC BY)",
+        "inputs": [
+          {
+            "symbol": "V",
+            "from": "lamp1.em.potential_difference",
+            "value": 12.0,
+            "unit": "V",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-1"
+            },
+            "rank": "scalar",
+            "display": "12 V"
+          },
+          {
+            "symbol": "R",
+            "from": "lamp1.electric.resistance",
+            "value": 6.0,
+            "unit": "Ω",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-2"
+            },
+            "rank": "scalar",
+            "display": "6 Ω"
+          }
+        ]
+      }
+    },
+    {
+      "beat": 12,
+      "kind": "answer",
+      "ref": "lamp1.electric.power",
+      "property": "electric.power",
+      "value": 24.0,
+      "unit": "W",
+      "dimension": {
+        "kg": "1",
+        "m": "2",
+        "s": "-3"
+      },
+      "rank": "scalar",
+      "display": "24 W",
+      "narrate": "Answer: 24 W.",
+      "because": {
+        "kind": "summary",
+        "laws": [
+          "joule_heating",
+          "kirchhoff_voltage_law"
+        ],
+        "paths_found": 2
+      }
+    }
+  ],
+  "paths": [
+    {
+      "cost": 3,
+      "laws": [
+        "joule_heating",
+        "kirchhoff_voltage_law"
+      ],
+      "formulas": [
+        "loop.V_from_source",
+        "loop.V_shared_to_load",
+        "power.P_from_V_R"
+      ],
+      "value": {
+        "value": 24.0,
+        "unit": "W",
+        "dimension": {
+          "kg": "1",
+          "m": "2",
+          "s": "-3"
+        },
+        "rank": "scalar",
+        "display": "24 W"
+      },
+      "assumptions": [
+        "ideal_source",
+        "no_internal_resistance",
+        "ideal_wires",
+        "single_loop",
+        "steady_state",
+        "ohmic"
+      ],
+      "citations": [
+        "OpenStax College Physics 2e, 21.2 (CC BY)",
+        "OpenStax College Physics 2e, 20.4 (CC BY)"
+      ],
+      "steps": [
+        {
+          "ref": "bat.electric.emf",
+          "property": "electric.emf",
+          "value": 12.0,
+          "unit": "V",
+          "dimension": {
+            "kg": "1",
+            "m": "2",
+            "s": "-3",
+            "A": "-1"
+          },
+          "rank": "scalar",
+          "display": "12 V",
+          "because": {
+            "kind": "given",
+            "detail": "supplied by the problem statement"
+          }
+        },
+        {
+          "ref": "loop.em.potential_difference",
+          "property": "em.potential_difference",
+          "value": 12.0,
+          "unit": "V",
+          "dimension": {
+            "kg": "1",
+            "m": "2",
+            "s": "-3",
+            "A": "-1"
+          },
+          "rank": "scalar",
+          "display": "12 V",
+          "because": {
+            "kind": "derived",
+            "formula": "loop.V_from_source",
+            "expression": "emf",
+            "substituted": "(12 V)",
+            "law": "kirchhoff_voltage_law",
+            "law_label": "Kirchhoff's voltage law",
+            "law_statement": "The algebraic sum of potential differences around any closed loop is zero: energy per unit charge returns to where it started. This is what makes voltages add in a series combination.",
+            "assumes": [
+              "ideal_source",
+              "no_internal_resistance"
+            ],
+            "cite": "OpenStax College Physics 2e, 21.2 (CC BY)",
+            "inputs": [
+              {
+                "symbol": "emf",
+                "from": "bat.electric.emf",
+                "value": 12.0,
+                "unit": "V",
+                "dimension": {
+                  "kg": "1",
+                  "m": "2",
+                  "s": "-3",
+                  "A": "-1"
+                },
+                "rank": "scalar",
+                "display": "12 V"
+              }
+            ]
+          }
+        },
+        {
+          "ref": "lamp1.em.potential_difference",
+          "property": "em.potential_difference",
+          "value": 12.0,
+          "unit": "V",
+          "dimension": {
+            "kg": "1",
+            "m": "2",
+            "s": "-3",
+            "A": "-1"
+          },
+          "rank": "scalar",
+          "display": "12 V",
+          "because": {
+            "kind": "derived",
+            "formula": "loop.V_shared_to_load",
+            "expression": "V",
+            "substituted": "(12 V)",
+            "law": "kirchhoff_voltage_law",
+            "law_label": "Kirchhoff's voltage law",
+            "law_statement": "The algebraic sum of potential differences around any closed loop is zero: energy per unit charge returns to where it started. This is what makes voltages add in a series combination.",
+            "assumes": [
+              "ideal_wires",
+              "single_loop"
+            ],
+            "cite": "OpenStax College Physics 2e, 21.2 (CC BY)",
+            "inputs": [
+              {
+                "symbol": "V",
+                "from": "loop.em.potential_difference",
+                "value": 12.0,
+                "unit": "V",
+                "dimension": {
+                  "kg": "1",
+                  "m": "2",
+                  "s": "-3",
+                  "A": "-1"
+                },
+                "rank": "scalar",
+                "display": "12 V"
+              }
+            ]
+          }
+        },
+        {
+          "ref": "lamp1.electric.resistance",
+          "property": "electric.resistance",
+          "value": 6.0,
+          "unit": "Ω",
+          "dimension": {
+            "kg": "1",
+            "m": "2",
+            "s": "-3",
+            "A": "-2"
+          },
+          "rank": "scalar",
+          "display": "6 Ω",
+          "because": {
+            "kind": "given",
+            "detail": "supplied by the problem statement"
+          }
+        },
+        {
+          "ref": "lamp1.electric.power",
+          "property": "electric.power",
+          "value": 24.0,
+          "unit": "W",
+          "dimension": {
+            "kg": "1",
+            "m": "2",
+            "s": "-3"
+          },
+          "rank": "scalar",
+          "display": "24 W",
+          "because": {
+            "kind": "derived",
+            "formula": "power.P_from_V_R",
+            "expression": "V**2 / R",
+            "substituted": "(12 V)**2/(6 Ω)",
+            "law": "joule_heating",
+            "law_label": "Joule heating",
+            "law_statement": "A resistive element dissipates electrical energy as heat at a rate P = I*V, equivalently I^2*R or V^2/R. Which of the three forms the resolver reaches for depends only on what the problem happens to give.",
+            "assumes": [
+              "steady_state",
+              "ohmic"
+            ],
+            "cite": "OpenStax College Physics 2e, 20.4 (CC BY)",
+            "inputs": [
+              {
+                "symbol": "V",
+                "from": "lamp1.em.potential_difference",
+                "value": 12.0,
+                "unit": "V",
+                "dimension": {
+                  "kg": "1",
+                  "m": "2",
+                  "s": "-3",
+                  "A": "-1"
+                },
+                "rank": "scalar",
+                "display": "12 V"
+              },
+              {
+                "symbol": "R",
+                "from": "lamp1.electric.resistance",
+                "value": 6.0,
+                "unit": "Ω",
+                "dimension": {
+                  "kg": "1",
+                  "m": "2",
+                  "s": "-3",
+                  "A": "-2"
+                },
+                "rank": "scalar",
+                "display": "6 Ω"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "cost": 4,
+      "laws": [
+        "joule_heating",
+        "kirchhoff_voltage_law",
+        "ohms_law"
+      ],
+      "formulas": [
+        "loop.V_from_source",
+        "loop.V_shared_to_load",
+        "loop.I_from_V_R",
+        "power.P_from_I_R"
+      ],
+      "value": {
+        "value": 24.0,
+        "unit": "W",
+        "dimension": {
+          "kg": "1",
+          "m": "2",
+          "s": "-3"
+        },
+        "rank": "scalar",
+        "display": "24 W"
+      },
+      "assumptions": [
+        "ideal_source",
+        "no_internal_resistance",
+        "ideal_wires",
+        "single_loop",
+        "steady_state",
+        "ohmic_load",
+        "ohmic"
+      ],
+      "citations": [
+        "OpenStax College Physics 2e, 21.2 (CC BY)",
+        "OpenStax College Physics 2e, 20.2 (CC BY)",
+        "OpenStax College Physics 2e, 20.4 (CC BY)"
+      ],
+      "steps": [
+        {
+          "ref": "bat.electric.emf",
+          "property": "electric.emf",
+          "value": 12.0,
+          "unit": "V",
+          "dimension": {
+            "kg": "1",
+            "m": "2",
+            "s": "-3",
+            "A": "-1"
+          },
+          "rank": "scalar",
+          "display": "12 V",
+          "because": {
+            "kind": "given",
+            "detail": "supplied by the problem statement"
+          }
+        },
+        {
+          "ref": "loop.em.potential_difference",
+          "property": "em.potential_difference",
+          "value": 12.0,
+          "unit": "V",
+          "dimension": {
+            "kg": "1",
+            "m": "2",
+            "s": "-3",
+            "A": "-1"
+          },
+          "rank": "scalar",
+          "display": "12 V",
+          "because": {
+            "kind": "derived",
+            "formula": "loop.V_from_source",
+            "expression": "emf",
+            "substituted": "(12 V)",
+            "law": "kirchhoff_voltage_law",
+            "law_label": "Kirchhoff's voltage law",
+            "law_statement": "The algebraic sum of potential differences around any closed loop is zero: energy per unit charge returns to where it started. This is what makes voltages add in a series combination.",
+            "assumes": [
+              "ideal_source",
+              "no_internal_resistance"
+            ],
+            "cite": "OpenStax College Physics 2e, 21.2 (CC BY)",
+            "inputs": [
+              {
+                "symbol": "emf",
+                "from": "bat.electric.emf",
+                "value": 12.0,
+                "unit": "V",
+                "dimension": {
+                  "kg": "1",
+                  "m": "2",
+                  "s": "-3",
+                  "A": "-1"
+                },
+                "rank": "scalar",
+                "display": "12 V"
+              }
+            ]
+          }
+        },
+        {
+          "ref": "lamp1.em.potential_difference",
+          "property": "em.potential_difference",
+          "value": 12.0,
+          "unit": "V",
+          "dimension": {
+            "kg": "1",
+            "m": "2",
+            "s": "-3",
+            "A": "-1"
+          },
+          "rank": "scalar",
+          "display": "12 V",
+          "because": {
+            "kind": "derived",
+            "formula": "loop.V_shared_to_load",
+            "expression": "V",
+            "substituted": "(12 V)",
+            "law": "kirchhoff_voltage_law",
+            "law_label": "Kirchhoff's voltage law",
+            "law_statement": "The algebraic sum of potential differences around any closed loop is zero: energy per unit charge returns to where it started. This is what makes voltages add in a series combination.",
+            "assumes": [
+              "ideal_wires",
+              "single_loop"
+            ],
+            "cite": "OpenStax College Physics 2e, 21.2 (CC BY)",
+            "inputs": [
+              {
+                "symbol": "V",
+                "from": "loop.em.potential_difference",
+                "value": 12.0,
+                "unit": "V",
+                "dimension": {
+                  "kg": "1",
+                  "m": "2",
+                  "s": "-3",
+                  "A": "-1"
+                },
+                "rank": "scalar",
+                "display": "12 V"
+              }
+            ]
+          }
+        },
+        {
+          "ref": "lamp1.electric.resistance",
+          "property": "electric.resistance",
+          "value": 6.0,
+          "unit": "Ω",
+          "dimension": {
+            "kg": "1",
+            "m": "2",
+            "s": "-3",
+            "A": "-2"
+          },
+          "rank": "scalar",
+          "display": "6 Ω",
+          "because": {
+            "kind": "given",
+            "detail": "supplied by the problem statement"
+          }
+        },
+        {
+          "ref": "lamp1.electric.current",
+          "property": "electric.current",
+          "value": 2.0,
+          "unit": "A",
+          "dimension": {
+            "A": "1"
+          },
+          "rank": "scalar",
+          "display": "2 A",
+          "because": {
+            "kind": "derived",
+            "formula": "loop.I_from_V_R",
+            "expression": "V / R",
+            "substituted": "(12 V)/(6 Ω)",
+            "law": "ohms_law",
+            "law_label": "Ohm's law",
+            "law_statement": "For an ohmic conductor the current through it is proportional to the potential difference across it, with the resistance as the constant of proportionality: V = I*R.",
+            "assumes": [
+              "steady_state",
+              "ohmic_load"
+            ],
+            "cite": "OpenStax College Physics 2e, 20.2 (CC BY)",
+            "inputs": [
+              {
+                "symbol": "V",
+                "from": "lamp1.em.potential_difference",
+                "value": 12.0,
+                "unit": "V",
+                "dimension": {
+                  "kg": "1",
+                  "m": "2",
+                  "s": "-3",
+                  "A": "-1"
+                },
+                "rank": "scalar",
+                "display": "12 V"
+              },
+              {
+                "symbol": "R",
+                "from": "lamp1.electric.resistance",
+                "value": 6.0,
+                "unit": "Ω",
+                "dimension": {
+                  "kg": "1",
+                  "m": "2",
+                  "s": "-3",
+                  "A": "-2"
+                },
+                "rank": "scalar",
+                "display": "6 Ω"
+              }
+            ]
+          }
+        },
+        {
+          "ref": "lamp1.electric.power",
+          "property": "electric.power",
+          "value": 24.0,
+          "unit": "W",
+          "dimension": {
+            "kg": "1",
+            "m": "2",
+            "s": "-3"
+          },
+          "rank": "scalar",
+          "display": "24 W",
+          "because": {
+            "kind": "derived",
+            "formula": "power.P_from_I_R",
+            "expression": "I**2 * R",
+            "substituted": "(2 A)**2*(6 Ω)",
+            "law": "joule_heating",
+            "law_label": "Joule heating",
+            "law_statement": "A resistive element dissipates electrical energy as heat at a rate P = I*V, equivalently I^2*R or V^2/R. Which of the three forms the resolver reaches for depends only on what the problem happens to give.",
+            "assumes": [
+              "steady_state",
+              "ohmic"
+            ],
+            "cite": "OpenStax College Physics 2e, 20.4 (CC BY)",
+            "inputs": [
+              {
+                "symbol": "I",
+                "from": "lamp1.electric.current",
+                "value": 2.0,
+                "unit": "A",
+                "dimension": {
+                  "A": "1"
+                },
+                "rank": "scalar",
+                "display": "2 A"
+              },
+              {
+                "symbol": "R",
+                "from": "lamp1.electric.resistance",
+                "value": 6.0,
+                "unit": "Ω",
+                "dimension": {
+                  "kg": "1",
+                  "m": "2",
+                  "s": "-3",
+                  "A": "-2"
+                },
+                "rank": "scalar",
+                "display": "6 Ω"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

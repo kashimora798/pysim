@@ -1,0 +1,13 @@
+*.egg-info/
+*.py[cod]
+.env
+.env.*
+.hypothesis/
+.pytest_cache/
+.research/
+.venv/
+__pycache__/
+_ff.txt
+out/
+!.env.example
+.claude/settings.local.json

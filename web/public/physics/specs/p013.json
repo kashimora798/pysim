@@ -1,0 +1,597 @@
+{
+  "fieldforge": "0.1",
+  "problem": {
+    "id": "p013",
+    "title": "The same two charges, immersed in water",
+    "text": "A 2.0 uC point charge sits 30 cm from a test point, exactly as in p002 -- but the whole\narrangement is immersed in water, whose relative permittivity is about 80. What is the field\nmagnitude at the test point now?",
+    "source": "After OpenStax University Physics 2, 5.1 (CC BY)",
+    "tags": [
+      "electrostatics",
+      "environment",
+      "medium",
+      "coulomb"
+    ]
+  },
+  "target": "p1.em.electric_field_magnitude",
+  "answer": {
+    "value": 2496.5421631578265,
+    "unit": "V/m",
+    "dimension": {
+      "kg": "1",
+      "m": "1",
+      "s": "-3",
+      "A": "-1"
+    },
+    "rank": "scalar",
+    "display": "2497 V/m"
+  },
+  "scene": {
+    "instances": [
+      {
+        "id": "env",
+        "kind": "environment",
+        "label": "Environment",
+        "model3d": null,
+        "tags": [
+          "environment",
+          "scene",
+          "settings"
+        ],
+        "given": {
+          "env.env.air_density": {
+            "value": 0.0,
+            "unit": "kg·m⁻³",
+            "dimension": {
+              "kg": "1",
+              "m": "-3"
+            },
+            "rank": "scalar",
+            "display": "0 kg·m⁻³"
+          },
+          "env.env.gravity": {
+            "value": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "unit": "m/s²",
+            "dimension": {
+              "m": "1",
+              "s": "-2"
+            },
+            "rank": "vector",
+            "display": "[0, 0, 0] m/s²"
+          },
+          "env.env.relative_permittivity": {
+            "value": 80.0,
+            "unit": "",
+            "dimension": {},
+            "rank": "scalar",
+            "display": "80"
+          },
+          "env.env.temperature": {
+            "value": 293.15,
+            "unit": "K",
+            "dimension": {
+              "K": "1"
+            },
+            "rank": "scalar",
+            "display": "293.1 K"
+          },
+          "env.env.wind_velocity": {
+            "value": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "unit": "m/s",
+            "dimension": {
+              "m": "1",
+              "s": "-1"
+            },
+            "rank": "vector",
+            "display": "[0, 0, 0] m/s"
+          }
+        }
+      },
+      {
+        "id": "q1",
+        "kind": "point_charge",
+        "label": "Point charge",
+        "model3d": "point_charge.glb",
+        "tags": [
+          "charge_source",
+          "electrostatic",
+          "source"
+        ],
+        "given": {
+          "q1.em.charge": {
+            "value": 2e-06,
+            "unit": "C",
+            "dimension": {
+              "s": "1",
+              "A": "1"
+            },
+            "rank": "scalar",
+            "display": "2.000e-6 C"
+          }
+        }
+      },
+      {
+        "id": "p1",
+        "kind": "field_probe",
+        "label": "Field probe",
+        "model3d": "probe.glb",
+        "tags": [
+          "tool",
+          "probe",
+          "test_point"
+        ],
+        "given": {}
+      }
+    ],
+    "relations": [
+      {
+        "kind": "acts_on",
+        "from": "q1",
+        "to": "p1",
+        "given": {
+          "geometry.separation": {
+            "value": 0.3,
+            "unit": "m",
+            "dimension": {
+              "m": "1"
+            },
+            "rank": "scalar",
+            "display": "0.3 m"
+          }
+        }
+      }
+    ]
+  },
+  "assumptions": [
+    "point_source",
+    "vacuum",
+    "outside_any_conductor"
+  ],
+  "citations": [
+    "definitional",
+    "OpenStax College Physics 2e, 18.5 (CC BY)"
+  ],
+  "checks": {
+    "dimensions": "pass",
+    "engines": [
+      "chain"
+    ],
+    "paths_found": 1,
+    "paths_agree": true,
+    "path_spread": 0.0
+  },
+  "timeline": [
+    {
+      "beat": 1,
+      "kind": "place",
+      "instance": "q1",
+      "component": "point_charge",
+      "model3d": "point_charge.glb",
+      "narrate": "Place Point charge.",
+      "because": {
+        "kind": "scene",
+        "detail": "An idealised charge with no extent. The canonical field source; everything else in electrostatics is a superposition of these.",
+        "laws": [
+          "coulombs_law",
+          "superposition_electric"
+        ]
+      }
+    },
+    {
+      "beat": 2,
+      "kind": "place",
+      "instance": "env",
+      "component": "environment",
+      "model3d": null,
+      "narrate": "Place Environment.",
+      "because": {
+        "kind": "scene",
+        "detail": "The surrounding medium and fields. Defaults are an idealised vacuum with no gravity, which is what textbook electrostatics problems assume -- stated here as an editable value instead of a footnote.",
+        "laws": [
+          "newton_gravitation_uniform",
+          "superposition_of_forces",
+          "medium_permittivity"
+        ]
+      }
+    },
+    {
+      "beat": 3,
+      "kind": "place",
+      "instance": "p1",
+      "component": "field_probe",
+      "model3d": "probe.glb",
+      "narrate": "Place Field probe.",
+      "because": {
+        "kind": "scene",
+        "detail": "A massless, chargeless point placed in the world to read the field there. The canonical \"where\" for a field question; carries no charge of its own so it never perturbs the scene.",
+        "laws": []
+      }
+    },
+    {
+      "beat": 4,
+      "kind": "relate",
+      "relation": "acts_on",
+      "from": "q1",
+      "to": "p1",
+      "narrate": "q1 is acts on p1.",
+      "because": {
+        "kind": "scene",
+        "detail": "stated by the problem's geometry"
+      }
+    },
+    {
+      "beat": 5,
+      "kind": "given",
+      "instance": "q1",
+      "ref": "q1.em.charge",
+      "property": "em.charge",
+      "channel": "charge_glyph",
+      "value": 2e-06,
+      "unit": "C",
+      "dimension": {
+        "s": "1",
+        "A": "1"
+      },
+      "rank": "scalar",
+      "display": "2.000e-6 C",
+      "narrate": "q1: charge is 2.000e-6 C, as stated.",
+      "because": {
+        "kind": "given",
+        "detail": "supplied by the problem statement"
+      }
+    },
+    {
+      "beat": 6,
+      "kind": "resolve",
+      "instance": "q1",
+      "ref": "q1.em.charge_magnitude",
+      "property": "em.charge_magnitude",
+      "channel": "charge_glyph",
+      "value": 2e-06,
+      "unit": "C",
+      "dimension": {
+        "s": "1",
+        "A": "1"
+      },
+      "rank": "scalar",
+      "display": "2.000e-6 C",
+      "narrate": "q1: charge magnitude resolves to 2.000e-6 C.",
+      "because": {
+        "kind": "derived",
+        "formula": "charge.magnitude_from_signed",
+        "expression": "Abs(q)",
+        "substituted": "Abs((2.000e-6 C))",
+        "law": "definition_magnitude",
+        "law_label": "Magnitude of a vector quantity",
+        "law_statement": "A scalar magnitude property is the Euclidean norm of its vector counterpart. Bookkeeping, not physics, but it must be cited like anything else so no trace step is unexplained.",
+        "assumes": [],
+        "cite": "definitional",
+        "inputs": [
+          {
+            "symbol": "q",
+            "from": "q1.em.charge",
+            "value": 2e-06,
+            "unit": "C",
+            "dimension": {
+              "s": "1",
+              "A": "1"
+            },
+            "rank": "scalar",
+            "display": "2.000e-6 C"
+          }
+        ]
+      }
+    },
+    {
+      "beat": 7,
+      "kind": "given",
+      "instance": "env",
+      "ref": "env.env.relative_permittivity",
+      "property": "env.relative_permittivity",
+      "channel": null,
+      "value": 80.0,
+      "unit": "",
+      "dimension": {},
+      "rank": "scalar",
+      "display": "80",
+      "narrate": "env: relative permittivity is 80, as stated.",
+      "because": {
+        "kind": "given",
+        "detail": "supplied by the problem statement"
+      }
+    },
+    {
+      "beat": 8,
+      "kind": "resolve",
+      "instance": "p1",
+      "ref": "p1.em.electric_field_magnitude",
+      "property": "em.electric_field_magnitude",
+      "channel": "field_intensity",
+      "value": 2496.5421631578265,
+      "unit": "V/m",
+      "dimension": {
+        "kg": "1",
+        "m": "1",
+        "s": "-3",
+        "A": "-1"
+      },
+      "rank": "scalar",
+      "display": "2497 V/m",
+      "narrate": "p1: electric field magnitude resolves to 2497 V/m.",
+      "because": {
+        "kind": "derived",
+        "formula": "coulomb.E_mag_from_point_charge",
+        "expression": "k_e * Q / (eps_r * r**2)",
+        "substituted": "(2.000e-6 C)*(8.988e9 kg·m³·s⁻⁴·A⁻²)/((80)*(0.3 m)**2)",
+        "law": "coulombs_law",
+        "law_label": "Coulomb's law",
+        "law_statement": "The electrostatic force between two point charges acts along the line joining them, with magnitude proportional to the product of the charges and inversely proportional to the square of their separation.",
+        "assumes": [
+          "point_source",
+          "vacuum",
+          "outside_any_conductor"
+        ],
+        "cite": "OpenStax College Physics 2e, 18.5 (CC BY)",
+        "inputs": [
+          {
+            "symbol": "k_e",
+            "from": "k_e",
+            "value": 8987551787.368176,
+            "unit": "kg·m³·s⁻⁴·A⁻²",
+            "dimension": {
+              "kg": "1",
+              "m": "3",
+              "s": "-4",
+              "A": "-2"
+            },
+            "rank": "scalar",
+            "display": "8.988e9 kg·m³·s⁻⁴·A⁻²"
+          },
+          {
+            "symbol": "Q",
+            "from": "q1.em.charge_magnitude",
+            "value": 2e-06,
+            "unit": "C",
+            "dimension": {
+              "s": "1",
+              "A": "1"
+            },
+            "rank": "scalar",
+            "display": "2.000e-6 C"
+          },
+          {
+            "symbol": "r",
+            "from": "None",
+            "value": 0.3,
+            "unit": "m",
+            "dimension": {
+              "m": "1"
+            },
+            "rank": "scalar",
+            "display": "0.3 m"
+          },
+          {
+            "symbol": "eps_r",
+            "from": "env.env.relative_permittivity",
+            "value": 80.0,
+            "unit": "",
+            "dimension": {},
+            "rank": "scalar",
+            "display": "80"
+          }
+        ]
+      }
+    },
+    {
+      "beat": 9,
+      "kind": "answer",
+      "ref": "p1.em.electric_field_magnitude",
+      "property": "em.electric_field_magnitude",
+      "value": 2496.5421631578265,
+      "unit": "V/m",
+      "dimension": {
+        "kg": "1",
+        "m": "1",
+        "s": "-3",
+        "A": "-1"
+      },
+      "rank": "scalar",
+      "display": "2497 V/m",
+      "narrate": "Answer: 2497 V/m.",
+      "because": {
+        "kind": "summary",
+        "laws": [
+          "coulombs_law",
+          "definition_magnitude"
+        ],
+        "paths_found": 1
+      }
+    }
+  ],
+  "paths": [
+    {
+      "cost": 2,
+      "laws": [
+        "coulombs_law",
+        "definition_magnitude"
+      ],
+      "formulas": [
+        "charge.magnitude_from_signed",
+        "coulomb.E_mag_from_point_charge"
+      ],
+      "value": {
+        "value": 2496.5421631578265,
+        "unit": "V/m",
+        "dimension": {
+          "kg": "1",
+          "m": "1",
+          "s": "-3",
+          "A": "-1"
+        },
+        "rank": "scalar",
+        "display": "2497 V/m"
+      },
+      "assumptions": [
+        "point_source",
+        "vacuum",
+        "outside_any_conductor"
+      ],
+      "citations": [
+        "definitional",
+        "OpenStax College Physics 2e, 18.5 (CC BY)"
+      ],
+      "steps": [
+        {
+          "ref": "q1.em.charge",
+          "property": "em.charge",
+          "value": 2e-06,
+          "unit": "C",
+          "dimension": {
+            "s": "1",
+            "A": "1"
+          },
+          "rank": "scalar",
+          "display": "2.000e-6 C",
+          "because": {
+            "kind": "given",
+            "detail": "supplied by the problem statement"
+          }
+        },
+        {
+          "ref": "q1.em.charge_magnitude",
+          "property": "em.charge_magnitude",
+          "value": 2e-06,
+          "unit": "C",
+          "dimension": {
+            "s": "1",
+            "A": "1"
+          },
+          "rank": "scalar",
+          "display": "2.000e-6 C",
+          "because": {
+            "kind": "derived",
+            "formula": "charge.magnitude_from_signed",
+            "expression": "Abs(q)",
+            "substituted": "Abs((2.000e-6 C))",
+            "law": "definition_magnitude",
+            "law_label": "Magnitude of a vector quantity",
+            "law_statement": "A scalar magnitude property is the Euclidean norm of its vector counterpart. Bookkeeping, not physics, but it must be cited like anything else so no trace step is unexplained.",
+            "assumes": [],
+            "cite": "definitional",
+            "inputs": [
+              {
+                "symbol": "q",
+                "from": "q1.em.charge",
+                "value": 2e-06,
+                "unit": "C",
+                "dimension": {
+                  "s": "1",
+                  "A": "1"
+                },
+                "rank": "scalar",
+                "display": "2.000e-6 C"
+              }
+            ]
+          }
+        },
+        {
+          "ref": "env.env.relative_permittivity",
+          "property": "env.relative_permittivity",
+          "value": 80.0,
+          "unit": "",
+          "dimension": {},
+          "rank": "scalar",
+          "display": "80",
+          "because": {
+            "kind": "given",
+            "detail": "supplied by the problem statement"
+          }
+        },
+        {
+          "ref": "p1.em.electric_field_magnitude",
+          "property": "em.electric_field_magnitude",
+          "value": 2496.5421631578265,
+          "unit": "V/m",
+          "dimension": {
+            "kg": "1",
+            "m": "1",
+            "s": "-3",
+            "A": "-1"
+          },
+          "rank": "scalar",
+          "display": "2497 V/m",
+          "because": {
+            "kind": "derived",
+            "formula": "coulomb.E_mag_from_point_charge",
+            "expression": "k_e * Q / (eps_r * r**2)",
+            "substituted": "(2.000e-6 C)*(8.988e9 kg·m³·s⁻⁴·A⁻²)/((80)*(0.3 m)**2)",
+            "law": "coulombs_law",
+            "law_label": "Coulomb's law",
+            "law_statement": "The electrostatic force between two point charges acts along the line joining them, with magnitude proportional to the product of the charges and inversely proportional to the square of their separation.",
+            "assumes": [
+              "point_source",
+              "vacuum",
+              "outside_any_conductor"
+            ],
+            "cite": "OpenStax College Physics 2e, 18.5 (CC BY)",
+            "inputs": [
+              {
+                "symbol": "k_e",
+                "from": "k_e",
+                "value": 8987551787.368176,
+                "unit": "kg·m³·s⁻⁴·A⁻²",
+                "dimension": {
+                  "kg": "1",
+                  "m": "3",
+                  "s": "-4",
+                  "A": "-2"
+                },
+                "rank": "scalar",
+                "display": "8.988e9 kg·m³·s⁻⁴·A⁻²"
+              },
+              {
+                "symbol": "Q",
+                "from": "q1.em.charge_magnitude",
+                "value": 2e-06,
+                "unit": "C",
+                "dimension": {
+                  "s": "1",
+                  "A": "1"
+                },
+                "rank": "scalar",
+                "display": "2.000e-6 C"
+              },
+              {
+                "symbol": "r",
+                "from": "None",
+                "value": 0.3,
+                "unit": "m",
+                "dimension": {
+                  "m": "1"
+                },
+                "rank": "scalar",
+                "display": "0.3 m"
+              },
+              {
+                "symbol": "eps_r",
+                "from": "env.env.relative_permittivity",
+                "value": 80.0,
+                "unit": "",
+                "dimension": {},
+                "rank": "scalar",
+                "display": "80"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

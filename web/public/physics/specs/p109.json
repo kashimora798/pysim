@@ -1,0 +1,475 @@
+{
+  "fieldforge": "0.1",
+  "problem": {
+    "id": "p109",
+    "title": "RC time constant",
+    "text": "A 100 uF capacitor is charged through a 10 kohm resistor. What is the time constant of the\ncircuit?",
+    "source": "After OpenStax College Physics 2e, 21.6 (CC BY)",
+    "tags": [
+      "circuits",
+      "capacitor",
+      "rc",
+      "chapter1"
+    ]
+  },
+  "target": "c1.electric.time_constant",
+  "answer": {
+    "value": 0.9999999999999999,
+    "unit": "s",
+    "dimension": {
+      "s": "1"
+    },
+    "rank": "scalar",
+    "display": "1 s"
+  },
+  "scene": {
+    "instances": [
+      {
+        "id": "c1",
+        "kind": "capacitor",
+        "label": "Capacitor",
+        "model3d": "capacitor.glb",
+        "tags": [
+          "passive",
+          "circuit",
+          "storage"
+        ],
+        "given": {
+          "c1.electric.capacitance": {
+            "value": 9.999999999999999e-05,
+            "unit": "F",
+            "dimension": {
+              "kg": "-1",
+              "m": "-2",
+              "s": "4",
+              "A": "2"
+            },
+            "rank": "scalar",
+            "display": "0.0001 F"
+          }
+        }
+      },
+      {
+        "id": "r1",
+        "kind": "resistor",
+        "label": "Resistor",
+        "model3d": "resistor.glb",
+        "tags": [
+          "passive",
+          "circuit",
+          "resistive"
+        ],
+        "given": {
+          "r1.electric.resistance": {
+            "value": 10000.0,
+            "unit": "Ω",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-2"
+            },
+            "rank": "scalar",
+            "display": "10000 Ω"
+          }
+        }
+      },
+      {
+        "id": "env",
+        "kind": "environment",
+        "label": "Environment",
+        "model3d": null,
+        "tags": [
+          "environment",
+          "scene",
+          "settings"
+        ],
+        "given": {
+          "env.env.air_density": {
+            "value": 0.0,
+            "unit": "kg·m⁻³",
+            "dimension": {
+              "kg": "1",
+              "m": "-3"
+            },
+            "rank": "scalar",
+            "display": "0 kg·m⁻³"
+          },
+          "env.env.gravity": {
+            "value": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "unit": "m/s²",
+            "dimension": {
+              "m": "1",
+              "s": "-2"
+            },
+            "rank": "vector",
+            "display": "[0, 0, 0] m/s²"
+          },
+          "env.env.relative_permittivity": {
+            "value": 1.0,
+            "unit": "",
+            "dimension": {},
+            "rank": "scalar",
+            "display": "1"
+          },
+          "env.env.temperature": {
+            "value": 293.15,
+            "unit": "K",
+            "dimension": {
+              "K": "1"
+            },
+            "rank": "scalar",
+            "display": "293.1 K"
+          },
+          "env.env.wind_velocity": {
+            "value": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "unit": "m/s",
+            "dimension": {
+              "m": "1",
+              "s": "-1"
+            },
+            "rank": "vector",
+            "display": "[0, 0, 0] m/s"
+          }
+        }
+      }
+    ],
+    "relations": [
+      {
+        "kind": "charged_through",
+        "from": "c1",
+        "to": "r1",
+        "given": {}
+      }
+    ]
+  },
+  "assumptions": [
+    "single_rc_branch"
+  ],
+  "citations": [
+    "OpenStax College Physics 2e, 21.6 (CC BY)"
+  ],
+  "checks": {
+    "dimensions": "pass",
+    "engines": [
+      "chain"
+    ],
+    "paths_found": 1,
+    "paths_agree": true,
+    "path_spread": 0.0
+  },
+  "timeline": [
+    {
+      "beat": 1,
+      "kind": "place",
+      "instance": "c1",
+      "component": "capacitor",
+      "model3d": "capacitor.glb",
+      "narrate": "Place Capacitor.",
+      "because": {
+        "kind": "scene",
+        "detail": "An element storing charge in proportion to the voltage across it.",
+        "laws": [
+          "capacitor_definition"
+        ]
+      }
+    },
+    {
+      "beat": 2,
+      "kind": "place",
+      "instance": "r1",
+      "component": "resistor",
+      "model3d": "resistor.glb",
+      "narrate": "Place Resistor.",
+      "because": {
+        "kind": "scene",
+        "detail": "An ohmic element: the voltage across it is proportional to the current through it. The workhorse of the chapter and the first thing a student picks up off the shelf.",
+        "laws": [
+          "ohms_law",
+          "joule_heating"
+        ]
+      }
+    },
+    {
+      "beat": 3,
+      "kind": "place",
+      "instance": "env",
+      "component": "environment",
+      "model3d": null,
+      "narrate": "Place Environment.",
+      "because": {
+        "kind": "scene",
+        "detail": "The surrounding medium and fields. Defaults are an idealised vacuum with no gravity, which is what textbook electrostatics problems assume -- stated here as an editable value instead of a footnote.",
+        "laws": [
+          "newton_gravitation_uniform",
+          "superposition_of_forces",
+          "medium_permittivity"
+        ]
+      }
+    },
+    {
+      "beat": 4,
+      "kind": "relate",
+      "relation": "charged_through",
+      "from": "c1",
+      "to": "r1",
+      "narrate": "c1 is charged through r1.",
+      "because": {
+        "kind": "scene",
+        "detail": "stated by the problem's geometry"
+      }
+    },
+    {
+      "beat": 5,
+      "kind": "given",
+      "instance": "c1",
+      "ref": "c1.electric.capacitance",
+      "property": "electric.capacitance",
+      "channel": null,
+      "value": 9.999999999999999e-05,
+      "unit": "F",
+      "dimension": {
+        "kg": "-1",
+        "m": "-2",
+        "s": "4",
+        "A": "2"
+      },
+      "rank": "scalar",
+      "display": "0.0001 F",
+      "narrate": "c1: capacitance is 0.0001 F, as stated.",
+      "because": {
+        "kind": "given",
+        "detail": "supplied by the problem statement"
+      }
+    },
+    {
+      "beat": 6,
+      "kind": "given",
+      "instance": "r1",
+      "ref": "r1.electric.resistance",
+      "property": "electric.resistance",
+      "channel": null,
+      "value": 10000.0,
+      "unit": "Ω",
+      "dimension": {
+        "kg": "1",
+        "m": "2",
+        "s": "-3",
+        "A": "-2"
+      },
+      "rank": "scalar",
+      "display": "10000 Ω",
+      "narrate": "r1: resistance is 10000 Ω, as stated.",
+      "because": {
+        "kind": "given",
+        "detail": "supplied by the problem statement"
+      }
+    },
+    {
+      "beat": 7,
+      "kind": "resolve",
+      "instance": "c1",
+      "ref": "c1.electric.time_constant",
+      "property": "electric.time_constant",
+      "channel": null,
+      "value": 0.9999999999999999,
+      "unit": "s",
+      "dimension": {
+        "s": "1"
+      },
+      "rank": "scalar",
+      "display": "1 s",
+      "narrate": "c1: time constant resolves to 1 s.",
+      "because": {
+        "kind": "derived",
+        "formula": "rc.tau_from_R_C",
+        "expression": "R * C",
+        "substituted": "(0.0001 F)*(10000 Ω)",
+        "law": "rc_time_constant",
+        "law_label": "RC time constant",
+        "law_statement": "A resistor charging a capacitor does so with characteristic time tau = R*C, after which the capacitor has reached 1 - 1/e of its final charge.",
+        "assumes": [
+          "single_rc_branch"
+        ],
+        "cite": "OpenStax College Physics 2e, 21.6 (CC BY)",
+        "inputs": [
+          {
+            "symbol": "C",
+            "from": "c1.electric.capacitance",
+            "value": 9.999999999999999e-05,
+            "unit": "F",
+            "dimension": {
+              "kg": "-1",
+              "m": "-2",
+              "s": "4",
+              "A": "2"
+            },
+            "rank": "scalar",
+            "display": "0.0001 F"
+          },
+          {
+            "symbol": "R",
+            "from": "r1.electric.resistance",
+            "value": 10000.0,
+            "unit": "Ω",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-2"
+            },
+            "rank": "scalar",
+            "display": "10000 Ω"
+          }
+        ]
+      }
+    },
+    {
+      "beat": 8,
+      "kind": "answer",
+      "ref": "c1.electric.time_constant",
+      "property": "electric.time_constant",
+      "value": 0.9999999999999999,
+      "unit": "s",
+      "dimension": {
+        "s": "1"
+      },
+      "rank": "scalar",
+      "display": "1 s",
+      "narrate": "Answer: 1 s.",
+      "because": {
+        "kind": "summary",
+        "laws": [
+          "rc_time_constant"
+        ],
+        "paths_found": 1
+      }
+    }
+  ],
+  "paths": [
+    {
+      "cost": 1,
+      "laws": [
+        "rc_time_constant"
+      ],
+      "formulas": [
+        "rc.tau_from_R_C"
+      ],
+      "value": {
+        "value": 0.9999999999999999,
+        "unit": "s",
+        "dimension": {
+          "s": "1"
+        },
+        "rank": "scalar",
+        "display": "1 s"
+      },
+      "assumptions": [
+        "single_rc_branch"
+      ],
+      "citations": [
+        "OpenStax College Physics 2e, 21.6 (CC BY)"
+      ],
+      "steps": [
+        {
+          "ref": "c1.electric.capacitance",
+          "property": "electric.capacitance",
+          "value": 9.999999999999999e-05,
+          "unit": "F",
+          "dimension": {
+            "kg": "-1",
+            "m": "-2",
+            "s": "4",
+            "A": "2"
+          },
+          "rank": "scalar",
+          "display": "0.0001 F",
+          "because": {
+            "kind": "given",
+            "detail": "supplied by the problem statement"
+          }
+        },
+        {
+          "ref": "r1.electric.resistance",
+          "property": "electric.resistance",
+          "value": 10000.0,
+          "unit": "Ω",
+          "dimension": {
+            "kg": "1",
+            "m": "2",
+            "s": "-3",
+            "A": "-2"
+          },
+          "rank": "scalar",
+          "display": "10000 Ω",
+          "because": {
+            "kind": "given",
+            "detail": "supplied by the problem statement"
+          }
+        },
+        {
+          "ref": "c1.electric.time_constant",
+          "property": "electric.time_constant",
+          "value": 0.9999999999999999,
+          "unit": "s",
+          "dimension": {
+            "s": "1"
+          },
+          "rank": "scalar",
+          "display": "1 s",
+          "because": {
+            "kind": "derived",
+            "formula": "rc.tau_from_R_C",
+            "expression": "R * C",
+            "substituted": "(0.0001 F)*(10000 Ω)",
+            "law": "rc_time_constant",
+            "law_label": "RC time constant",
+            "law_statement": "A resistor charging a capacitor does so with characteristic time tau = R*C, after which the capacitor has reached 1 - 1/e of its final charge.",
+            "assumes": [
+              "single_rc_branch"
+            ],
+            "cite": "OpenStax College Physics 2e, 21.6 (CC BY)",
+            "inputs": [
+              {
+                "symbol": "C",
+                "from": "c1.electric.capacitance",
+                "value": 9.999999999999999e-05,
+                "unit": "F",
+                "dimension": {
+                  "kg": "-1",
+                  "m": "-2",
+                  "s": "4",
+                  "A": "2"
+                },
+                "rank": "scalar",
+                "display": "0.0001 F"
+              },
+              {
+                "symbol": "R",
+                "from": "r1.electric.resistance",
+                "value": 10000.0,
+                "unit": "Ω",
+                "dimension": {
+                  "kg": "1",
+                  "m": "2",
+                  "s": "-3",
+                  "A": "-2"
+                },
+                "rank": "scalar",
+                "display": "10000 Ω"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

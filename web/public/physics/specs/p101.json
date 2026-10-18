@@ -1,0 +1,726 @@
+{
+  "fieldforge": "0.1",
+  "problem": {
+    "id": "p101",
+    "title": "Current in a single-resistor loop",
+    "text": "A 12 V battery is connected by ideal wires to a single 4.0 ohm resistor. What current flows\naround the loop?",
+    "source": "After OpenStax College Physics 2e, 20.2 (CC BY)",
+    "tags": [
+      "circuits",
+      "ohm",
+      "chapter1"
+    ]
+  },
+  "target": "loop.electric.current",
+  "answer": {
+    "value": 3.0,
+    "unit": "A",
+    "dimension": {
+      "A": "1"
+    },
+    "rank": "scalar",
+    "display": "3 A"
+  },
+  "scene": {
+    "instances": [
+      {
+        "id": "bat",
+        "kind": "battery",
+        "label": "Battery",
+        "model3d": "battery.glb",
+        "tags": [
+          "source",
+          "circuit",
+          "emf"
+        ],
+        "given": {
+          "bat.electric.emf": {
+            "value": 12.0,
+            "unit": "V",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-1"
+            },
+            "rank": "scalar",
+            "display": "12 V"
+          }
+        }
+      },
+      {
+        "id": "r1",
+        "kind": "resistor",
+        "label": "Resistor",
+        "model3d": "resistor.glb",
+        "tags": [
+          "passive",
+          "circuit",
+          "resistive"
+        ],
+        "given": {
+          "r1.electric.resistance": {
+            "value": 4.0,
+            "unit": "Ω",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-2"
+            },
+            "rank": "scalar",
+            "display": "4 Ω"
+          }
+        }
+      },
+      {
+        "id": "loop",
+        "kind": "circuit_loop",
+        "label": "Circuit loop",
+        "model3d": null,
+        "tags": [
+          "circuit",
+          "topology"
+        ],
+        "given": {}
+      },
+      {
+        "id": "env",
+        "kind": "environment",
+        "label": "Environment",
+        "model3d": null,
+        "tags": [
+          "environment",
+          "scene",
+          "settings"
+        ],
+        "given": {
+          "env.env.air_density": {
+            "value": 0.0,
+            "unit": "kg·m⁻³",
+            "dimension": {
+              "kg": "1",
+              "m": "-3"
+            },
+            "rank": "scalar",
+            "display": "0 kg·m⁻³"
+          },
+          "env.env.gravity": {
+            "value": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "unit": "m/s²",
+            "dimension": {
+              "m": "1",
+              "s": "-2"
+            },
+            "rank": "vector",
+            "display": "[0, 0, 0] m/s²"
+          },
+          "env.env.relative_permittivity": {
+            "value": 1.0,
+            "unit": "",
+            "dimension": {},
+            "rank": "scalar",
+            "display": "1"
+          },
+          "env.env.temperature": {
+            "value": 293.15,
+            "unit": "K",
+            "dimension": {
+              "K": "1"
+            },
+            "rank": "scalar",
+            "display": "293.1 K"
+          },
+          "env.env.wind_velocity": {
+            "value": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "unit": "m/s",
+            "dimension": {
+              "m": "1",
+              "s": "-1"
+            },
+            "rank": "vector",
+            "display": "[0, 0, 0] m/s"
+          }
+        }
+      }
+    ],
+    "relations": [
+      {
+        "kind": "driven_by",
+        "from": "loop",
+        "to": "bat",
+        "given": {}
+      },
+      {
+        "kind": "loads",
+        "from": "loop",
+        "to": "r1",
+        "given": {}
+      }
+    ]
+  },
+  "assumptions": [
+    "ideal_source",
+    "no_internal_resistance",
+    "ideal_wires",
+    "steady_state",
+    "ohmic_load"
+  ],
+  "citations": [
+    "OpenStax College Physics 2e, 21.2 (CC BY)",
+    "OpenStax College Physics 2e, 21.1 (CC BY)",
+    "OpenStax College Physics 2e, 20.2 (CC BY)"
+  ],
+  "checks": {
+    "dimensions": "pass",
+    "engines": [
+      "chain"
+    ],
+    "paths_found": 1,
+    "paths_agree": true,
+    "path_spread": 0.0
+  },
+  "timeline": [
+    {
+      "beat": 1,
+      "kind": "place",
+      "instance": "bat",
+      "component": "battery",
+      "model3d": "battery.glb",
+      "narrate": "Place Battery.",
+      "because": {
+        "kind": "scene",
+        "detail": "An ideal source of constant emf. Two terminals; current leaves the positive one. Ideal here means zero internal resistance, which the assumption list on every formula states plainly.",
+        "laws": [
+          "ohms_law",
+          "kirchhoff_voltage_law"
+        ]
+      }
+    },
+    {
+      "beat": 2,
+      "kind": "place",
+      "instance": "loop",
+      "component": "circuit_loop",
+      "model3d": null,
+      "narrate": "Place Circuit loop.",
+      "because": {
+        "kind": "scene",
+        "detail": "A closed loop: one source driving one resistive thing, which may itself be a whole reduced network. This is the component the wiring interaction produces when the student closes the circuit, and it is where the current the whole chapter is about actually lives.",
+        "laws": [
+          "ohms_law",
+          "kirchhoff_voltage_law"
+        ]
+      }
+    },
+    {
+      "beat": 3,
+      "kind": "place",
+      "instance": "r1",
+      "component": "resistor",
+      "model3d": "resistor.glb",
+      "narrate": "Place Resistor.",
+      "because": {
+        "kind": "scene",
+        "detail": "An ohmic element: the voltage across it is proportional to the current through it. The workhorse of the chapter and the first thing a student picks up off the shelf.",
+        "laws": [
+          "ohms_law",
+          "joule_heating"
+        ]
+      }
+    },
+    {
+      "beat": 4,
+      "kind": "place",
+      "instance": "env",
+      "component": "environment",
+      "model3d": null,
+      "narrate": "Place Environment.",
+      "because": {
+        "kind": "scene",
+        "detail": "The surrounding medium and fields. Defaults are an idealised vacuum with no gravity, which is what textbook electrostatics problems assume -- stated here as an editable value instead of a footnote.",
+        "laws": [
+          "newton_gravitation_uniform",
+          "superposition_of_forces",
+          "medium_permittivity"
+        ]
+      }
+    },
+    {
+      "beat": 5,
+      "kind": "relate",
+      "relation": "driven_by",
+      "from": "loop",
+      "to": "bat",
+      "narrate": "loop is driven by bat.",
+      "because": {
+        "kind": "scene",
+        "detail": "stated by the problem's geometry"
+      }
+    },
+    {
+      "beat": 6,
+      "kind": "relate",
+      "relation": "loads",
+      "from": "loop",
+      "to": "r1",
+      "narrate": "loop is loads r1.",
+      "because": {
+        "kind": "scene",
+        "detail": "stated by the problem's geometry"
+      }
+    },
+    {
+      "beat": 7,
+      "kind": "given",
+      "instance": "bat",
+      "ref": "bat.electric.emf",
+      "property": "electric.emf",
+      "channel": null,
+      "value": 12.0,
+      "unit": "V",
+      "dimension": {
+        "kg": "1",
+        "m": "2",
+        "s": "-3",
+        "A": "-1"
+      },
+      "rank": "scalar",
+      "display": "12 V",
+      "narrate": "bat: emf is 12 V, as stated.",
+      "because": {
+        "kind": "given",
+        "detail": "supplied by the problem statement"
+      }
+    },
+    {
+      "beat": 8,
+      "kind": "resolve",
+      "instance": "loop",
+      "ref": "loop.em.potential_difference",
+      "property": "em.potential_difference",
+      "channel": "potential_shading",
+      "value": 12.0,
+      "unit": "V",
+      "dimension": {
+        "kg": "1",
+        "m": "2",
+        "s": "-3",
+        "A": "-1"
+      },
+      "rank": "scalar",
+      "display": "12 V",
+      "narrate": "loop: potential difference resolves to 12 V.",
+      "because": {
+        "kind": "derived",
+        "formula": "loop.V_from_source",
+        "expression": "emf",
+        "substituted": "(12 V)",
+        "law": "kirchhoff_voltage_law",
+        "law_label": "Kirchhoff's voltage law",
+        "law_statement": "The algebraic sum of potential differences around any closed loop is zero: energy per unit charge returns to where it started. This is what makes voltages add in a series combination.",
+        "assumes": [
+          "ideal_source",
+          "no_internal_resistance"
+        ],
+        "cite": "OpenStax College Physics 2e, 21.2 (CC BY)",
+        "inputs": [
+          {
+            "symbol": "emf",
+            "from": "bat.electric.emf",
+            "value": 12.0,
+            "unit": "V",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-1"
+            },
+            "rank": "scalar",
+            "display": "12 V"
+          }
+        ]
+      }
+    },
+    {
+      "beat": 9,
+      "kind": "given",
+      "instance": "r1",
+      "ref": "r1.electric.resistance",
+      "property": "electric.resistance",
+      "channel": null,
+      "value": 4.0,
+      "unit": "Ω",
+      "dimension": {
+        "kg": "1",
+        "m": "2",
+        "s": "-3",
+        "A": "-2"
+      },
+      "rank": "scalar",
+      "display": "4 Ω",
+      "narrate": "r1: resistance is 4 Ω, as stated.",
+      "because": {
+        "kind": "given",
+        "detail": "supplied by the problem statement"
+      }
+    },
+    {
+      "beat": 10,
+      "kind": "resolve",
+      "instance": "loop",
+      "ref": "loop.electric.resistance",
+      "property": "electric.resistance",
+      "channel": null,
+      "value": 4.0,
+      "unit": "Ω",
+      "dimension": {
+        "kg": "1",
+        "m": "2",
+        "s": "-3",
+        "A": "-2"
+      },
+      "rank": "scalar",
+      "display": "4 Ω",
+      "narrate": "loop: resistance resolves to 4 Ω.",
+      "because": {
+        "kind": "derived",
+        "formula": "loop.R_from_load",
+        "expression": "R",
+        "substituted": "(4 Ω)",
+        "law": "series_resistance",
+        "law_label": "Resistances in series add",
+        "law_statement": "Two elements carrying the same current present the sum of their resistances, because their potential differences add while the current is common: R = R_a + R_b.",
+        "assumes": [
+          "ideal_wires",
+          "ideal_source"
+        ],
+        "cite": "OpenStax College Physics 2e, 21.1 (CC BY)",
+        "inputs": [
+          {
+            "symbol": "R",
+            "from": "r1.electric.resistance",
+            "value": 4.0,
+            "unit": "Ω",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-2"
+            },
+            "rank": "scalar",
+            "display": "4 Ω"
+          }
+        ]
+      }
+    },
+    {
+      "beat": 11,
+      "kind": "resolve",
+      "instance": "loop",
+      "ref": "loop.electric.current",
+      "property": "electric.current",
+      "channel": null,
+      "value": 3.0,
+      "unit": "A",
+      "dimension": {
+        "A": "1"
+      },
+      "rank": "scalar",
+      "display": "3 A",
+      "narrate": "loop: current resolves to 3 A.",
+      "because": {
+        "kind": "derived",
+        "formula": "loop.I_from_V_R",
+        "expression": "V / R",
+        "substituted": "(12 V)/(4 Ω)",
+        "law": "ohms_law",
+        "law_label": "Ohm's law",
+        "law_statement": "For an ohmic conductor the current through it is proportional to the potential difference across it, with the resistance as the constant of proportionality: V = I*R.",
+        "assumes": [
+          "steady_state",
+          "ohmic_load"
+        ],
+        "cite": "OpenStax College Physics 2e, 20.2 (CC BY)",
+        "inputs": [
+          {
+            "symbol": "V",
+            "from": "loop.em.potential_difference",
+            "value": 12.0,
+            "unit": "V",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-1"
+            },
+            "rank": "scalar",
+            "display": "12 V"
+          },
+          {
+            "symbol": "R",
+            "from": "loop.electric.resistance",
+            "value": 4.0,
+            "unit": "Ω",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-2"
+            },
+            "rank": "scalar",
+            "display": "4 Ω"
+          }
+        ]
+      }
+    },
+    {
+      "beat": 12,
+      "kind": "answer",
+      "ref": "loop.electric.current",
+      "property": "electric.current",
+      "value": 3.0,
+      "unit": "A",
+      "dimension": {
+        "A": "1"
+      },
+      "rank": "scalar",
+      "display": "3 A",
+      "narrate": "Answer: 3 A.",
+      "because": {
+        "kind": "summary",
+        "laws": [
+          "kirchhoff_voltage_law",
+          "ohms_law",
+          "series_resistance"
+        ],
+        "paths_found": 1
+      }
+    }
+  ],
+  "paths": [
+    {
+      "cost": 3,
+      "laws": [
+        "kirchhoff_voltage_law",
+        "ohms_law",
+        "series_resistance"
+      ],
+      "formulas": [
+        "loop.V_from_source",
+        "loop.R_from_load",
+        "loop.I_from_V_R"
+      ],
+      "value": {
+        "value": 3.0,
+        "unit": "A",
+        "dimension": {
+          "A": "1"
+        },
+        "rank": "scalar",
+        "display": "3 A"
+      },
+      "assumptions": [
+        "ideal_source",
+        "no_internal_resistance",
+        "ideal_wires",
+        "steady_state",
+        "ohmic_load"
+      ],
+      "citations": [
+        "OpenStax College Physics 2e, 21.2 (CC BY)",
+        "OpenStax College Physics 2e, 21.1 (CC BY)",
+        "OpenStax College Physics 2e, 20.2 (CC BY)"
+      ],
+      "steps": [
+        {
+          "ref": "bat.electric.emf",
+          "property": "electric.emf",
+          "value": 12.0,
+          "unit": "V",
+          "dimension": {
+            "kg": "1",
+            "m": "2",
+            "s": "-3",
+            "A": "-1"
+          },
+          "rank": "scalar",
+          "display": "12 V",
+          "because": {
+            "kind": "given",
+            "detail": "supplied by the problem statement"
+          }
+        },
+        {
+          "ref": "loop.em.potential_difference",
+          "property": "em.potential_difference",
+          "value": 12.0,
+          "unit": "V",
+          "dimension": {
+            "kg": "1",
+            "m": "2",
+            "s": "-3",
+            "A": "-1"
+          },
+          "rank": "scalar",
+          "display": "12 V",
+          "because": {
+            "kind": "derived",
+            "formula": "loop.V_from_source",
+            "expression": "emf",
+            "substituted": "(12 V)",
+            "law": "kirchhoff_voltage_law",
+            "law_label": "Kirchhoff's voltage law",
+            "law_statement": "The algebraic sum of potential differences around any closed loop is zero: energy per unit charge returns to where it started. This is what makes voltages add in a series combination.",
+            "assumes": [
+              "ideal_source",
+              "no_internal_resistance"
+            ],
+            "cite": "OpenStax College Physics 2e, 21.2 (CC BY)",
+            "inputs": [
+              {
+                "symbol": "emf",
+                "from": "bat.electric.emf",
+                "value": 12.0,
+                "unit": "V",
+                "dimension": {
+                  "kg": "1",
+                  "m": "2",
+                  "s": "-3",
+                  "A": "-1"
+                },
+                "rank": "scalar",
+                "display": "12 V"
+              }
+            ]
+          }
+        },
+        {
+          "ref": "r1.electric.resistance",
+          "property": "electric.resistance",
+          "value": 4.0,
+          "unit": "Ω",
+          "dimension": {
+            "kg": "1",
+            "m": "2",
+            "s": "-3",
+            "A": "-2"
+          },
+          "rank": "scalar",
+          "display": "4 Ω",
+          "because": {
+            "kind": "given",
+            "detail": "supplied by the problem statement"
+          }
+        },
+        {
+          "ref": "loop.electric.resistance",
+          "property": "electric.resistance",
+          "value": 4.0,
+          "unit": "Ω",
+          "dimension": {
+            "kg": "1",
+            "m": "2",
+            "s": "-3",
+            "A": "-2"
+          },
+          "rank": "scalar",
+          "display": "4 Ω",
+          "because": {
+            "kind": "derived",
+            "formula": "loop.R_from_load",
+            "expression": "R",
+            "substituted": "(4 Ω)",
+            "law": "series_resistance",
+            "law_label": "Resistances in series add",
+            "law_statement": "Two elements carrying the same current present the sum of their resistances, because their potential differences add while the current is common: R = R_a + R_b.",
+            "assumes": [
+              "ideal_wires",
+              "ideal_source"
+            ],
+            "cite": "OpenStax College Physics 2e, 21.1 (CC BY)",
+            "inputs": [
+              {
+                "symbol": "R",
+                "from": "r1.electric.resistance",
+                "value": 4.0,
+                "unit": "Ω",
+                "dimension": {
+                  "kg": "1",
+                  "m": "2",
+                  "s": "-3",
+                  "A": "-2"
+                },
+                "rank": "scalar",
+                "display": "4 Ω"
+              }
+            ]
+          }
+        },
+        {
+          "ref": "loop.electric.current",
+          "property": "electric.current",
+          "value": 3.0,
+          "unit": "A",
+          "dimension": {
+            "A": "1"
+          },
+          "rank": "scalar",
+          "display": "3 A",
+          "because": {
+            "kind": "derived",
+            "formula": "loop.I_from_V_R",
+            "expression": "V / R",
+            "substituted": "(12 V)/(4 Ω)",
+            "law": "ohms_law",
+            "law_label": "Ohm's law",
+            "law_statement": "For an ohmic conductor the current through it is proportional to the potential difference across it, with the resistance as the constant of proportionality: V = I*R.",
+            "assumes": [
+              "steady_state",
+              "ohmic_load"
+            ],
+            "cite": "OpenStax College Physics 2e, 20.2 (CC BY)",
+            "inputs": [
+              {
+                "symbol": "V",
+                "from": "loop.em.potential_difference",
+                "value": 12.0,
+                "unit": "V",
+                "dimension": {
+                  "kg": "1",
+                  "m": "2",
+                  "s": "-3",
+                  "A": "-1"
+                },
+                "rank": "scalar",
+                "display": "12 V"
+              },
+              {
+                "symbol": "R",
+                "from": "loop.electric.resistance",
+                "value": 4.0,
+                "unit": "Ω",
+                "dimension": {
+                  "kg": "1",
+                  "m": "2",
+                  "s": "-3",
+                  "A": "-2"
+                },
+                "rank": "scalar",
+                "display": "4 Ω"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

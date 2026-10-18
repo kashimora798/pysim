@@ -1,0 +1,27 @@
+id: p002
+title: Field of a point charge
+source: "After OpenStax College Physics 2e, 18.5 (CC BY)"
+tags: [electrostatics, coulomb]
+text: |
+  A point charge of +2.0 uC sits in vacuum. What is the magnitude of the electric field it
+  produces at a point 30 cm away?
+scene:
+  instances:
+    - id: q1
+      kind: point_charge
+      set:
+        em.charge: "2.0 uC"
+    - id: p1
+      kind: field_probe
+  relations:
+    - kind: acts_on
+      from: q1
+      to: p1
+      set:
+        geometry.separation: "30 cm"
+target: {instance: p1, prop: em.electric_field_magnitude}
+expect:
+  value: 1.99723e5
+  unit: V/m
+  tol: 0.005
+  note: "E = k_e*Q/r^2. The charge magnitude is itself a derived step from the signed charge."

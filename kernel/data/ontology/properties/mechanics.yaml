@@ -1,0 +1,89 @@
+domain: mechanics
+properties:
+  mechanics.mass:
+    symbol: m
+    dim: mass
+    rank: scalar
+    kind: lumped
+    si_unit: kg
+    description: Inertial mass.
+
+  mechanics.force:
+    symbol: F
+    dim: force
+    rank: vector
+    kind: lumped
+    si_unit: N
+    description: Net force acting on an object.
+
+  mechanics.force_em:
+    symbol: F_em
+    dim: force
+    rank: vector
+    kind: lumped
+    si_unit: N
+    description: Electromagnetic contribution to the net force on a body.
+
+  mechanics.force_gravity:
+    symbol: F_g
+    dim: force
+    rank: vector
+    kind: lumped
+    si_unit: N
+    description: Gravitational contribution (weight) to the net force on a body.
+
+  mechanics.force_drag:
+    symbol: F_d
+    dim: force
+    rank: vector
+    kind: lumped
+    si_unit: N
+    description: Drag contribution from motion relative to the surrounding medium.
+
+  mechanics.drag_coefficient:
+    symbol: C_d
+    dim: dimensionless
+    rank: scalar
+    kind: lumped
+    si_unit: "1"
+    description: Shape-dependent drag coefficient. About 0.47 for a sphere.
+
+  mechanics.force_magnitude:
+    symbol: F
+    dim: force
+    rank: scalar
+    kind: lumped
+    si_unit: N
+    description: Magnitude of the net force.
+
+  mechanics.momentum:
+    symbol: p
+    dim: momentum
+    rank: vector
+    kind: lumped
+    si_unit: kg*m/s
+    description: Linear momentum.
+
+  mechanics.work:
+    symbol: W
+    dim: energy
+    rank: scalar
+    kind: lumped
+    si_unit: J
+    description: Work done on an object.
+
+  energy.kinetic:
+    symbol: K
+    dim: energy
+    rank: scalar
+    kind: lumped
+    si_unit: J
+    description: Kinetic energy.
+
+  energy.potential_electric:
+    symbol: U
+    dim: energy
+    rank: scalar
+    kind: lumped
+    si_unit: J
+    description: Electric potential energy of a charge.

@@ -1,0 +1,52 @@
+# Tools are components.
+#
+# A measurement is placing another object in the world and reading one of its observable
+# properties. There is no separate "probe" subsystem, no special-case measurement path — which is
+# the whole point: an ammeter reading and a derived current resolve through identical machinery.
+components:
+  field_probe:
+    label: Field probe
+    tags: [tool, probe, test_point]
+    description: >
+      A massless, chargeless point placed in the world to read the field there. The canonical
+      "where" for a field question; carries no charge of its own so it never perturbs the scene.
+    laws: []
+    model3d: probe.glb
+    properties:
+      geometry.position:           {role: settable}
+      em.electric_field:           {role: observable}
+      em.electric_field_magnitude: {role: observable}
+      em.electric_potential:       {role: observable}
+      em.magnetic_field:           {role: observable}
+      em.magnetic_field_magnitude: {role: observable}
+
+  voltmeter:
+    label: Voltmeter
+    tags: [tool, probe]
+    description: Reads the potential difference between two points. Ideal — draws no charge.
+    laws: [electric_potential_definition]
+    model3d: voltmeter.glb
+    properties:
+      geometry.position:       {role: settable}
+      em.potential_difference: {role: observable}
+      em.electric_potential:   {role: observable}
+
+  ruler:
+    label: Ruler
+    tags: [tool, probe]
+    description: Reads a distance or displacement in the scene.
+    laws: []
+    model3d: ruler.glb
+    properties:
+      geometry.length:         {role: observable}
+      kinematics.distance:     {role: observable}
+      kinematics.displacement: {role: observable}
+
+  stopwatch:
+    label: Stopwatch
+    tags: [tool, probe]
+    description: Reads an elapsed time.
+    laws: []
+    model3d: stopwatch.glb
+    properties:
+      kinematics.time: {role: observable}

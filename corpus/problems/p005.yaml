@@ -1,0 +1,19 @@
+id: p005
+title: Field of an infinite charged plane
+source: "After OpenStax University Physics 2, 6.4 (CC BY)"
+tags: [electrostatics, gauss]
+text: |
+  A very large flat sheet carries a uniform surface charge density of 1.0 uC/m^2. What is the
+  magnitude of the electric field near the sheet?
+scene:
+  instances:
+    - id: sheet
+      kind: infinite_charged_plane
+      set:
+        em.charge_density_surface: "1.0 uC/m^2"
+target: {instance: sheet, prop: em.electric_field_magnitude}
+expect:
+  value: 5.6472e4
+  unit: V/m
+  tol: 0.005
+  note: "E = sigma/(2*eps0), independent of distance."

@@ -1,0 +1,17 @@
+id: p101
+title: Current in a single-resistor loop
+source: "After OpenStax College Physics 2e, 20.2 (CC BY)"
+tags: [circuits, ohm, chapter1]
+text: |
+  A 12 V battery is connected by ideal wires to a single 4.0 ohm resistor. What current flows
+  around the loop?
+scene:
+  instances:
+    - {id: bat, kind: battery, set: {electric.emf: "12 V"}}
+    - {id: r1, kind: resistor, set: {electric.resistance: "4.0 ohm"}}
+    - {id: loop, kind: circuit_loop}
+  relations:
+    - {kind: driven_by, from: loop, to: bat}
+    - {kind: loads, from: loop, to: r1}
+target: {instance: loop, prop: electric.current}
+expect: {value: 3.0, unit: A, tol: 0.001, note: "I = V/R. The simplest closed loop there is."}

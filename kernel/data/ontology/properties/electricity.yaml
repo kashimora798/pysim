@@ -1,0 +1,70 @@
+# Circuit properties.
+#
+# `electric.resistance` is carried by a resistor *and* by a series or parallel pair, which is what
+# makes reduction compositional: a combination is itself a resistive thing, so it can be a member
+# of the next combination. The reduction tree mirrors the order the student wires things together.
+domain: electricity
+properties:
+  electric.current:
+    symbol: I
+    dim: current
+    rank: scalar
+    kind: lumped
+    si_unit: A
+    description: Current through an element, conventional direction.
+
+  electric.resistance:
+    symbol: R
+    dim: resistance
+    rank: scalar
+    kind: lumped
+    si_unit: ohm
+    description: Resistance of an element or of a reduced combination.
+
+  electric.emf:
+    symbol: emf
+    dim: voltage
+    rank: scalar
+    kind: lumped
+    si_unit: V
+    description: Electromotive force of a source, before any internal drop.
+
+  electric.power:
+    symbol: P
+    dim: power
+    rank: scalar
+    kind: lumped
+    si_unit: W
+    description: Power dissipated or delivered by an element.
+
+  electric.capacitance:
+    symbol: C
+    dim: capacitance
+    rank: scalar
+    kind: lumped
+    si_unit: F
+    description: Capacitance of a capacitor or reduced combination.
+
+  electric.charge_stored:
+    symbol: Q
+    dim: charge
+    rank: scalar
+    kind: lumped
+    si_unit: C
+    description: Charge stored on a capacitor.
+
+  electric.time_constant:
+    symbol: tau
+    dim: time
+    rank: scalar
+    kind: lumped
+    si_unit: s
+    description: RC time constant of a resistor-capacitor pair.
+
+  electric.energy_stored:
+    symbol: U
+    dim: energy
+    rank: scalar
+    kind: lumped
+    si_unit: J
+    description: Energy stored in a capacitor's field.

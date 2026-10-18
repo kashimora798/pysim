@@ -1,0 +1,495 @@
+{
+  "fieldforge": "0.1",
+  "problem": {
+    "id": "p010",
+    "title": "Total charge of a uniformly charged sphere",
+    "text": "An insulating sphere of radius 20 cm carries a uniform volume charge density of 5.0 uC/m^3.\nWhat is its total charge?",
+    "source": "After OpenStax University Physics 2, 6.4 (CC BY)",
+    "tags": [
+      "electrostatics",
+      "geometry"
+    ]
+  },
+  "target": "ball.em.charge",
+  "answer": {
+    "value": 1.6755160819145565e-07,
+    "unit": "C",
+    "dimension": {
+      "s": "1",
+      "A": "1"
+    },
+    "rank": "scalar",
+    "display": "1.676e-7 C"
+  },
+  "scene": {
+    "instances": [
+      {
+        "id": "ball",
+        "kind": "uniform_charged_sphere",
+        "label": "Uniformly charged insulating sphere",
+        "model3d": "sphere.glb",
+        "tags": [
+          "charge_source",
+          "electrostatic",
+          "source"
+        ],
+        "given": {
+          "ball.em.charge_density_volume": {
+            "value": 4.9999999999999996e-06,
+            "unit": "C/m³",
+            "dimension": {
+              "m": "-3",
+              "s": "1",
+              "A": "1"
+            },
+            "rank": "scalar",
+            "display": "5.000e-6 C/m³"
+          },
+          "ball.geometry.radius": {
+            "value": 0.2,
+            "unit": "m",
+            "dimension": {
+              "m": "1"
+            },
+            "rank": "scalar",
+            "display": "0.2 m"
+          }
+        }
+      },
+      {
+        "id": "env",
+        "kind": "environment",
+        "label": "Environment",
+        "model3d": null,
+        "tags": [
+          "environment",
+          "scene",
+          "settings"
+        ],
+        "given": {
+          "env.env.air_density": {
+            "value": 0.0,
+            "unit": "kg·m⁻³",
+            "dimension": {
+              "kg": "1",
+              "m": "-3"
+            },
+            "rank": "scalar",
+            "display": "0 kg·m⁻³"
+          },
+          "env.env.gravity": {
+            "value": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "unit": "m/s²",
+            "dimension": {
+              "m": "1",
+              "s": "-2"
+            },
+            "rank": "vector",
+            "display": "[0, 0, 0] m/s²"
+          },
+          "env.env.relative_permittivity": {
+            "value": 1.0,
+            "unit": "",
+            "dimension": {},
+            "rank": "scalar",
+            "display": "1"
+          },
+          "env.env.temperature": {
+            "value": 293.15,
+            "unit": "K",
+            "dimension": {
+              "K": "1"
+            },
+            "rank": "scalar",
+            "display": "293.1 K"
+          },
+          "env.env.wind_velocity": {
+            "value": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "unit": "m/s",
+            "dimension": {
+              "m": "1",
+              "s": "-1"
+            },
+            "rank": "vector",
+            "display": "[0, 0, 0] m/s"
+          }
+        }
+      }
+    ],
+    "relations": []
+  },
+  "assumptions": [
+    "sphere",
+    "uniform_density"
+  ],
+  "citations": [
+    "geometry",
+    "definitional"
+  ],
+  "checks": {
+    "dimensions": "pass",
+    "engines": [
+      "chain"
+    ],
+    "paths_found": 1,
+    "paths_agree": true,
+    "path_spread": 0.0
+  },
+  "timeline": [
+    {
+      "beat": 1,
+      "kind": "place",
+      "instance": "ball",
+      "component": "uniform_charged_sphere",
+      "model3d": "sphere.glb",
+      "narrate": "Place Uniformly charged insulating sphere.",
+      "because": {
+        "kind": "scene",
+        "detail": "A sphere of uniform volume charge density. Non-conducting, so the charge stays put and the interior field is non-zero and linear in r.",
+        "laws": [
+          "gauss_law_electric",
+          "superposition_electric"
+        ]
+      }
+    },
+    {
+      "beat": 2,
+      "kind": "place",
+      "instance": "env",
+      "component": "environment",
+      "model3d": null,
+      "narrate": "Place Environment.",
+      "because": {
+        "kind": "scene",
+        "detail": "The surrounding medium and fields. Defaults are an idealised vacuum with no gravity, which is what textbook electrostatics problems assume -- stated here as an editable value instead of a footnote.",
+        "laws": [
+          "newton_gravitation_uniform",
+          "superposition_of_forces",
+          "medium_permittivity"
+        ]
+      }
+    },
+    {
+      "beat": 3,
+      "kind": "given",
+      "instance": "ball",
+      "ref": "ball.em.charge_density_volume",
+      "property": "em.charge_density_volume",
+      "channel": "density_shading",
+      "value": 4.9999999999999996e-06,
+      "unit": "C/m³",
+      "dimension": {
+        "m": "-3",
+        "s": "1",
+        "A": "1"
+      },
+      "rank": "scalar",
+      "display": "5.000e-6 C/m³",
+      "narrate": "ball: charge density volume is 5.000e-6 C/m³, as stated.",
+      "because": {
+        "kind": "given",
+        "detail": "supplied by the problem statement"
+      }
+    },
+    {
+      "beat": 4,
+      "kind": "given",
+      "instance": "ball",
+      "ref": "ball.geometry.radius",
+      "property": "geometry.radius",
+      "channel": "radius_ring",
+      "value": 0.2,
+      "unit": "m",
+      "dimension": {
+        "m": "1"
+      },
+      "rank": "scalar",
+      "display": "0.2 m",
+      "narrate": "ball: radius is 0.2 m, as stated.",
+      "because": {
+        "kind": "given",
+        "detail": "supplied by the problem statement"
+      }
+    },
+    {
+      "beat": 5,
+      "kind": "resolve",
+      "instance": "ball",
+      "ref": "ball.geometry.volume",
+      "property": "geometry.volume",
+      "channel": "dimension_label",
+      "value": 0.03351032163829113,
+      "unit": "m³",
+      "dimension": {
+        "m": "3"
+      },
+      "rank": "scalar",
+      "display": "0.03351 m³",
+      "narrate": "ball: volume resolves to 0.03351 m³.",
+      "because": {
+        "kind": "derived",
+        "formula": "sphere.volume_from_radius",
+        "expression": "4 * pi * R**3 / 3",
+        "substituted": "4*pi*(0.2 m)**3/3",
+        "law": null,
+        "law_label": null,
+        "law_statement": null,
+        "assumes": [
+          "sphere"
+        ],
+        "cite": "geometry",
+        "inputs": [
+          {
+            "symbol": "R",
+            "from": "ball.geometry.radius",
+            "value": 0.2,
+            "unit": "m",
+            "dimension": {
+              "m": "1"
+            },
+            "rank": "scalar",
+            "display": "0.2 m"
+          }
+        ]
+      }
+    },
+    {
+      "beat": 6,
+      "kind": "resolve",
+      "instance": "ball",
+      "ref": "ball.em.charge",
+      "property": "em.charge",
+      "channel": "charge_glyph",
+      "value": 1.6755160819145565e-07,
+      "unit": "C",
+      "dimension": {
+        "s": "1",
+        "A": "1"
+      },
+      "rank": "scalar",
+      "display": "1.676e-7 C",
+      "narrate": "ball: charge resolves to 1.676e-7 C.",
+      "because": {
+        "kind": "derived",
+        "formula": "sphere.charge_from_density",
+        "expression": "rho * Vol",
+        "substituted": "(0.03351 m³)*(5.000e-6 C/m³)",
+        "law": "gauss_law_electric",
+        "law_label": "Gauss's law for electricity",
+        "law_statement": "The electric flux through any closed surface equals the enclosed charge divided by the vacuum permittivity. Its consequences fix the field of every symmetric charge distribution.",
+        "assumes": [
+          "uniform_density"
+        ],
+        "cite": "definitional",
+        "inputs": [
+          {
+            "symbol": "rho",
+            "from": "ball.em.charge_density_volume",
+            "value": 4.9999999999999996e-06,
+            "unit": "C/m³",
+            "dimension": {
+              "m": "-3",
+              "s": "1",
+              "A": "1"
+            },
+            "rank": "scalar",
+            "display": "5.000e-6 C/m³"
+          },
+          {
+            "symbol": "Vol",
+            "from": "ball.geometry.volume",
+            "value": 0.03351032163829113,
+            "unit": "m³",
+            "dimension": {
+              "m": "3"
+            },
+            "rank": "scalar",
+            "display": "0.03351 m³"
+          }
+        ]
+      }
+    },
+    {
+      "beat": 7,
+      "kind": "answer",
+      "ref": "ball.em.charge",
+      "property": "em.charge",
+      "value": 1.6755160819145565e-07,
+      "unit": "C",
+      "dimension": {
+        "s": "1",
+        "A": "1"
+      },
+      "rank": "scalar",
+      "display": "1.676e-7 C",
+      "narrate": "Answer: 1.676e-7 C.",
+      "because": {
+        "kind": "summary",
+        "laws": [
+          "gauss_law_electric"
+        ],
+        "paths_found": 1
+      }
+    }
+  ],
+  "paths": [
+    {
+      "cost": 2,
+      "laws": [
+        "gauss_law_electric"
+      ],
+      "formulas": [
+        "sphere.volume_from_radius",
+        "sphere.charge_from_density"
+      ],
+      "value": {
+        "value": 1.6755160819145565e-07,
+        "unit": "C",
+        "dimension": {
+          "s": "1",
+          "A": "1"
+        },
+        "rank": "scalar",
+        "display": "1.676e-7 C"
+      },
+      "assumptions": [
+        "sphere",
+        "uniform_density"
+      ],
+      "citations": [
+        "geometry",
+        "definitional"
+      ],
+      "steps": [
+        {
+          "ref": "ball.em.charge_density_volume",
+          "property": "em.charge_density_volume",
+          "value": 4.9999999999999996e-06,
+          "unit": "C/m³",
+          "dimension": {
+            "m": "-3",
+            "s": "1",
+            "A": "1"
+          },
+          "rank": "scalar",
+          "display": "5.000e-6 C/m³",
+          "because": {
+            "kind": "given",
+            "detail": "supplied by the problem statement"
+          }
+        },
+        {
+          "ref": "ball.geometry.radius",
+          "property": "geometry.radius",
+          "value": 0.2,
+          "unit": "m",
+          "dimension": {
+            "m": "1"
+          },
+          "rank": "scalar",
+          "display": "0.2 m",
+          "because": {
+            "kind": "given",
+            "detail": "supplied by the problem statement"
+          }
+        },
+        {
+          "ref": "ball.geometry.volume",
+          "property": "geometry.volume",
+          "value": 0.03351032163829113,
+          "unit": "m³",
+          "dimension": {
+            "m": "3"
+          },
+          "rank": "scalar",
+          "display": "0.03351 m³",
+          "because": {
+            "kind": "derived",
+            "formula": "sphere.volume_from_radius",
+            "expression": "4 * pi * R**3 / 3",
+            "substituted": "4*pi*(0.2 m)**3/3",
+            "law": null,
+            "law_label": null,
+            "law_statement": null,
+            "assumes": [
+              "sphere"
+            ],
+            "cite": "geometry",
+            "inputs": [
+              {
+                "symbol": "R",
+                "from": "ball.geometry.radius",
+                "value": 0.2,
+                "unit": "m",
+                "dimension": {
+                  "m": "1"
+                },
+                "rank": "scalar",
+                "display": "0.2 m"
+              }
+            ]
+          }
+        },
+        {
+          "ref": "ball.em.charge",
+          "property": "em.charge",
+          "value": 1.6755160819145565e-07,
+          "unit": "C",
+          "dimension": {
+            "s": "1",
+            "A": "1"
+          },
+          "rank": "scalar",
+          "display": "1.676e-7 C",
+          "because": {
+            "kind": "derived",
+            "formula": "sphere.charge_from_density",
+            "expression": "rho * Vol",
+            "substituted": "(0.03351 m³)*(5.000e-6 C/m³)",
+            "law": "gauss_law_electric",
+            "law_label": "Gauss's law for electricity",
+            "law_statement": "The electric flux through any closed surface equals the enclosed charge divided by the vacuum permittivity. Its consequences fix the field of every symmetric charge distribution.",
+            "assumes": [
+              "uniform_density"
+            ],
+            "cite": "definitional",
+            "inputs": [
+              {
+                "symbol": "rho",
+                "from": "ball.em.charge_density_volume",
+                "value": 4.9999999999999996e-06,
+                "unit": "C/m³",
+                "dimension": {
+                  "m": "-3",
+                  "s": "1",
+                  "A": "1"
+                },
+                "rank": "scalar",
+                "display": "5.000e-6 C/m³"
+              },
+              {
+                "symbol": "Vol",
+                "from": "ball.geometry.volume",
+                "value": 0.03351032163829113,
+                "unit": "m³",
+                "dimension": {
+                  "m": "3"
+                },
+                "rank": "scalar",
+                "display": "0.03351 m³"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

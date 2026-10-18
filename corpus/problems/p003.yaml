@@ -1,0 +1,33 @@
+id: p003
+title: Charge released in the cavity of a uniformly charged sphere
+source: "Superposition construction; OpenStax University Physics 2, 6.4 (CC BY)"
+tags: [electrostatics, superposition, cavity, cross-domain, flagship]
+text: |
+  A spherical cavity of radius 2.0 cm is carved out of a uniformly charged insulating sphere of
+  radius 10 cm whose volume charge density is 1.0e-5 C/m^3. The cavity's centre is offset 2.0 cm
+  from the sphere's centre. A 1.0 nC charge of mass 1.0 mg is released inside the cavity. What is
+  the magnitude of its acceleration?
+scene:
+  instances:
+    - id: cav
+      kind: spherical_cavity_in_charged_sphere
+      set:
+        em.charge_density_volume: "1.0e-5 C/m^3"
+        geometry.radius: "10 cm"
+        geometry.offset: "[0.02, 0, 0] m"
+    - id: p
+      kind: charged_particle
+      set:
+        em.charge: "1.0 nC"
+        mechanics.mass: "1.0e-6 kg"
+  relations:
+    - {kind: inside_cavity_of, from: p, to: cav}
+target: {instance: p, prop: kinematics.acceleration_magnitude}
+expect:
+  value: 7.5295
+  unit: m/s^2
+  tol: 0.01
+  note: >
+    The flagship case. E = rho*a/(3*eps0) is uniform throughout the cavity, so the particle
+    undergoes exact constant-acceleration motion. No simulation library contains this scenario,
+    and the chain crosses from electromagnetism into mechanics with no special case.

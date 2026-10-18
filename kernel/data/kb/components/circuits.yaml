@@ -1,0 +1,136 @@
+# Circuit components — Chapter 1, the hands-first chapter.
+#
+# `series_pair` and `parallel_pair` are the interesting entries. They are not abstractions bolted
+# on for the solver's benefit: they are what the student *creates* by wiring two things together.
+# Because a pair carries `electric.resistance` just like a resistor does, a pair can be a member
+# of the next pair, and an arbitrary series/parallel network reduces by composition. The reduction
+# tree and the build order are the same tree.
+components:
+  battery:
+    label: Battery
+    tags: [source, circuit, emf]
+    description: >
+      An ideal source of constant emf. Two terminals; current leaves the positive one. Ideal here
+      means zero internal resistance, which the assumption list on every formula states plainly.
+    laws: [ohms_law, kirchhoff_voltage_law]
+    model3d: battery.glb
+    properties:
+      electric.emf:        {role: settable, required: true}
+      em.potential_difference: {role: observable}
+      electric.current:    {role: observable}
+      electric.power:      {role: observable}
+
+  resistor:
+    label: Resistor
+    tags: [passive, circuit, resistive]
+    description: >
+      An ohmic element: the voltage across it is proportional to the current through it. The
+      workhorse of the chapter and the first thing a student picks up off the shelf.
+    laws: [ohms_law, joule_heating]
+    model3d: resistor.glb
+    properties:
+      electric.resistance: {role: settable, required: true}
+      electric.current:    {role: observable}
+      em.potential_difference: {role: observable}
+      electric.power:      {role: observable}
+
+  lamp:
+    label: Lamp
+    tags: [passive, circuit, resistive, indicator]
+    description: >
+      A resistive element that visibly brightens with dissipated power. Physically a resistor;
+      pedagogically much better, because the answer is something you can see rather than read.
+    laws: [ohms_law, joule_heating]
+    model3d: lamp.glb
+    properties:
+      electric.resistance: {role: settable, required: true}
+      electric.current:    {role: observable}
+      em.potential_difference: {role: observable}
+      electric.power:      {role: observable}
+
+  capacitor:
+    label: Capacitor
+    tags: [passive, circuit, storage]
+    description: An element storing charge in proportion to the voltage across it.
+    laws: [capacitor_definition]
+    model3d: capacitor.glb
+    properties:
+      electric.capacitance:    {role: settable, required: true}
+      em.potential_difference: {role: settable}
+      electric.charge_stored:  {role: observable}
+      electric.energy_stored:  {role: observable}
+      electric.time_constant:  {role: observable}
+
+  series_pair:
+    label: Series combination
+    tags: [combination, circuit, resistive]
+    description: >
+      Two elements wired end to end, so the same current passes through both and their voltages
+      add. Created by the student's own wiring; carries a resistance of its own, so it can be a
+      member of a further combination.
+    laws: [series_resistance, kirchhoff_voltage_law]
+    model3d: null
+    properties:
+      electric.resistance:     {role: observable}
+      electric.capacitance:    {role: observable}
+      electric.current:        {role: observable}
+      em.potential_difference: {role: settable, note: "a problem may state the supply voltage across a combination"}
+      electric.charge_stored:  {role: observable}
+      electric.energy_stored:  {role: observable}
+      electric.power:          {role: observable}
+
+  parallel_pair:
+    label: Parallel combination
+    tags: [combination, circuit, resistive]
+    description: >
+      Two elements across the same two nodes, so they share a voltage and their currents add.
+      Carries a resistance of its own for the same compositional reason as a series pair.
+    laws: [parallel_resistance, kirchhoff_current_law]
+    model3d: null
+    properties:
+      electric.resistance:     {role: observable}
+      electric.capacitance:    {role: observable}
+      electric.current:        {role: observable}
+      em.potential_difference: {role: settable, note: "a problem may state the supply voltage across a combination"}
+      electric.charge_stored:  {role: observable}
+      electric.energy_stored:  {role: observable}
+      electric.power:          {role: observable}
+
+  circuit_loop:
+    label: Circuit loop
+    tags: [circuit, topology]
+    description: >
+      A closed loop: one source driving one resistive thing, which may itself be a whole reduced
+      network. This is the component the wiring interaction produces when the student closes the
+      circuit, and it is where the current the whole chapter is about actually lives.
+    laws: [ohms_law, kirchhoff_voltage_law]
+    model3d: null
+    properties:
+      electric.current:        {role: observable}
+      electric.resistance:     {role: observable}
+      em.potential_difference: {role: settable, note: "a problem may state the supply voltage directly"}
+      electric.power:          {role: observable}
+
+  ammeter:
+    label: Ammeter
+    tags: [tool, probe, circuit]
+    description: >
+      Reads the current through the element it is placed in series with. Ideal: zero resistance, so
+      inserting it does not change the circuit. A tool is an ordinary component, so this reading
+      resolves through exactly the same machinery as a derived current.
+    laws: [kirchhoff_current_law]
+    model3d: ammeter.glb
+    properties:
+      electric.current: {role: observable}
+
+  voltmeter_dc:
+    label: Voltmeter
+    tags: [tool, probe, circuit]
+    description: >
+      Reads the potential difference across the element it is placed in parallel with. Ideal:
+      infinite resistance, so it draws no current.
+    laws: [kirchhoff_voltage_law]
+    model3d: voltmeter.glb
+    properties:
+      em.potential_difference: {role: observable}
+      electric.power:          {role: observable}

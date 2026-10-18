@@ -1,0 +1,37 @@
+laws:
+  newton_gravitation_uniform:
+    label: Weight in a uniform gravitational field
+    statement: >
+      A body of mass m in a uniform gravitational field g experiences a force m*g directed along
+      the field. Uniform is the right idealisation on a bench: g varies by less than a part in a
+      million across a desk.
+    governs: [mechanics.force_gravity, env.gravity]
+    cite: "OpenStax College Physics 2e, 4.5 (CC BY)"
+
+  superposition_of_forces:
+    label: Superposition of forces
+    statement: >
+      The net force on a body is the vector sum of the forces acting on it, each computed as if
+      the others were absent. This is why an electric force and a weight can be derived
+      independently and then added.
+    governs: [mechanics.force, mechanics.force_em, mechanics.force_gravity]
+    cite: "OpenStax College Physics 2e, 4.6 (CC BY)"
+
+  medium_permittivity:
+    label: Permittivity of the medium
+    statement: >
+      In a uniform dielectric the electric field of a given charge is reduced by the medium's
+      relative permittivity. The same two charges in water attract about eighty times less
+      strongly than in vacuum.
+    governs: [em.electric_field_magnitude, em.electric_potential, env.relative_permittivity]
+    cite: "OpenStax University Physics 2, 5.1 (CC BY)"
+
+  quadratic_drag:
+    label: Quadratic drag through a medium
+    statement: >
+      A body moving at velocity v through a medium of density rho, with the medium itself moving at
+      v_wind, feels a force -0.5*rho*C_d*A*|v - v_wind|*(v - v_wind): opposing the RELATIVE motion
+      and growing with its square. Wind enters only through that relative velocity, which is why a
+      body moving with the wind feels no drag at all.
+    governs: [mechanics.force_drag, env.wind_velocity, env.air_density]
+    cite: "OpenStax College Physics 2e, 5.2 (CC BY)"

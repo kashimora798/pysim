@@ -1,0 +1,997 @@
+{
+  "fieldforge": "0.1",
+  "problem": {
+    "id": "p006",
+    "title": "Cyclotron radius of a proton",
+    "text": "A proton moves at 1.0e6 m/s perpendicular to a uniform magnetic field of 0.50 T. What is the\nradius of its circular path?",
+    "source": "After OpenStax University Physics 2, 11.3 (CC BY)",
+    "tags": [
+      "magnetism",
+      "circular-motion"
+    ]
+  },
+  "target": "p.em.cyclotron_radius",
+  "answer": {
+    "value": 0.020879369829706305,
+    "unit": "m",
+    "dimension": {
+      "m": "1"
+    },
+    "rank": "scalar",
+    "display": "0.02088 m"
+  },
+  "scene": {
+    "instances": [
+      {
+        "id": "region",
+        "kind": "uniform_magnetic_field_region",
+        "label": "Uniform magnetic field region",
+        "model3d": "field_region.glb",
+        "tags": [
+          "field_region",
+          "magnetostatic",
+          "source"
+        ],
+        "given": {
+          "region.em.magnetic_field": {
+            "value": [
+              0.0,
+              0.0,
+              0.5
+            ],
+            "unit": "T",
+            "dimension": {
+              "kg": "1",
+              "s": "-2",
+              "A": "-1"
+            },
+            "rank": "vector",
+            "display": "[0, 0, 0.5] T"
+          }
+        }
+      },
+      {
+        "id": "p",
+        "kind": "charged_particle",
+        "label": "Charged particle",
+        "model3d": "particle.glb",
+        "tags": [
+          "charge_source",
+          "electrostatic",
+          "source",
+          "movable",
+          "projectile"
+        ],
+        "given": {
+          "p.em.charge": {
+            "value": 1.602176634e-19,
+            "unit": "C",
+            "dimension": {
+              "s": "1",
+              "A": "1"
+            },
+            "rank": "scalar",
+            "display": "1.602e-19 C"
+          },
+          "p.geometry.cross_section": {
+            "value": 0.0,
+            "unit": "m²",
+            "dimension": {
+              "m": "2"
+            },
+            "rank": "scalar",
+            "display": "0 m²"
+          },
+          "p.kinematics.velocity": {
+            "value": [
+              1000000.0,
+              0.0,
+              0.0
+            ],
+            "unit": "m/s",
+            "dimension": {
+              "m": "1",
+              "s": "-1"
+            },
+            "rank": "vector",
+            "display": "[1.000e6, 0, 0] m/s"
+          },
+          "p.mechanics.drag_coefficient": {
+            "value": 0.47,
+            "unit": "",
+            "dimension": {},
+            "rank": "scalar",
+            "display": "0.47"
+          },
+          "p.mechanics.mass": {
+            "value": 1.67262192369e-27,
+            "unit": "kg",
+            "dimension": {
+              "kg": "1"
+            },
+            "rank": "scalar",
+            "display": "1.673e-27 kg"
+          }
+        }
+      },
+      {
+        "id": "env",
+        "kind": "environment",
+        "label": "Environment",
+        "model3d": null,
+        "tags": [
+          "environment",
+          "scene",
+          "settings"
+        ],
+        "given": {
+          "env.env.air_density": {
+            "value": 0.0,
+            "unit": "kg·m⁻³",
+            "dimension": {
+              "kg": "1",
+              "m": "-3"
+            },
+            "rank": "scalar",
+            "display": "0 kg·m⁻³"
+          },
+          "env.env.gravity": {
+            "value": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "unit": "m/s²",
+            "dimension": {
+              "m": "1",
+              "s": "-2"
+            },
+            "rank": "vector",
+            "display": "[0, 0, 0] m/s²"
+          },
+          "env.env.relative_permittivity": {
+            "value": 1.0,
+            "unit": "",
+            "dimension": {},
+            "rank": "scalar",
+            "display": "1"
+          },
+          "env.env.temperature": {
+            "value": 293.15,
+            "unit": "K",
+            "dimension": {
+              "K": "1"
+            },
+            "rank": "scalar",
+            "display": "293.1 K"
+          },
+          "env.env.wind_velocity": {
+            "value": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "unit": "m/s",
+            "dimension": {
+              "m": "1",
+              "s": "-1"
+            },
+            "rank": "vector",
+            "display": "[0, 0, 0] m/s"
+          }
+        }
+      }
+    ],
+    "relations": [
+      {
+        "kind": "inside",
+        "from": "p",
+        "to": "region",
+        "given": {}
+      }
+    ]
+  },
+  "assumptions": [
+    "uniform_field",
+    "velocity_perpendicular_to_B",
+    "non_relativistic"
+  ],
+  "citations": [
+    "definitional",
+    "OpenStax University Physics 2, 11.3 (CC BY)"
+  ],
+  "checks": {
+    "dimensions": "pass",
+    "engines": [
+      "chain"
+    ],
+    "paths_found": 1,
+    "paths_agree": true,
+    "path_spread": 0.0
+  },
+  "timeline": [
+    {
+      "beat": 1,
+      "kind": "place",
+      "instance": "p",
+      "component": "charged_particle",
+      "model3d": "particle.glb",
+      "narrate": "Place Charged particle.",
+      "because": {
+        "kind": "scene",
+        "detail": "A charge with mass, free to move. Both a field source and the thing that responds to a field — which is precisely why the field -> force -> trajectory chain needs no special case.",
+        "laws": [
+          "coulombs_law",
+          "lorentz_force",
+          "newton_second_law"
+        ]
+      }
+    },
+    {
+      "beat": 2,
+      "kind": "place",
+      "instance": "region",
+      "component": "uniform_magnetic_field_region",
+      "model3d": "field_region.glb",
+      "narrate": "Place Uniform magnetic field region.",
+      "because": {
+        "kind": "scene",
+        "detail": "A region of stated uniform magnetic flux density.",
+        "laws": [
+          "circular_motion_magnetic",
+          "lorentz_force"
+        ]
+      }
+    },
+    {
+      "beat": 3,
+      "kind": "place",
+      "instance": "env",
+      "component": "environment",
+      "model3d": null,
+      "narrate": "Place Environment.",
+      "because": {
+        "kind": "scene",
+        "detail": "The surrounding medium and fields. Defaults are an idealised vacuum with no gravity, which is what textbook electrostatics problems assume -- stated here as an editable value instead of a footnote.",
+        "laws": [
+          "newton_gravitation_uniform",
+          "superposition_of_forces",
+          "medium_permittivity"
+        ]
+      }
+    },
+    {
+      "beat": 4,
+      "kind": "relate",
+      "relation": "inside",
+      "from": "p",
+      "to": "region",
+      "narrate": "p is inside region.",
+      "because": {
+        "kind": "scene",
+        "detail": "stated by the problem's geometry"
+      }
+    },
+    {
+      "beat": 5,
+      "kind": "given",
+      "instance": "p",
+      "ref": "p.mechanics.mass",
+      "property": "mechanics.mass",
+      "channel": "mass_label",
+      "value": 1.67262192369e-27,
+      "unit": "kg",
+      "dimension": {
+        "kg": "1"
+      },
+      "rank": "scalar",
+      "display": "1.673e-27 kg",
+      "narrate": "p: mass is 1.673e-27 kg, as stated.",
+      "because": {
+        "kind": "given",
+        "detail": "supplied by the problem statement"
+      }
+    },
+    {
+      "beat": 6,
+      "kind": "given",
+      "instance": "p",
+      "ref": "p.kinematics.velocity",
+      "property": "kinematics.velocity",
+      "channel": "velocity_vector",
+      "value": [
+        1000000.0,
+        0.0,
+        0.0
+      ],
+      "unit": "m/s",
+      "dimension": {
+        "m": "1",
+        "s": "-1"
+      },
+      "rank": "vector",
+      "display": "[1.000e6, 0, 0] m/s",
+      "narrate": "p: velocity is [1.000e6, 0, 0] m/s, as stated.",
+      "because": {
+        "kind": "given",
+        "detail": "supplied by the problem statement"
+      }
+    },
+    {
+      "beat": 7,
+      "kind": "resolve",
+      "instance": "p",
+      "ref": "p.kinematics.speed",
+      "property": "kinematics.speed",
+      "channel": "velocity_vector",
+      "value": 1000000.0,
+      "unit": "m/s",
+      "dimension": {
+        "m": "1",
+        "s": "-1"
+      },
+      "rank": "scalar",
+      "display": "1.000e6 m/s",
+      "narrate": "p: speed resolves to 1.000e6 m/s.",
+      "because": {
+        "kind": "derived",
+        "formula": "kin.speed_from_velocity",
+        "expression": "mag(v)",
+        "substituted": "mag(([1.000e6, 0, 0] m/s))",
+        "law": "definition_magnitude",
+        "law_label": "Magnitude of a vector quantity",
+        "law_statement": "A scalar magnitude property is the Euclidean norm of its vector counterpart. Bookkeeping, not physics, but it must be cited like anything else so no trace step is unexplained.",
+        "assumes": [],
+        "cite": "definitional",
+        "inputs": [
+          {
+            "symbol": "v",
+            "from": "p.kinematics.velocity",
+            "value": [
+              1000000.0,
+              0.0,
+              0.0
+            ],
+            "unit": "m/s",
+            "dimension": {
+              "m": "1",
+              "s": "-1"
+            },
+            "rank": "vector",
+            "display": "[1.000e6, 0, 0] m/s"
+          }
+        ]
+      }
+    },
+    {
+      "beat": 8,
+      "kind": "given",
+      "instance": "p",
+      "ref": "p.em.charge",
+      "property": "em.charge",
+      "channel": "charge_glyph",
+      "value": 1.602176634e-19,
+      "unit": "C",
+      "dimension": {
+        "s": "1",
+        "A": "1"
+      },
+      "rank": "scalar",
+      "display": "1.602e-19 C",
+      "narrate": "p: charge is 1.602e-19 C, as stated.",
+      "because": {
+        "kind": "given",
+        "detail": "supplied by the problem statement"
+      }
+    },
+    {
+      "beat": 9,
+      "kind": "resolve",
+      "instance": "p",
+      "ref": "p.em.charge_magnitude",
+      "property": "em.charge_magnitude",
+      "channel": "charge_glyph",
+      "value": 1.602176634e-19,
+      "unit": "C",
+      "dimension": {
+        "s": "1",
+        "A": "1"
+      },
+      "rank": "scalar",
+      "display": "1.602e-19 C",
+      "narrate": "p: charge magnitude resolves to 1.602e-19 C.",
+      "because": {
+        "kind": "derived",
+        "formula": "charge.magnitude_from_signed",
+        "expression": "Abs(q)",
+        "substituted": "Abs((1.602e-19 C))",
+        "law": "definition_magnitude",
+        "law_label": "Magnitude of a vector quantity",
+        "law_statement": "A scalar magnitude property is the Euclidean norm of its vector counterpart. Bookkeeping, not physics, but it must be cited like anything else so no trace step is unexplained.",
+        "assumes": [],
+        "cite": "definitional",
+        "inputs": [
+          {
+            "symbol": "q",
+            "from": "p.em.charge",
+            "value": 1.602176634e-19,
+            "unit": "C",
+            "dimension": {
+              "s": "1",
+              "A": "1"
+            },
+            "rank": "scalar",
+            "display": "1.602e-19 C"
+          }
+        ]
+      }
+    },
+    {
+      "beat": 10,
+      "kind": "given",
+      "instance": "region",
+      "ref": "region.em.magnetic_field",
+      "property": "em.magnetic_field",
+      "channel": "field_arrows",
+      "value": [
+        0.0,
+        0.0,
+        0.5
+      ],
+      "unit": "T",
+      "dimension": {
+        "kg": "1",
+        "s": "-2",
+        "A": "-1"
+      },
+      "rank": "vector",
+      "display": "[0, 0, 0.5] T",
+      "narrate": "region: magnetic field is [0, 0, 0.5] T, as stated.",
+      "because": {
+        "kind": "given",
+        "detail": "supplied by the problem statement"
+      }
+    },
+    {
+      "beat": 11,
+      "kind": "resolve",
+      "instance": "region",
+      "ref": "region.em.magnetic_field_magnitude",
+      "property": "em.magnetic_field_magnitude",
+      "channel": "field_intensity",
+      "value": 0.5,
+      "unit": "T",
+      "dimension": {
+        "kg": "1",
+        "s": "-2",
+        "A": "-1"
+      },
+      "rank": "scalar",
+      "display": "0.5 T",
+      "narrate": "region: magnetic field magnitude resolves to 0.5 T.",
+      "because": {
+        "kind": "derived",
+        "formula": "field.B_mag_from_vector",
+        "expression": "mag(B)",
+        "substituted": "mag(([0, 0, 0.5] T))",
+        "law": "definition_magnitude",
+        "law_label": "Magnitude of a vector quantity",
+        "law_statement": "A scalar magnitude property is the Euclidean norm of its vector counterpart. Bookkeeping, not physics, but it must be cited like anything else so no trace step is unexplained.",
+        "assumes": [],
+        "cite": "definitional",
+        "inputs": [
+          {
+            "symbol": "B",
+            "from": "region.em.magnetic_field",
+            "value": [
+              0.0,
+              0.0,
+              0.5
+            ],
+            "unit": "T",
+            "dimension": {
+              "kg": "1",
+              "s": "-2",
+              "A": "-1"
+            },
+            "rank": "vector",
+            "display": "[0, 0, 0.5] T"
+          }
+        ]
+      }
+    },
+    {
+      "beat": 12,
+      "kind": "resolve",
+      "instance": "p",
+      "ref": "p.em.magnetic_field_magnitude",
+      "property": "em.magnetic_field_magnitude",
+      "channel": "field_intensity",
+      "value": 0.5,
+      "unit": "T",
+      "dimension": {
+        "kg": "1",
+        "s": "-2",
+        "A": "-1"
+      },
+      "rank": "scalar",
+      "display": "0.5 T",
+      "narrate": "p: magnetic field magnitude resolves to 0.5 T.",
+      "because": {
+        "kind": "derived",
+        "formula": "field.B_mag_at_particle",
+        "expression": "B",
+        "substituted": "(0.5 T)",
+        "law": "circular_motion_magnetic",
+        "law_label": "Circular motion in a uniform magnetic field",
+        "law_statement": "A charge moving perpendicular to a uniform magnetic field travels a circle whose radius is mv/(qB) and whose period is independent of speed.",
+        "assumes": [
+          "uniform_field"
+        ],
+        "cite": "OpenStax University Physics 2, 11.3 (CC BY)",
+        "inputs": [
+          {
+            "symbol": "B",
+            "from": "region.em.magnetic_field_magnitude",
+            "value": 0.5,
+            "unit": "T",
+            "dimension": {
+              "kg": "1",
+              "s": "-2",
+              "A": "-1"
+            },
+            "rank": "scalar",
+            "display": "0.5 T"
+          }
+        ]
+      }
+    },
+    {
+      "beat": 13,
+      "kind": "resolve",
+      "instance": "p",
+      "ref": "p.em.cyclotron_radius",
+      "property": "em.cyclotron_radius",
+      "channel": "orbit_circle",
+      "value": 0.020879369829706305,
+      "unit": "m",
+      "dimension": {
+        "m": "1"
+      },
+      "rank": "scalar",
+      "display": "0.02088 m",
+      "narrate": "p: cyclotron radius resolves to 0.02088 m.",
+      "because": {
+        "kind": "derived",
+        "formula": "cyclotron.radius",
+        "expression": "m * v / (Q * B)",
+        "substituted": "(1.673e-27 kg)*(1.000e6 m/s)/((0.5 T)*(1.602e-19 C))",
+        "law": "circular_motion_magnetic",
+        "law_label": "Circular motion in a uniform magnetic field",
+        "law_statement": "A charge moving perpendicular to a uniform magnetic field travels a circle whose radius is mv/(qB) and whose period is independent of speed.",
+        "assumes": [
+          "velocity_perpendicular_to_B",
+          "non_relativistic"
+        ],
+        "cite": "OpenStax University Physics 2, 11.3 (CC BY)",
+        "inputs": [
+          {
+            "symbol": "m",
+            "from": "p.mechanics.mass",
+            "value": 1.67262192369e-27,
+            "unit": "kg",
+            "dimension": {
+              "kg": "1"
+            },
+            "rank": "scalar",
+            "display": "1.673e-27 kg"
+          },
+          {
+            "symbol": "v",
+            "from": "p.kinematics.speed",
+            "value": 1000000.0,
+            "unit": "m/s",
+            "dimension": {
+              "m": "1",
+              "s": "-1"
+            },
+            "rank": "scalar",
+            "display": "1.000e6 m/s"
+          },
+          {
+            "symbol": "Q",
+            "from": "p.em.charge_magnitude",
+            "value": 1.602176634e-19,
+            "unit": "C",
+            "dimension": {
+              "s": "1",
+              "A": "1"
+            },
+            "rank": "scalar",
+            "display": "1.602e-19 C"
+          },
+          {
+            "symbol": "B",
+            "from": "p.em.magnetic_field_magnitude",
+            "value": 0.5,
+            "unit": "T",
+            "dimension": {
+              "kg": "1",
+              "s": "-2",
+              "A": "-1"
+            },
+            "rank": "scalar",
+            "display": "0.5 T"
+          }
+        ]
+      }
+    },
+    {
+      "beat": 14,
+      "kind": "answer",
+      "ref": "p.em.cyclotron_radius",
+      "property": "em.cyclotron_radius",
+      "value": 0.020879369829706305,
+      "unit": "m",
+      "dimension": {
+        "m": "1"
+      },
+      "rank": "scalar",
+      "display": "0.02088 m",
+      "narrate": "Answer: 0.02088 m.",
+      "because": {
+        "kind": "summary",
+        "laws": [
+          "circular_motion_magnetic",
+          "definition_magnitude"
+        ],
+        "paths_found": 1
+      }
+    }
+  ],
+  "paths": [
+    {
+      "cost": 5,
+      "laws": [
+        "circular_motion_magnetic",
+        "definition_magnitude"
+      ],
+      "formulas": [
+        "kin.speed_from_velocity",
+        "charge.magnitude_from_signed",
+        "field.B_mag_from_vector",
+        "field.B_mag_at_particle",
+        "cyclotron.radius"
+      ],
+      "value": {
+        "value": 0.020879369829706305,
+        "unit": "m",
+        "dimension": {
+          "m": "1"
+        },
+        "rank": "scalar",
+        "display": "0.02088 m"
+      },
+      "assumptions": [
+        "uniform_field",
+        "velocity_perpendicular_to_B",
+        "non_relativistic"
+      ],
+      "citations": [
+        "definitional",
+        "OpenStax University Physics 2, 11.3 (CC BY)"
+      ],
+      "steps": [
+        {
+          "ref": "p.mechanics.mass",
+          "property": "mechanics.mass",
+          "value": 1.67262192369e-27,
+          "unit": "kg",
+          "dimension": {
+            "kg": "1"
+          },
+          "rank": "scalar",
+          "display": "1.673e-27 kg",
+          "because": {
+            "kind": "given",
+            "detail": "supplied by the problem statement"
+          }
+        },
+        {
+          "ref": "p.kinematics.velocity",
+          "property": "kinematics.velocity",
+          "value": [
+            1000000.0,
+            0.0,
+            0.0
+          ],
+          "unit": "m/s",
+          "dimension": {
+            "m": "1",
+            "s": "-1"
+          },
+          "rank": "vector",
+          "display": "[1.000e6, 0, 0] m/s",
+          "because": {
+            "kind": "given",
+            "detail": "supplied by the problem statement"
+          }
+        },
+        {
+          "ref": "p.kinematics.speed",
+          "property": "kinematics.speed",
+          "value": 1000000.0,
+          "unit": "m/s",
+          "dimension": {
+            "m": "1",
+            "s": "-1"
+          },
+          "rank": "scalar",
+          "display": "1.000e6 m/s",
+          "because": {
+            "kind": "derived",
+            "formula": "kin.speed_from_velocity",
+            "expression": "mag(v)",
+            "substituted": "mag(([1.000e6, 0, 0] m/s))",
+            "law": "definition_magnitude",
+            "law_label": "Magnitude of a vector quantity",
+            "law_statement": "A scalar magnitude property is the Euclidean norm of its vector counterpart. Bookkeeping, not physics, but it must be cited like anything else so no trace step is unexplained.",
+            "assumes": [],
+            "cite": "definitional",
+            "inputs": [
+              {
+                "symbol": "v",
+                "from": "p.kinematics.velocity",
+                "value": [
+                  1000000.0,
+                  0.0,
+                  0.0
+                ],
+                "unit": "m/s",
+                "dimension": {
+                  "m": "1",
+                  "s": "-1"
+                },
+                "rank": "vector",
+                "display": "[1.000e6, 0, 0] m/s"
+              }
+            ]
+          }
+        },
+        {
+          "ref": "p.em.charge",
+          "property": "em.charge",
+          "value": 1.602176634e-19,
+          "unit": "C",
+          "dimension": {
+            "s": "1",
+            "A": "1"
+          },
+          "rank": "scalar",
+          "display": "1.602e-19 C",
+          "because": {
+            "kind": "given",
+            "detail": "supplied by the problem statement"
+          }
+        },
+        {
+          "ref": "p.em.charge_magnitude",
+          "property": "em.charge_magnitude",
+          "value": 1.602176634e-19,
+          "unit": "C",
+          "dimension": {
+            "s": "1",
+            "A": "1"
+          },
+          "rank": "scalar",
+          "display": "1.602e-19 C",
+          "because": {
+            "kind": "derived",
+            "formula": "charge.magnitude_from_signed",
+            "expression": "Abs(q)",
+            "substituted": "Abs((1.602e-19 C))",
+            "law": "definition_magnitude",
+            "law_label": "Magnitude of a vector quantity",
+            "law_statement": "A scalar magnitude property is the Euclidean norm of its vector counterpart. Bookkeeping, not physics, but it must be cited like anything else so no trace step is unexplained.",
+            "assumes": [],
+            "cite": "definitional",
+            "inputs": [
+              {
+                "symbol": "q",
+                "from": "p.em.charge",
+                "value": 1.602176634e-19,
+                "unit": "C",
+                "dimension": {
+                  "s": "1",
+                  "A": "1"
+                },
+                "rank": "scalar",
+                "display": "1.602e-19 C"
+              }
+            ]
+          }
+        },
+        {
+          "ref": "region.em.magnetic_field",
+          "property": "em.magnetic_field",
+          "value": [
+            0.0,
+            0.0,
+            0.5
+          ],
+          "unit": "T",
+          "dimension": {
+            "kg": "1",
+            "s": "-2",
+            "A": "-1"
+          },
+          "rank": "vector",
+          "display": "[0, 0, 0.5] T",
+          "because": {
+            "kind": "given",
+            "detail": "supplied by the problem statement"
+          }
+        },
+        {
+          "ref": "region.em.magnetic_field_magnitude",
+          "property": "em.magnetic_field_magnitude",
+          "value": 0.5,
+          "unit": "T",
+          "dimension": {
+            "kg": "1",
+            "s": "-2",
+            "A": "-1"
+          },
+          "rank": "scalar",
+          "display": "0.5 T",
+          "because": {
+            "kind": "derived",
+            "formula": "field.B_mag_from_vector",
+            "expression": "mag(B)",
+            "substituted": "mag(([0, 0, 0.5] T))",
+            "law": "definition_magnitude",
+            "law_label": "Magnitude of a vector quantity",
+            "law_statement": "A scalar magnitude property is the Euclidean norm of its vector counterpart. Bookkeeping, not physics, but it must be cited like anything else so no trace step is unexplained.",
+            "assumes": [],
+            "cite": "definitional",
+            "inputs": [
+              {
+                "symbol": "B",
+                "from": "region.em.magnetic_field",
+                "value": [
+                  0.0,
+                  0.0,
+                  0.5
+                ],
+                "unit": "T",
+                "dimension": {
+                  "kg": "1",
+                  "s": "-2",
+                  "A": "-1"
+                },
+                "rank": "vector",
+                "display": "[0, 0, 0.5] T"
+              }
+            ]
+          }
+        },
+        {
+          "ref": "p.em.magnetic_field_magnitude",
+          "property": "em.magnetic_field_magnitude",
+          "value": 0.5,
+          "unit": "T",
+          "dimension": {
+            "kg": "1",
+            "s": "-2",
+            "A": "-1"
+          },
+          "rank": "scalar",
+          "display": "0.5 T",
+          "because": {
+            "kind": "derived",
+            "formula": "field.B_mag_at_particle",
+            "expression": "B",
+            "substituted": "(0.5 T)",
+            "law": "circular_motion_magnetic",
+            "law_label": "Circular motion in a uniform magnetic field",
+            "law_statement": "A charge moving perpendicular to a uniform magnetic field travels a circle whose radius is mv/(qB) and whose period is independent of speed.",
+            "assumes": [
+              "uniform_field"
+            ],
+            "cite": "OpenStax University Physics 2, 11.3 (CC BY)",
+            "inputs": [
+              {
+                "symbol": "B",
+                "from": "region.em.magnetic_field_magnitude",
+                "value": 0.5,
+                "unit": "T",
+                "dimension": {
+                  "kg": "1",
+                  "s": "-2",
+                  "A": "-1"
+                },
+                "rank": "scalar",
+                "display": "0.5 T"
+              }
+            ]
+          }
+        },
+        {
+          "ref": "p.em.cyclotron_radius",
+          "property": "em.cyclotron_radius",
+          "value": 0.020879369829706305,
+          "unit": "m",
+          "dimension": {
+            "m": "1"
+          },
+          "rank": "scalar",
+          "display": "0.02088 m",
+          "because": {
+            "kind": "derived",
+            "formula": "cyclotron.radius",
+            "expression": "m * v / (Q * B)",
+            "substituted": "(1.673e-27 kg)*(1.000e6 m/s)/((0.5 T)*(1.602e-19 C))",
+            "law": "circular_motion_magnetic",
+            "law_label": "Circular motion in a uniform magnetic field",
+            "law_statement": "A charge moving perpendicular to a uniform magnetic field travels a circle whose radius is mv/(qB) and whose period is independent of speed.",
+            "assumes": [
+              "velocity_perpendicular_to_B",
+              "non_relativistic"
+            ],
+            "cite": "OpenStax University Physics 2, 11.3 (CC BY)",
+            "inputs": [
+              {
+                "symbol": "m",
+                "from": "p.mechanics.mass",
+                "value": 1.67262192369e-27,
+                "unit": "kg",
+                "dimension": {
+                  "kg": "1"
+                },
+                "rank": "scalar",
+                "display": "1.673e-27 kg"
+              },
+              {
+                "symbol": "v",
+                "from": "p.kinematics.speed",
+                "value": 1000000.0,
+                "unit": "m/s",
+                "dimension": {
+                  "m": "1",
+                  "s": "-1"
+                },
+                "rank": "scalar",
+                "display": "1.000e6 m/s"
+              },
+              {
+                "symbol": "Q",
+                "from": "p.em.charge_magnitude",
+                "value": 1.602176634e-19,
+                "unit": "C",
+                "dimension": {
+                  "s": "1",
+                  "A": "1"
+                },
+                "rank": "scalar",
+                "display": "1.602e-19 C"
+              },
+              {
+                "symbol": "B",
+                "from": "p.em.magnetic_field_magnitude",
+                "value": 0.5,
+                "unit": "T",
+                "dimension": {
+                  "kg": "1",
+                  "s": "-2",
+                  "A": "-1"
+                },
+                "rank": "scalar",
+                "display": "0.5 T"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

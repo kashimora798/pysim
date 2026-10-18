@@ -1,0 +1,33 @@
+id: p105
+title: A series pair in parallel with a third resistor
+source: "After OpenStax College Physics 2e, 21.1 (CC BY)"
+tags: [circuits, series, parallel, nested, reduction, chapter1, flagship]
+text: |
+  A 10 ohm and a 20 ohm resistor are wired in series, and that combination is connected in
+  parallel with a 30 ohm resistor. The whole network is driven by a 30 V battery. What current
+  does the battery supply?
+scene:
+  instances:
+    - {id: bat, kind: battery, set: {electric.emf: "30 V"}}
+    - {id: r1, kind: resistor, set: {electric.resistance: "10 ohm"}}
+    - {id: r2, kind: resistor, set: {electric.resistance: "20 ohm"}}
+    - {id: r3, kind: resistor, set: {electric.resistance: "30 ohm"}}
+    - {id: sp, kind: series_pair}
+    - {id: pp, kind: parallel_pair}
+    - {id: loop, kind: circuit_loop}
+  relations:
+    - {kind: series_a, from: sp, to: r1}
+    - {kind: series_b, from: sp, to: r2}
+    - {kind: parallel_a, from: pp, to: sp}
+    - {kind: parallel_b, from: pp, to: r3}
+    - {kind: driven_by, from: loop, to: bat}
+    - {kind: loads, from: loop, to: pp}
+target: {instance: loop, prop: electric.current}
+expect:
+  value: 2.0
+  unit: A
+  tol: 0.001
+  note: >
+    The nesting case, and the reason the reduction rules take two roles. A series pair is itself a
+    member of a parallel pair: (10+20)=30, then 30*30/60=15, then 30/15. No n-ary formula and no
+    matrix solve -- the reduction tree is the tree the student wired.

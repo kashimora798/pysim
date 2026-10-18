@@ -1,0 +1,1272 @@
+{
+  "fieldforge": "0.1",
+  "problem": {
+    "id": "p105",
+    "title": "A series pair in parallel with a third resistor",
+    "text": "A 10 ohm and a 20 ohm resistor are wired in series, and that combination is connected in\nparallel with a 30 ohm resistor. The whole network is driven by a 30 V battery. What current\ndoes the battery supply?",
+    "source": "After OpenStax College Physics 2e, 21.1 (CC BY)",
+    "tags": [
+      "circuits",
+      "series",
+      "parallel",
+      "nested",
+      "reduction",
+      "chapter1",
+      "flagship"
+    ]
+  },
+  "target": "loop.electric.current",
+  "answer": {
+    "value": 2.0,
+    "unit": "A",
+    "dimension": {
+      "A": "1"
+    },
+    "rank": "scalar",
+    "display": "2 A"
+  },
+  "scene": {
+    "instances": [
+      {
+        "id": "bat",
+        "kind": "battery",
+        "label": "Battery",
+        "model3d": "battery.glb",
+        "tags": [
+          "source",
+          "circuit",
+          "emf"
+        ],
+        "given": {
+          "bat.electric.emf": {
+            "value": 30.0,
+            "unit": "V",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-1"
+            },
+            "rank": "scalar",
+            "display": "30 V"
+          }
+        }
+      },
+      {
+        "id": "r1",
+        "kind": "resistor",
+        "label": "Resistor",
+        "model3d": "resistor.glb",
+        "tags": [
+          "passive",
+          "circuit",
+          "resistive"
+        ],
+        "given": {
+          "r1.electric.resistance": {
+            "value": 10.0,
+            "unit": "Ω",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-2"
+            },
+            "rank": "scalar",
+            "display": "10 Ω"
+          }
+        }
+      },
+      {
+        "id": "r2",
+        "kind": "resistor",
+        "label": "Resistor",
+        "model3d": "resistor.glb",
+        "tags": [
+          "passive",
+          "circuit",
+          "resistive"
+        ],
+        "given": {
+          "r2.electric.resistance": {
+            "value": 20.0,
+            "unit": "Ω",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-2"
+            },
+            "rank": "scalar",
+            "display": "20 Ω"
+          }
+        }
+      },
+      {
+        "id": "r3",
+        "kind": "resistor",
+        "label": "Resistor",
+        "model3d": "resistor.glb",
+        "tags": [
+          "passive",
+          "circuit",
+          "resistive"
+        ],
+        "given": {
+          "r3.electric.resistance": {
+            "value": 30.0,
+            "unit": "Ω",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-2"
+            },
+            "rank": "scalar",
+            "display": "30 Ω"
+          }
+        }
+      },
+      {
+        "id": "sp",
+        "kind": "series_pair",
+        "label": "Series combination",
+        "model3d": null,
+        "tags": [
+          "combination",
+          "circuit",
+          "resistive"
+        ],
+        "given": {}
+      },
+      {
+        "id": "pp",
+        "kind": "parallel_pair",
+        "label": "Parallel combination",
+        "model3d": null,
+        "tags": [
+          "combination",
+          "circuit",
+          "resistive"
+        ],
+        "given": {}
+      },
+      {
+        "id": "loop",
+        "kind": "circuit_loop",
+        "label": "Circuit loop",
+        "model3d": null,
+        "tags": [
+          "circuit",
+          "topology"
+        ],
+        "given": {}
+      },
+      {
+        "id": "env",
+        "kind": "environment",
+        "label": "Environment",
+        "model3d": null,
+        "tags": [
+          "environment",
+          "scene",
+          "settings"
+        ],
+        "given": {
+          "env.env.air_density": {
+            "value": 0.0,
+            "unit": "kg·m⁻³",
+            "dimension": {
+              "kg": "1",
+              "m": "-3"
+            },
+            "rank": "scalar",
+            "display": "0 kg·m⁻³"
+          },
+          "env.env.gravity": {
+            "value": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "unit": "m/s²",
+            "dimension": {
+              "m": "1",
+              "s": "-2"
+            },
+            "rank": "vector",
+            "display": "[0, 0, 0] m/s²"
+          },
+          "env.env.relative_permittivity": {
+            "value": 1.0,
+            "unit": "",
+            "dimension": {},
+            "rank": "scalar",
+            "display": "1"
+          },
+          "env.env.temperature": {
+            "value": 293.15,
+            "unit": "K",
+            "dimension": {
+              "K": "1"
+            },
+            "rank": "scalar",
+            "display": "293.1 K"
+          },
+          "env.env.wind_velocity": {
+            "value": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "unit": "m/s",
+            "dimension": {
+              "m": "1",
+              "s": "-1"
+            },
+            "rank": "vector",
+            "display": "[0, 0, 0] m/s"
+          }
+        }
+      }
+    ],
+    "relations": [
+      {
+        "kind": "series_a",
+        "from": "sp",
+        "to": "r1",
+        "given": {}
+      },
+      {
+        "kind": "series_b",
+        "from": "sp",
+        "to": "r2",
+        "given": {}
+      },
+      {
+        "kind": "parallel_a",
+        "from": "pp",
+        "to": "sp",
+        "given": {}
+      },
+      {
+        "kind": "parallel_b",
+        "from": "pp",
+        "to": "r3",
+        "given": {}
+      },
+      {
+        "kind": "driven_by",
+        "from": "loop",
+        "to": "bat",
+        "given": {}
+      },
+      {
+        "kind": "loads",
+        "from": "loop",
+        "to": "pp",
+        "given": {}
+      }
+    ]
+  },
+  "assumptions": [
+    "ideal_source",
+    "no_internal_resistance",
+    "same_current_through_both",
+    "ideal_wires",
+    "same_voltage_across_both",
+    "steady_state",
+    "ohmic_load"
+  ],
+  "citations": [
+    "OpenStax College Physics 2e, 21.2 (CC BY)",
+    "OpenStax College Physics 2e, 21.1 (CC BY)",
+    "OpenStax College Physics 2e, 20.2 (CC BY)"
+  ],
+  "checks": {
+    "dimensions": "pass",
+    "engines": [
+      "chain"
+    ],
+    "paths_found": 1,
+    "paths_agree": true,
+    "path_spread": 0.0
+  },
+  "timeline": [
+    {
+      "beat": 1,
+      "kind": "place",
+      "instance": "bat",
+      "component": "battery",
+      "model3d": "battery.glb",
+      "narrate": "Place Battery.",
+      "because": {
+        "kind": "scene",
+        "detail": "An ideal source of constant emf. Two terminals; current leaves the positive one. Ideal here means zero internal resistance, which the assumption list on every formula states plainly.",
+        "laws": [
+          "ohms_law",
+          "kirchhoff_voltage_law"
+        ]
+      }
+    },
+    {
+      "beat": 2,
+      "kind": "place",
+      "instance": "loop",
+      "component": "circuit_loop",
+      "model3d": null,
+      "narrate": "Place Circuit loop.",
+      "because": {
+        "kind": "scene",
+        "detail": "A closed loop: one source driving one resistive thing, which may itself be a whole reduced network. This is the component the wiring interaction produces when the student closes the circuit, and it is where the current the whole chapter is about actually lives.",
+        "laws": [
+          "ohms_law",
+          "kirchhoff_voltage_law"
+        ]
+      }
+    },
+    {
+      "beat": 3,
+      "kind": "place",
+      "instance": "r1",
+      "component": "resistor",
+      "model3d": "resistor.glb",
+      "narrate": "Place Resistor.",
+      "because": {
+        "kind": "scene",
+        "detail": "An ohmic element: the voltage across it is proportional to the current through it. The workhorse of the chapter and the first thing a student picks up off the shelf.",
+        "laws": [
+          "ohms_law",
+          "joule_heating"
+        ]
+      }
+    },
+    {
+      "beat": 4,
+      "kind": "place",
+      "instance": "r2",
+      "component": "resistor",
+      "model3d": "resistor.glb",
+      "narrate": "Place Resistor.",
+      "because": {
+        "kind": "scene",
+        "detail": "An ohmic element: the voltage across it is proportional to the current through it. The workhorse of the chapter and the first thing a student picks up off the shelf.",
+        "laws": [
+          "ohms_law",
+          "joule_heating"
+        ]
+      }
+    },
+    {
+      "beat": 5,
+      "kind": "place",
+      "instance": "sp",
+      "component": "series_pair",
+      "model3d": null,
+      "narrate": "Place Series combination.",
+      "because": {
+        "kind": "scene",
+        "detail": "Two elements wired end to end, so the same current passes through both and their voltages add. Created by the student's own wiring; carries a resistance of its own, so it can be a member of a further combination.",
+        "laws": [
+          "series_resistance",
+          "kirchhoff_voltage_law"
+        ]
+      }
+    },
+    {
+      "beat": 6,
+      "kind": "place",
+      "instance": "r3",
+      "component": "resistor",
+      "model3d": "resistor.glb",
+      "narrate": "Place Resistor.",
+      "because": {
+        "kind": "scene",
+        "detail": "An ohmic element: the voltage across it is proportional to the current through it. The workhorse of the chapter and the first thing a student picks up off the shelf.",
+        "laws": [
+          "ohms_law",
+          "joule_heating"
+        ]
+      }
+    },
+    {
+      "beat": 7,
+      "kind": "place",
+      "instance": "pp",
+      "component": "parallel_pair",
+      "model3d": null,
+      "narrate": "Place Parallel combination.",
+      "because": {
+        "kind": "scene",
+        "detail": "Two elements across the same two nodes, so they share a voltage and their currents add. Carries a resistance of its own for the same compositional reason as a series pair.",
+        "laws": [
+          "parallel_resistance",
+          "kirchhoff_current_law"
+        ]
+      }
+    },
+    {
+      "beat": 8,
+      "kind": "place",
+      "instance": "env",
+      "component": "environment",
+      "model3d": null,
+      "narrate": "Place Environment.",
+      "because": {
+        "kind": "scene",
+        "detail": "The surrounding medium and fields. Defaults are an idealised vacuum with no gravity, which is what textbook electrostatics problems assume -- stated here as an editable value instead of a footnote.",
+        "laws": [
+          "newton_gravitation_uniform",
+          "superposition_of_forces",
+          "medium_permittivity"
+        ]
+      }
+    },
+    {
+      "beat": 9,
+      "kind": "relate",
+      "relation": "series_a",
+      "from": "sp",
+      "to": "r1",
+      "narrate": "sp is series a r1.",
+      "because": {
+        "kind": "scene",
+        "detail": "stated by the problem's geometry"
+      }
+    },
+    {
+      "beat": 10,
+      "kind": "relate",
+      "relation": "series_b",
+      "from": "sp",
+      "to": "r2",
+      "narrate": "sp is series b r2.",
+      "because": {
+        "kind": "scene",
+        "detail": "stated by the problem's geometry"
+      }
+    },
+    {
+      "beat": 11,
+      "kind": "relate",
+      "relation": "parallel_a",
+      "from": "pp",
+      "to": "sp",
+      "narrate": "pp is parallel a sp.",
+      "because": {
+        "kind": "scene",
+        "detail": "stated by the problem's geometry"
+      }
+    },
+    {
+      "beat": 12,
+      "kind": "relate",
+      "relation": "parallel_b",
+      "from": "pp",
+      "to": "r3",
+      "narrate": "pp is parallel b r3.",
+      "because": {
+        "kind": "scene",
+        "detail": "stated by the problem's geometry"
+      }
+    },
+    {
+      "beat": 13,
+      "kind": "relate",
+      "relation": "driven_by",
+      "from": "loop",
+      "to": "bat",
+      "narrate": "loop is driven by bat.",
+      "because": {
+        "kind": "scene",
+        "detail": "stated by the problem's geometry"
+      }
+    },
+    {
+      "beat": 14,
+      "kind": "relate",
+      "relation": "loads",
+      "from": "loop",
+      "to": "pp",
+      "narrate": "loop is loads pp.",
+      "because": {
+        "kind": "scene",
+        "detail": "stated by the problem's geometry"
+      }
+    },
+    {
+      "beat": 15,
+      "kind": "given",
+      "instance": "bat",
+      "ref": "bat.electric.emf",
+      "property": "electric.emf",
+      "channel": null,
+      "value": 30.0,
+      "unit": "V",
+      "dimension": {
+        "kg": "1",
+        "m": "2",
+        "s": "-3",
+        "A": "-1"
+      },
+      "rank": "scalar",
+      "display": "30 V",
+      "narrate": "bat: emf is 30 V, as stated.",
+      "because": {
+        "kind": "given",
+        "detail": "supplied by the problem statement"
+      }
+    },
+    {
+      "beat": 16,
+      "kind": "resolve",
+      "instance": "loop",
+      "ref": "loop.em.potential_difference",
+      "property": "em.potential_difference",
+      "channel": "potential_shading",
+      "value": 30.0,
+      "unit": "V",
+      "dimension": {
+        "kg": "1",
+        "m": "2",
+        "s": "-3",
+        "A": "-1"
+      },
+      "rank": "scalar",
+      "display": "30 V",
+      "narrate": "loop: potential difference resolves to 30 V.",
+      "because": {
+        "kind": "derived",
+        "formula": "loop.V_from_source",
+        "expression": "emf",
+        "substituted": "(30 V)",
+        "law": "kirchhoff_voltage_law",
+        "law_label": "Kirchhoff's voltage law",
+        "law_statement": "The algebraic sum of potential differences around any closed loop is zero: energy per unit charge returns to where it started. This is what makes voltages add in a series combination.",
+        "assumes": [
+          "ideal_source",
+          "no_internal_resistance"
+        ],
+        "cite": "OpenStax College Physics 2e, 21.2 (CC BY)",
+        "inputs": [
+          {
+            "symbol": "emf",
+            "from": "bat.electric.emf",
+            "value": 30.0,
+            "unit": "V",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-1"
+            },
+            "rank": "scalar",
+            "display": "30 V"
+          }
+        ]
+      }
+    },
+    {
+      "beat": 17,
+      "kind": "given",
+      "instance": "r1",
+      "ref": "r1.electric.resistance",
+      "property": "electric.resistance",
+      "channel": null,
+      "value": 10.0,
+      "unit": "Ω",
+      "dimension": {
+        "kg": "1",
+        "m": "2",
+        "s": "-3",
+        "A": "-2"
+      },
+      "rank": "scalar",
+      "display": "10 Ω",
+      "narrate": "r1: resistance is 10 Ω, as stated.",
+      "because": {
+        "kind": "given",
+        "detail": "supplied by the problem statement"
+      }
+    },
+    {
+      "beat": 18,
+      "kind": "given",
+      "instance": "r2",
+      "ref": "r2.electric.resistance",
+      "property": "electric.resistance",
+      "channel": null,
+      "value": 20.0,
+      "unit": "Ω",
+      "dimension": {
+        "kg": "1",
+        "m": "2",
+        "s": "-3",
+        "A": "-2"
+      },
+      "rank": "scalar",
+      "display": "20 Ω",
+      "narrate": "r2: resistance is 20 Ω, as stated.",
+      "because": {
+        "kind": "given",
+        "detail": "supplied by the problem statement"
+      }
+    },
+    {
+      "beat": 19,
+      "kind": "resolve",
+      "instance": "sp",
+      "ref": "sp.electric.resistance",
+      "property": "electric.resistance",
+      "channel": null,
+      "value": 30.0,
+      "unit": "Ω",
+      "dimension": {
+        "kg": "1",
+        "m": "2",
+        "s": "-3",
+        "A": "-2"
+      },
+      "rank": "scalar",
+      "display": "30 Ω",
+      "narrate": "sp: resistance resolves to 30 Ω.",
+      "because": {
+        "kind": "derived",
+        "formula": "series.R_from_members",
+        "expression": "Ra + Rb",
+        "substituted": "(10 Ω) + (20 Ω)",
+        "law": "series_resistance",
+        "law_label": "Resistances in series add",
+        "law_statement": "Two elements carrying the same current present the sum of their resistances, because their potential differences add while the current is common: R = R_a + R_b.",
+        "assumes": [
+          "same_current_through_both",
+          "ideal_wires"
+        ],
+        "cite": "OpenStax College Physics 2e, 21.1 (CC BY)",
+        "inputs": [
+          {
+            "symbol": "Ra",
+            "from": "r1.electric.resistance",
+            "value": 10.0,
+            "unit": "Ω",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-2"
+            },
+            "rank": "scalar",
+            "display": "10 Ω"
+          },
+          {
+            "symbol": "Rb",
+            "from": "r2.electric.resistance",
+            "value": 20.0,
+            "unit": "Ω",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-2"
+            },
+            "rank": "scalar",
+            "display": "20 Ω"
+          }
+        ]
+      }
+    },
+    {
+      "beat": 20,
+      "kind": "given",
+      "instance": "r3",
+      "ref": "r3.electric.resistance",
+      "property": "electric.resistance",
+      "channel": null,
+      "value": 30.0,
+      "unit": "Ω",
+      "dimension": {
+        "kg": "1",
+        "m": "2",
+        "s": "-3",
+        "A": "-2"
+      },
+      "rank": "scalar",
+      "display": "30 Ω",
+      "narrate": "r3: resistance is 30 Ω, as stated.",
+      "because": {
+        "kind": "given",
+        "detail": "supplied by the problem statement"
+      }
+    },
+    {
+      "beat": 21,
+      "kind": "resolve",
+      "instance": "pp",
+      "ref": "pp.electric.resistance",
+      "property": "electric.resistance",
+      "channel": null,
+      "value": 15.0,
+      "unit": "Ω",
+      "dimension": {
+        "kg": "1",
+        "m": "2",
+        "s": "-3",
+        "A": "-2"
+      },
+      "rank": "scalar",
+      "display": "15 Ω",
+      "narrate": "pp: resistance resolves to 15 Ω.",
+      "because": {
+        "kind": "derived",
+        "formula": "parallel.R_from_members",
+        "expression": "Ra * Rb / (Ra + Rb)",
+        "substituted": "(30 Ω)*(30 Ω)/((30 Ω) + (30 Ω))",
+        "law": "parallel_resistance",
+        "law_label": "Resistances in parallel combine reciprocally",
+        "law_statement": "Two elements across the same pair of nodes present R_a*R_b/(R_a + R_b), because their currents add while the potential difference is common. The result is always smaller than either part.",
+        "assumes": [
+          "same_voltage_across_both",
+          "ideal_wires"
+        ],
+        "cite": "OpenStax College Physics 2e, 21.1 (CC BY)",
+        "inputs": [
+          {
+            "symbol": "Ra",
+            "from": "sp.electric.resistance",
+            "value": 30.0,
+            "unit": "Ω",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-2"
+            },
+            "rank": "scalar",
+            "display": "30 Ω"
+          },
+          {
+            "symbol": "Rb",
+            "from": "r3.electric.resistance",
+            "value": 30.0,
+            "unit": "Ω",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-2"
+            },
+            "rank": "scalar",
+            "display": "30 Ω"
+          }
+        ]
+      }
+    },
+    {
+      "beat": 22,
+      "kind": "resolve",
+      "instance": "loop",
+      "ref": "loop.electric.resistance",
+      "property": "electric.resistance",
+      "channel": null,
+      "value": 15.0,
+      "unit": "Ω",
+      "dimension": {
+        "kg": "1",
+        "m": "2",
+        "s": "-3",
+        "A": "-2"
+      },
+      "rank": "scalar",
+      "display": "15 Ω",
+      "narrate": "loop: resistance resolves to 15 Ω.",
+      "because": {
+        "kind": "derived",
+        "formula": "loop.R_from_load",
+        "expression": "R",
+        "substituted": "(15 Ω)",
+        "law": "series_resistance",
+        "law_label": "Resistances in series add",
+        "law_statement": "Two elements carrying the same current present the sum of their resistances, because their potential differences add while the current is common: R = R_a + R_b.",
+        "assumes": [
+          "ideal_wires",
+          "ideal_source"
+        ],
+        "cite": "OpenStax College Physics 2e, 21.1 (CC BY)",
+        "inputs": [
+          {
+            "symbol": "R",
+            "from": "pp.electric.resistance",
+            "value": 15.0,
+            "unit": "Ω",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-2"
+            },
+            "rank": "scalar",
+            "display": "15 Ω"
+          }
+        ]
+      }
+    },
+    {
+      "beat": 23,
+      "kind": "resolve",
+      "instance": "loop",
+      "ref": "loop.electric.current",
+      "property": "electric.current",
+      "channel": null,
+      "value": 2.0,
+      "unit": "A",
+      "dimension": {
+        "A": "1"
+      },
+      "rank": "scalar",
+      "display": "2 A",
+      "narrate": "loop: current resolves to 2 A.",
+      "because": {
+        "kind": "derived",
+        "formula": "loop.I_from_V_R",
+        "expression": "V / R",
+        "substituted": "(30 V)/(15 Ω)",
+        "law": "ohms_law",
+        "law_label": "Ohm's law",
+        "law_statement": "For an ohmic conductor the current through it is proportional to the potential difference across it, with the resistance as the constant of proportionality: V = I*R.",
+        "assumes": [
+          "steady_state",
+          "ohmic_load"
+        ],
+        "cite": "OpenStax College Physics 2e, 20.2 (CC BY)",
+        "inputs": [
+          {
+            "symbol": "V",
+            "from": "loop.em.potential_difference",
+            "value": 30.0,
+            "unit": "V",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-1"
+            },
+            "rank": "scalar",
+            "display": "30 V"
+          },
+          {
+            "symbol": "R",
+            "from": "loop.electric.resistance",
+            "value": 15.0,
+            "unit": "Ω",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-2"
+            },
+            "rank": "scalar",
+            "display": "15 Ω"
+          }
+        ]
+      }
+    },
+    {
+      "beat": 24,
+      "kind": "answer",
+      "ref": "loop.electric.current",
+      "property": "electric.current",
+      "value": 2.0,
+      "unit": "A",
+      "dimension": {
+        "A": "1"
+      },
+      "rank": "scalar",
+      "display": "2 A",
+      "narrate": "Answer: 2 A.",
+      "because": {
+        "kind": "summary",
+        "laws": [
+          "kirchhoff_voltage_law",
+          "ohms_law",
+          "parallel_resistance",
+          "series_resistance"
+        ],
+        "paths_found": 1
+      }
+    }
+  ],
+  "paths": [
+    {
+      "cost": 5,
+      "laws": [
+        "kirchhoff_voltage_law",
+        "ohms_law",
+        "parallel_resistance",
+        "series_resistance"
+      ],
+      "formulas": [
+        "loop.V_from_source",
+        "series.R_from_members",
+        "parallel.R_from_members",
+        "loop.R_from_load",
+        "loop.I_from_V_R"
+      ],
+      "value": {
+        "value": 2.0,
+        "unit": "A",
+        "dimension": {
+          "A": "1"
+        },
+        "rank": "scalar",
+        "display": "2 A"
+      },
+      "assumptions": [
+        "ideal_source",
+        "no_internal_resistance",
+        "same_current_through_both",
+        "ideal_wires",
+        "same_voltage_across_both",
+        "steady_state",
+        "ohmic_load"
+      ],
+      "citations": [
+        "OpenStax College Physics 2e, 21.2 (CC BY)",
+        "OpenStax College Physics 2e, 21.1 (CC BY)",
+        "OpenStax College Physics 2e, 20.2 (CC BY)"
+      ],
+      "steps": [
+        {
+          "ref": "bat.electric.emf",
+          "property": "electric.emf",
+          "value": 30.0,
+          "unit": "V",
+          "dimension": {
+            "kg": "1",
+            "m": "2",
+            "s": "-3",
+            "A": "-1"
+          },
+          "rank": "scalar",
+          "display": "30 V",
+          "because": {
+            "kind": "given",
+            "detail": "supplied by the problem statement"
+          }
+        },
+        {
+          "ref": "loop.em.potential_difference",
+          "property": "em.potential_difference",
+          "value": 30.0,
+          "unit": "V",
+          "dimension": {
+            "kg": "1",
+            "m": "2",
+            "s": "-3",
+            "A": "-1"
+          },
+          "rank": "scalar",
+          "display": "30 V",
+          "because": {
+            "kind": "derived",
+            "formula": "loop.V_from_source",
+            "expression": "emf",
+            "substituted": "(30 V)",
+            "law": "kirchhoff_voltage_law",
+            "law_label": "Kirchhoff's voltage law",
+            "law_statement": "The algebraic sum of potential differences around any closed loop is zero: energy per unit charge returns to where it started. This is what makes voltages add in a series combination.",
+            "assumes": [
+              "ideal_source",
+              "no_internal_resistance"
+            ],
+            "cite": "OpenStax College Physics 2e, 21.2 (CC BY)",
+            "inputs": [
+              {
+                "symbol": "emf",
+                "from": "bat.electric.emf",
+                "value": 30.0,
+                "unit": "V",
+                "dimension": {
+                  "kg": "1",
+                  "m": "2",
+                  "s": "-3",
+                  "A": "-1"
+                },
+                "rank": "scalar",
+                "display": "30 V"
+              }
+            ]
+          }
+        },
+        {
+          "ref": "r1.electric.resistance",
+          "property": "electric.resistance",
+          "value": 10.0,
+          "unit": "Ω",
+          "dimension": {
+            "kg": "1",
+            "m": "2",
+            "s": "-3",
+            "A": "-2"
+          },
+          "rank": "scalar",
+          "display": "10 Ω",
+          "because": {
+            "kind": "given",
+            "detail": "supplied by the problem statement"
+          }
+        },
+        {
+          "ref": "r2.electric.resistance",
+          "property": "electric.resistance",
+          "value": 20.0,
+          "unit": "Ω",
+          "dimension": {
+            "kg": "1",
+            "m": "2",
+            "s": "-3",
+            "A": "-2"
+          },
+          "rank": "scalar",
+          "display": "20 Ω",
+          "because": {
+            "kind": "given",
+            "detail": "supplied by the problem statement"
+          }
+        },
+        {
+          "ref": "sp.electric.resistance",
+          "property": "electric.resistance",
+          "value": 30.0,
+          "unit": "Ω",
+          "dimension": {
+            "kg": "1",
+            "m": "2",
+            "s": "-3",
+            "A": "-2"
+          },
+          "rank": "scalar",
+          "display": "30 Ω",
+          "because": {
+            "kind": "derived",
+            "formula": "series.R_from_members",
+            "expression": "Ra + Rb",
+            "substituted": "(10 Ω) + (20 Ω)",
+            "law": "series_resistance",
+            "law_label": "Resistances in series add",
+            "law_statement": "Two elements carrying the same current present the sum of their resistances, because their potential differences add while the current is common: R = R_a + R_b.",
+            "assumes": [
+              "same_current_through_both",
+              "ideal_wires"
+            ],
+            "cite": "OpenStax College Physics 2e, 21.1 (CC BY)",
+            "inputs": [
+              {
+                "symbol": "Ra",
+                "from": "r1.electric.resistance",
+                "value": 10.0,
+                "unit": "Ω",
+                "dimension": {
+                  "kg": "1",
+                  "m": "2",
+                  "s": "-3",
+                  "A": "-2"
+                },
+                "rank": "scalar",
+                "display": "10 Ω"
+              },
+              {
+                "symbol": "Rb",
+                "from": "r2.electric.resistance",
+                "value": 20.0,
+                "unit": "Ω",
+                "dimension": {
+                  "kg": "1",
+                  "m": "2",
+                  "s": "-3",
+                  "A": "-2"
+                },
+                "rank": "scalar",
+                "display": "20 Ω"
+              }
+            ]
+          }
+        },
+        {
+          "ref": "r3.electric.resistance",
+          "property": "electric.resistance",
+          "value": 30.0,
+          "unit": "Ω",
+          "dimension": {
+            "kg": "1",
+            "m": "2",
+            "s": "-3",
+            "A": "-2"
+          },
+          "rank": "scalar",
+          "display": "30 Ω",
+          "because": {
+            "kind": "given",
+            "detail": "supplied by the problem statement"
+          }
+        },
+        {
+          "ref": "pp.electric.resistance",
+          "property": "electric.resistance",
+          "value": 15.0,
+          "unit": "Ω",
+          "dimension": {
+            "kg": "1",
+            "m": "2",
+            "s": "-3",
+            "A": "-2"
+          },
+          "rank": "scalar",
+          "display": "15 Ω",
+          "because": {
+            "kind": "derived",
+            "formula": "parallel.R_from_members",
+            "expression": "Ra * Rb / (Ra + Rb)",
+            "substituted": "(30 Ω)*(30 Ω)/((30 Ω) + (30 Ω))",
+            "law": "parallel_resistance",
+            "law_label": "Resistances in parallel combine reciprocally",
+            "law_statement": "Two elements across the same pair of nodes present R_a*R_b/(R_a + R_b), because their currents add while the potential difference is common. The result is always smaller than either part.",
+            "assumes": [
+              "same_voltage_across_both",
+              "ideal_wires"
+            ],
+            "cite": "OpenStax College Physics 2e, 21.1 (CC BY)",
+            "inputs": [
+              {
+                "symbol": "Ra",
+                "from": "sp.electric.resistance",
+                "value": 30.0,
+                "unit": "Ω",
+                "dimension": {
+                  "kg": "1",
+                  "m": "2",
+                  "s": "-3",
+                  "A": "-2"
+                },
+                "rank": "scalar",
+                "display": "30 Ω"
+              },
+              {
+                "symbol": "Rb",
+                "from": "r3.electric.resistance",
+                "value": 30.0,
+                "unit": "Ω",
+                "dimension": {
+                  "kg": "1",
+                  "m": "2",
+                  "s": "-3",
+                  "A": "-2"
+                },
+                "rank": "scalar",
+                "display": "30 Ω"
+              }
+            ]
+          }
+        },
+        {
+          "ref": "loop.electric.resistance",
+          "property": "electric.resistance",
+          "value": 15.0,
+          "unit": "Ω",
+          "dimension": {
+            "kg": "1",
+            "m": "2",
+            "s": "-3",
+            "A": "-2"
+          },
+          "rank": "scalar",
+          "display": "15 Ω",
+          "because": {
+            "kind": "derived",
+            "formula": "loop.R_from_load",
+            "expression": "R",
+            "substituted": "(15 Ω)",
+            "law": "series_resistance",
+            "law_label": "Resistances in series add",
+            "law_statement": "Two elements carrying the same current present the sum of their resistances, because their potential differences add while the current is common: R = R_a + R_b.",
+            "assumes": [
+              "ideal_wires",
+              "ideal_source"
+            ],
+            "cite": "OpenStax College Physics 2e, 21.1 (CC BY)",
+            "inputs": [
+              {
+                "symbol": "R",
+                "from": "pp.electric.resistance",
+                "value": 15.0,
+                "unit": "Ω",
+                "dimension": {
+                  "kg": "1",
+                  "m": "2",
+                  "s": "-3",
+                  "A": "-2"
+                },
+                "rank": "scalar",
+                "display": "15 Ω"
+              }
+            ]
+          }
+        },
+        {
+          "ref": "loop.electric.current",
+          "property": "electric.current",
+          "value": 2.0,
+          "unit": "A",
+          "dimension": {
+            "A": "1"
+          },
+          "rank": "scalar",
+          "display": "2 A",
+          "because": {
+            "kind": "derived",
+            "formula": "loop.I_from_V_R",
+            "expression": "V / R",
+            "substituted": "(30 V)/(15 Ω)",
+            "law": "ohms_law",
+            "law_label": "Ohm's law",
+            "law_statement": "For an ohmic conductor the current through it is proportional to the potential difference across it, with the resistance as the constant of proportionality: V = I*R.",
+            "assumes": [
+              "steady_state",
+              "ohmic_load"
+            ],
+            "cite": "OpenStax College Physics 2e, 20.2 (CC BY)",
+            "inputs": [
+              {
+                "symbol": "V",
+                "from": "loop.em.potential_difference",
+                "value": 30.0,
+                "unit": "V",
+                "dimension": {
+                  "kg": "1",
+                  "m": "2",
+                  "s": "-3",
+                  "A": "-1"
+                },
+                "rank": "scalar",
+                "display": "30 V"
+              },
+              {
+                "symbol": "R",
+                "from": "loop.electric.resistance",
+                "value": 15.0,
+                "unit": "Ω",
+                "dimension": {
+                  "kg": "1",
+                  "m": "2",
+                  "s": "-3",
+                  "A": "-2"
+                },
+                "rank": "scalar",
+                "display": "15 Ω"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

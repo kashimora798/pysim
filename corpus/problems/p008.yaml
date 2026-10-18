@@ -1,0 +1,27 @@
+id: p008
+title: Force on a charge between charged plates
+source: "After OpenStax College Physics 2e, 19.4 (CC BY)"
+tags: [electrostatics, force]
+text: |
+  A 2.0 nC charge sits between parallel plates held at a potential difference of 200 V and
+  separated by 5.0 cm. What is the magnitude of the electric force on it?
+scene:
+  instances:
+    - id: cap
+      kind: parallel_plate_capacitor
+      set:
+        em.potential_difference: "200 V"
+        geometry.separation_plates: "5.0 cm"
+    - id: p
+      kind: charged_particle
+      set:
+        em.charge: "2.0 nC"
+        mechanics.mass: "1.0e-9 kg"
+  relations:
+    - {kind: inside, from: p, to: cap}
+target: {instance: p, prop: mechanics.force_magnitude}
+expect:
+  value: 8.0e-6
+  unit: N
+  tol: 0.005
+  note: "E = V/d = 4000 V/m, then F = qE."

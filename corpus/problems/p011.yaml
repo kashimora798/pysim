@@ -1,0 +1,34 @@
+id: p011
+title: Speed gained by a charge crossing a cavity
+source: "Superposition construction; OpenStax University Physics 2, 6.4 (CC BY)"
+tags: [electrostatics, superposition, cavity, cross-domain, flagship, kinematics]
+text: |
+  In the cavity of p003 -- a 2.0 cm spherical hole offset 2.0 cm from the centre of a uniformly
+  charged insulating sphere of density 1.0e-5 C/m^3 -- a 1.0 nC charge of mass 1.0 mg is released
+  from rest. How fast is it moving after travelling 2.0 cm across the cavity?
+scene:
+  instances:
+    - id: cav
+      kind: spherical_cavity_in_charged_sphere
+      set:
+        em.charge_density_volume: "1.0e-5 C/m^3"
+        geometry.radius: "10 cm"
+        geometry.offset: "[0.02, 0, 0] m"
+    - id: p
+      kind: charged_particle
+      set:
+        em.charge: "1.0 nC"
+        mechanics.mass: "1.0e-6 kg"
+        kinematics.speed@initial: "0 m/s"
+        kinematics.distance: "2.0 cm"
+  relations:
+    - {kind: inside_cavity_of, from: p, to: cav}
+target: {instance: p, prop: kinematics.speed, state: final}
+expect:
+  value: 0.54880
+  unit: m/s
+  tol: 0.01
+  note: >
+    The full cross-domain chain in one problem: superposition gives a uniform cavity field, the
+    Lorentz force turns it into a force, Newton II into an acceleration, and constant-acceleration
+    kinematics into a speed. Five laws, two domains, one trace.

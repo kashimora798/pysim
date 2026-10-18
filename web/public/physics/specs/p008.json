@@ -1,0 +1,1423 @@
+{
+  "fieldforge": "0.1",
+  "problem": {
+    "id": "p008",
+    "title": "Force on a charge between charged plates",
+    "text": "A 2.0 nC charge sits between parallel plates held at a potential difference of 200 V and\nseparated by 5.0 cm. What is the magnitude of the electric force on it?",
+    "source": "After OpenStax College Physics 2e, 19.4 (CC BY)",
+    "tags": [
+      "electrostatics",
+      "force"
+    ]
+  },
+  "target": "p.mechanics.force_magnitude",
+  "answer": {
+    "value": 8.000000000000001e-06,
+    "unit": "N",
+    "dimension": {
+      "kg": "1",
+      "m": "1",
+      "s": "-2"
+    },
+    "rank": "scalar",
+    "display": "8.000e-6 N"
+  },
+  "scene": {
+    "instances": [
+      {
+        "id": "cap",
+        "kind": "parallel_plate_capacitor",
+        "label": "Parallel-plate capacitor",
+        "model3d": "parallel_plates.glb",
+        "tags": [
+          "field_region",
+          "electrostatic",
+          "source",
+          "uniform_field"
+        ],
+        "given": {
+          "cap.em.potential_difference": {
+            "value": 200.0,
+            "unit": "V",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-1"
+            },
+            "rank": "scalar",
+            "display": "200 V"
+          },
+          "cap.geometry.direction": {
+            "value": [
+              0.0,
+              -1.0,
+              0.0
+            ],
+            "unit": "",
+            "dimension": {},
+            "rank": "vector",
+            "display": "[0, -1, 0]"
+          },
+          "cap.geometry.separation_plates": {
+            "value": 0.05,
+            "unit": "m",
+            "dimension": {
+              "m": "1"
+            },
+            "rank": "scalar",
+            "display": "0.05 m"
+          }
+        }
+      },
+      {
+        "id": "p",
+        "kind": "charged_particle",
+        "label": "Charged particle",
+        "model3d": "particle.glb",
+        "tags": [
+          "charge_source",
+          "electrostatic",
+          "source",
+          "movable",
+          "projectile"
+        ],
+        "given": {
+          "p.em.charge": {
+            "value": 2e-09,
+            "unit": "C",
+            "dimension": {
+              "s": "1",
+              "A": "1"
+            },
+            "rank": "scalar",
+            "display": "2.000e-9 C"
+          },
+          "p.geometry.cross_section": {
+            "value": 0.0,
+            "unit": "m²",
+            "dimension": {
+              "m": "2"
+            },
+            "rank": "scalar",
+            "display": "0 m²"
+          },
+          "p.mechanics.drag_coefficient": {
+            "value": 0.47,
+            "unit": "",
+            "dimension": {},
+            "rank": "scalar",
+            "display": "0.47"
+          },
+          "p.mechanics.mass": {
+            "value": 1e-09,
+            "unit": "kg",
+            "dimension": {
+              "kg": "1"
+            },
+            "rank": "scalar",
+            "display": "1.000e-9 kg"
+          }
+        }
+      },
+      {
+        "id": "env",
+        "kind": "environment",
+        "label": "Environment",
+        "model3d": null,
+        "tags": [
+          "environment",
+          "scene",
+          "settings"
+        ],
+        "given": {
+          "env.env.air_density": {
+            "value": 0.0,
+            "unit": "kg·m⁻³",
+            "dimension": {
+              "kg": "1",
+              "m": "-3"
+            },
+            "rank": "scalar",
+            "display": "0 kg·m⁻³"
+          },
+          "env.env.gravity": {
+            "value": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "unit": "m/s²",
+            "dimension": {
+              "m": "1",
+              "s": "-2"
+            },
+            "rank": "vector",
+            "display": "[0, 0, 0] m/s²"
+          },
+          "env.env.relative_permittivity": {
+            "value": 1.0,
+            "unit": "",
+            "dimension": {},
+            "rank": "scalar",
+            "display": "1"
+          },
+          "env.env.temperature": {
+            "value": 293.15,
+            "unit": "K",
+            "dimension": {
+              "K": "1"
+            },
+            "rank": "scalar",
+            "display": "293.1 K"
+          },
+          "env.env.wind_velocity": {
+            "value": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "unit": "m/s",
+            "dimension": {
+              "m": "1",
+              "s": "-1"
+            },
+            "rank": "vector",
+            "display": "[0, 0, 0] m/s"
+          }
+        }
+      }
+    ],
+    "relations": [
+      {
+        "kind": "inside",
+        "from": "p",
+        "to": "cap",
+        "given": {}
+      }
+    ]
+  },
+  "assumptions": [
+    "uniform_field",
+    "edge_effects_neglected",
+    "negligible_magnetic_force",
+    "no_other_forces",
+    "negligible_drag"
+  ],
+  "citations": [
+    "OpenStax College Physics 2e, 19.4 (CC BY)",
+    "OpenStax College Physics 2e, 18.5 (CC BY)",
+    "OpenStax College Physics 2e, 4.5 (CC BY)",
+    "OpenStax College Physics 2e, 4.6 (CC BY)",
+    "definitional"
+  ],
+  "checks": {
+    "dimensions": "pass",
+    "engines": [
+      "chain"
+    ],
+    "paths_found": 1,
+    "paths_agree": true,
+    "path_spread": 0.0
+  },
+  "timeline": [
+    {
+      "beat": 1,
+      "kind": "place",
+      "instance": "p",
+      "component": "charged_particle",
+      "model3d": "particle.glb",
+      "narrate": "Place Charged particle.",
+      "because": {
+        "kind": "scene",
+        "detail": "A charge with mass, free to move. Both a field source and the thing that responds to a field — which is precisely why the field -> force -> trajectory chain needs no special case.",
+        "laws": [
+          "coulombs_law",
+          "lorentz_force",
+          "newton_second_law"
+        ]
+      }
+    },
+    {
+      "beat": 2,
+      "kind": "place",
+      "instance": "cap",
+      "component": "parallel_plate_capacitor",
+      "model3d": "parallel_plates.glb",
+      "narrate": "Place Parallel-plate capacitor.",
+      "because": {
+        "kind": "scene",
+        "detail": "Two oppositely charged plates. Away from the edges the field between them is uniform, which makes this the standard way to produce a known constant field in a problem.",
+        "laws": [
+          "uniform_field_between_plates",
+          "gauss_law_electric"
+        ]
+      }
+    },
+    {
+      "beat": 3,
+      "kind": "place",
+      "instance": "env",
+      "component": "environment",
+      "model3d": null,
+      "narrate": "Place Environment.",
+      "because": {
+        "kind": "scene",
+        "detail": "The surrounding medium and fields. Defaults are an idealised vacuum with no gravity, which is what textbook electrostatics problems assume -- stated here as an editable value instead of a footnote.",
+        "laws": [
+          "newton_gravitation_uniform",
+          "superposition_of_forces",
+          "medium_permittivity"
+        ]
+      }
+    },
+    {
+      "beat": 4,
+      "kind": "relate",
+      "relation": "inside",
+      "from": "p",
+      "to": "cap",
+      "narrate": "p is inside cap.",
+      "because": {
+        "kind": "scene",
+        "detail": "stated by the problem's geometry"
+      }
+    },
+    {
+      "beat": 5,
+      "kind": "given",
+      "instance": "p",
+      "ref": "p.em.charge",
+      "property": "em.charge",
+      "channel": "charge_glyph",
+      "value": 2e-09,
+      "unit": "C",
+      "dimension": {
+        "s": "1",
+        "A": "1"
+      },
+      "rank": "scalar",
+      "display": "2.000e-9 C",
+      "narrate": "p: charge is 2.000e-9 C, as stated.",
+      "because": {
+        "kind": "given",
+        "detail": "supplied by the problem statement"
+      }
+    },
+    {
+      "beat": 6,
+      "kind": "given",
+      "instance": "cap",
+      "ref": "cap.em.potential_difference",
+      "property": "em.potential_difference",
+      "channel": "potential_shading",
+      "value": 200.0,
+      "unit": "V",
+      "dimension": {
+        "kg": "1",
+        "m": "2",
+        "s": "-3",
+        "A": "-1"
+      },
+      "rank": "scalar",
+      "display": "200 V",
+      "narrate": "cap: potential difference is 200 V, as stated.",
+      "because": {
+        "kind": "given",
+        "detail": "supplied by the problem statement"
+      }
+    },
+    {
+      "beat": 7,
+      "kind": "given",
+      "instance": "cap",
+      "ref": "cap.geometry.separation_plates",
+      "property": "geometry.separation_plates",
+      "channel": "gap_dimension",
+      "value": 0.05,
+      "unit": "m",
+      "dimension": {
+        "m": "1"
+      },
+      "rank": "scalar",
+      "display": "0.05 m",
+      "narrate": "cap: separation plates is 0.05 m, as stated.",
+      "because": {
+        "kind": "given",
+        "detail": "supplied by the problem statement"
+      }
+    },
+    {
+      "beat": 8,
+      "kind": "resolve",
+      "instance": "cap",
+      "ref": "cap.em.electric_field_magnitude",
+      "property": "em.electric_field_magnitude",
+      "channel": "field_intensity",
+      "value": 4000.0,
+      "unit": "V/m",
+      "dimension": {
+        "kg": "1",
+        "m": "1",
+        "s": "-3",
+        "A": "-1"
+      },
+      "rank": "scalar",
+      "display": "4000 V/m",
+      "narrate": "cap: electric field magnitude resolves to 4000 V/m.",
+      "because": {
+        "kind": "derived",
+        "formula": "plates.E_mag_from_pd",
+        "expression": "V / d",
+        "substituted": "(200 V)/(0.05 m)",
+        "law": "uniform_field_between_plates",
+        "law_label": "Uniform field between parallel plates",
+        "law_statement": "Away from the edges, the field between oppositely charged parallel plates is uniform with magnitude equal to the potential difference divided by the separation.",
+        "assumes": [
+          "uniform_field",
+          "edge_effects_neglected"
+        ],
+        "cite": "OpenStax College Physics 2e, 19.4 (CC BY)",
+        "inputs": [
+          {
+            "symbol": "V",
+            "from": "cap.em.potential_difference",
+            "value": 200.0,
+            "unit": "V",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-1"
+            },
+            "rank": "scalar",
+            "display": "200 V"
+          },
+          {
+            "symbol": "d",
+            "from": "cap.geometry.separation_plates",
+            "value": 0.05,
+            "unit": "m",
+            "dimension": {
+              "m": "1"
+            },
+            "rank": "scalar",
+            "display": "0.05 m"
+          }
+        ]
+      }
+    },
+    {
+      "beat": 9,
+      "kind": "given",
+      "instance": "cap",
+      "ref": "cap.geometry.direction",
+      "property": "geometry.direction",
+      "channel": null,
+      "value": [
+        0.0,
+        -1.0,
+        0.0
+      ],
+      "unit": "",
+      "dimension": {},
+      "rank": "vector",
+      "display": "[0, -1, 0]",
+      "narrate": "cap: direction is [0, -1, 0], as stated.",
+      "because": {
+        "kind": "given",
+        "detail": "supplied by the problem statement"
+      }
+    },
+    {
+      "beat": 10,
+      "kind": "resolve",
+      "instance": "cap",
+      "ref": "cap.em.electric_field",
+      "property": "em.electric_field",
+      "channel": "field_arrows",
+      "value": [
+        0.0,
+        -4000.0,
+        0.0
+      ],
+      "unit": "V/m",
+      "dimension": {
+        "kg": "1",
+        "m": "1",
+        "s": "-3",
+        "A": "-1"
+      },
+      "rank": "vector",
+      "display": "[0, -4000, 0] V/m",
+      "narrate": "cap: electric field resolves to [0, -4000, 0] V/m.",
+      "because": {
+        "kind": "derived",
+        "formula": "field.E_vec_from_magnitude_and_direction",
+        "expression": "E * n",
+        "substituted": "(4000 V/m)*([0, -1, 0])",
+        "law": "uniform_field_between_plates",
+        "law_label": "Uniform field between parallel plates",
+        "law_statement": "Away from the edges, the field between oppositely charged parallel plates is uniform with magnitude equal to the potential difference divided by the separation.",
+        "assumes": [
+          "uniform_field"
+        ],
+        "cite": "OpenStax College Physics 2e, 19.4 (CC BY)",
+        "inputs": [
+          {
+            "symbol": "E",
+            "from": "cap.em.electric_field_magnitude",
+            "value": 4000.0,
+            "unit": "V/m",
+            "dimension": {
+              "kg": "1",
+              "m": "1",
+              "s": "-3",
+              "A": "-1"
+            },
+            "rank": "scalar",
+            "display": "4000 V/m"
+          },
+          {
+            "symbol": "n",
+            "from": "cap.geometry.direction",
+            "value": [
+              0.0,
+              -1.0,
+              0.0
+            ],
+            "unit": "",
+            "dimension": {},
+            "rank": "vector",
+            "display": "[0, -1, 0]"
+          }
+        ]
+      }
+    },
+    {
+      "beat": 11,
+      "kind": "resolve",
+      "instance": "p",
+      "ref": "p.em.electric_field",
+      "property": "em.electric_field",
+      "channel": "field_arrows",
+      "value": [
+        0.0,
+        -4000.0,
+        0.0
+      ],
+      "unit": "V/m",
+      "dimension": {
+        "kg": "1",
+        "m": "1",
+        "s": "-3",
+        "A": "-1"
+      },
+      "rank": "vector",
+      "display": "[0, -4000, 0] V/m",
+      "narrate": "p: electric field resolves to [0, -4000, 0] V/m.",
+      "because": {
+        "kind": "derived",
+        "formula": "plates.E_vec_at_charge",
+        "expression": "E",
+        "substituted": "([0, -4000, 0] V/m)",
+        "law": "uniform_field_between_plates",
+        "law_label": "Uniform field between parallel plates",
+        "law_statement": "Away from the edges, the field between oppositely charged parallel plates is uniform with magnitude equal to the potential difference divided by the separation.",
+        "assumes": [
+          "uniform_field"
+        ],
+        "cite": "OpenStax College Physics 2e, 19.4 (CC BY)",
+        "inputs": [
+          {
+            "symbol": "E",
+            "from": "cap.em.electric_field",
+            "value": [
+              0.0,
+              -4000.0,
+              0.0
+            ],
+            "unit": "V/m",
+            "dimension": {
+              "kg": "1",
+              "m": "1",
+              "s": "-3",
+              "A": "-1"
+            },
+            "rank": "vector",
+            "display": "[0, -4000, 0] V/m"
+          }
+        ]
+      }
+    },
+    {
+      "beat": 12,
+      "kind": "resolve",
+      "instance": "p",
+      "ref": "p.mechanics.force_em",
+      "property": "mechanics.force_em",
+      "channel": null,
+      "value": [
+        0.0,
+        -8.000000000000001e-06,
+        0.0
+      ],
+      "unit": "N",
+      "dimension": {
+        "kg": "1",
+        "m": "1",
+        "s": "-2"
+      },
+      "rank": "vector",
+      "display": "[0, -8.000e-6, 0] N",
+      "narrate": "p: force em resolves to [0, -8.000e-6, 0] N.",
+      "because": {
+        "kind": "derived",
+        "formula": "lorentz.F_vec_electric",
+        "expression": "q * E",
+        "substituted": "([0, -4000, 0] V/m)*(2.000e-9 C)",
+        "law": "lorentz_force",
+        "law_label": "Lorentz force law",
+        "law_statement": "A charge q moving with velocity v through fields E and B experiences force q(E + v x B).",
+        "assumes": [
+          "negligible_magnetic_force"
+        ],
+        "cite": "OpenStax College Physics 2e, 18.5 (CC BY)",
+        "inputs": [
+          {
+            "symbol": "q",
+            "from": "p.em.charge",
+            "value": 2e-09,
+            "unit": "C",
+            "dimension": {
+              "s": "1",
+              "A": "1"
+            },
+            "rank": "scalar",
+            "display": "2.000e-9 C"
+          },
+          {
+            "symbol": "E",
+            "from": "p.em.electric_field",
+            "value": [
+              0.0,
+              -4000.0,
+              0.0
+            ],
+            "unit": "V/m",
+            "dimension": {
+              "kg": "1",
+              "m": "1",
+              "s": "-3",
+              "A": "-1"
+            },
+            "rank": "vector",
+            "display": "[0, -4000, 0] V/m"
+          }
+        ]
+      }
+    },
+    {
+      "beat": 13,
+      "kind": "given",
+      "instance": "p",
+      "ref": "p.mechanics.mass",
+      "property": "mechanics.mass",
+      "channel": "mass_label",
+      "value": 1e-09,
+      "unit": "kg",
+      "dimension": {
+        "kg": "1"
+      },
+      "rank": "scalar",
+      "display": "1.000e-9 kg",
+      "narrate": "p: mass is 1.000e-9 kg, as stated.",
+      "because": {
+        "kind": "given",
+        "detail": "supplied by the problem statement"
+      }
+    },
+    {
+      "beat": 14,
+      "kind": "given",
+      "instance": "env",
+      "ref": "env.env.gravity",
+      "property": "env.gravity",
+      "channel": null,
+      "value": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "unit": "m/s²",
+      "dimension": {
+        "m": "1",
+        "s": "-2"
+      },
+      "rank": "vector",
+      "display": "[0, 0, 0] m/s²",
+      "narrate": "env: gravity is [0, 0, 0] m/s², as stated.",
+      "because": {
+        "kind": "given",
+        "detail": "supplied by the problem statement"
+      }
+    },
+    {
+      "beat": 15,
+      "kind": "resolve",
+      "instance": "p",
+      "ref": "p.mechanics.force_gravity",
+      "property": "mechanics.force_gravity",
+      "channel": null,
+      "value": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "unit": "N",
+      "dimension": {
+        "kg": "1",
+        "m": "1",
+        "s": "-2"
+      },
+      "rank": "vector",
+      "display": "[0, 0, 0] N",
+      "narrate": "p: force gravity resolves to [0, 0, 0] N.",
+      "because": {
+        "kind": "derived",
+        "formula": "gravity.F_vec_from_env",
+        "expression": "m * g",
+        "substituted": "([0, 0, 0] m/s²)*(1.000e-9 kg)",
+        "law": "newton_gravitation_uniform",
+        "law_label": "Weight in a uniform gravitational field",
+        "law_statement": "A body of mass m in a uniform gravitational field g experiences a force m*g directed along the field. Uniform is the right idealisation on a bench: g varies by less than a part in a million across a desk.",
+        "assumes": [
+          "uniform_field"
+        ],
+        "cite": "OpenStax College Physics 2e, 4.5 (CC BY)",
+        "inputs": [
+          {
+            "symbol": "m",
+            "from": "p.mechanics.mass",
+            "value": 1e-09,
+            "unit": "kg",
+            "dimension": {
+              "kg": "1"
+            },
+            "rank": "scalar",
+            "display": "1.000e-9 kg"
+          },
+          {
+            "symbol": "g",
+            "from": "env.env.gravity",
+            "value": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "unit": "m/s²",
+            "dimension": {
+              "m": "1",
+              "s": "-2"
+            },
+            "rank": "vector",
+            "display": "[0, 0, 0] m/s²"
+          }
+        ]
+      }
+    },
+    {
+      "beat": 16,
+      "kind": "resolve",
+      "instance": "p",
+      "ref": "p.mechanics.force",
+      "property": "mechanics.force",
+      "channel": "force_vector",
+      "value": [
+        0.0,
+        -8.000000000000001e-06,
+        0.0
+      ],
+      "unit": "N",
+      "dimension": {
+        "kg": "1",
+        "m": "1",
+        "s": "-2"
+      },
+      "rank": "vector",
+      "display": "[0, -8.000e-6, 0] N",
+      "narrate": "p: force resolves to [0, -8.000e-6, 0] N.",
+      "because": {
+        "kind": "derived",
+        "formula": "force.net_from_contributions",
+        "expression": "F_em + F_g",
+        "substituted": "([0, -8.000e-6, 0] N) + ([0, 0, 0] N)",
+        "law": "superposition_of_forces",
+        "law_label": "Superposition of forces",
+        "law_statement": "The net force on a body is the vector sum of the forces acting on it, each computed as if the others were absent. This is why an electric force and a weight can be derived independently and then added.",
+        "assumes": [
+          "no_other_forces",
+          "negligible_drag"
+        ],
+        "cite": "OpenStax College Physics 2e, 4.6 (CC BY)",
+        "inputs": [
+          {
+            "symbol": "F_em",
+            "from": "p.mechanics.force_em",
+            "value": [
+              0.0,
+              -8.000000000000001e-06,
+              0.0
+            ],
+            "unit": "N",
+            "dimension": {
+              "kg": "1",
+              "m": "1",
+              "s": "-2"
+            },
+            "rank": "vector",
+            "display": "[0, -8.000e-6, 0] N"
+          },
+          {
+            "symbol": "F_g",
+            "from": "p.mechanics.force_gravity",
+            "value": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "unit": "N",
+            "dimension": {
+              "kg": "1",
+              "m": "1",
+              "s": "-2"
+            },
+            "rank": "vector",
+            "display": "[0, 0, 0] N"
+          }
+        ]
+      }
+    },
+    {
+      "beat": 17,
+      "kind": "resolve",
+      "instance": "p",
+      "ref": "p.mechanics.force_magnitude",
+      "property": "mechanics.force_magnitude",
+      "channel": "force_vector",
+      "value": 8.000000000000001e-06,
+      "unit": "N",
+      "dimension": {
+        "kg": "1",
+        "m": "1",
+        "s": "-2"
+      },
+      "rank": "scalar",
+      "display": "8.000e-6 N",
+      "narrate": "p: force magnitude resolves to 8.000e-6 N.",
+      "because": {
+        "kind": "derived",
+        "formula": "force.magnitude_from_vector",
+        "expression": "mag(F)",
+        "substituted": "mag(([0, -8.000e-6, 0] N))",
+        "law": "definition_magnitude",
+        "law_label": "Magnitude of a vector quantity",
+        "law_statement": "A scalar magnitude property is the Euclidean norm of its vector counterpart. Bookkeeping, not physics, but it must be cited like anything else so no trace step is unexplained.",
+        "assumes": [],
+        "cite": "definitional",
+        "inputs": [
+          {
+            "symbol": "F",
+            "from": "p.mechanics.force",
+            "value": [
+              0.0,
+              -8.000000000000001e-06,
+              0.0
+            ],
+            "unit": "N",
+            "dimension": {
+              "kg": "1",
+              "m": "1",
+              "s": "-2"
+            },
+            "rank": "vector",
+            "display": "[0, -8.000e-6, 0] N"
+          }
+        ]
+      }
+    },
+    {
+      "beat": 18,
+      "kind": "answer",
+      "ref": "p.mechanics.force_magnitude",
+      "property": "mechanics.force_magnitude",
+      "value": 8.000000000000001e-06,
+      "unit": "N",
+      "dimension": {
+        "kg": "1",
+        "m": "1",
+        "s": "-2"
+      },
+      "rank": "scalar",
+      "display": "8.000e-6 N",
+      "narrate": "Answer: 8.000e-6 N.",
+      "because": {
+        "kind": "summary",
+        "laws": [
+          "definition_magnitude",
+          "lorentz_force",
+          "newton_gravitation_uniform",
+          "superposition_of_forces",
+          "uniform_field_between_plates"
+        ],
+        "paths_found": 1
+      }
+    }
+  ],
+  "paths": [
+    {
+      "cost": 7,
+      "laws": [
+        "definition_magnitude",
+        "lorentz_force",
+        "newton_gravitation_uniform",
+        "superposition_of_forces",
+        "uniform_field_between_plates"
+      ],
+      "formulas": [
+        "plates.E_mag_from_pd",
+        "field.E_vec_from_magnitude_and_direction",
+        "plates.E_vec_at_charge",
+        "lorentz.F_vec_electric",
+        "gravity.F_vec_from_env",
+        "force.net_from_contributions",
+        "force.magnitude_from_vector"
+      ],
+      "value": {
+        "value": 8.000000000000001e-06,
+        "unit": "N",
+        "dimension": {
+          "kg": "1",
+          "m": "1",
+          "s": "-2"
+        },
+        "rank": "scalar",
+        "display": "8.000e-6 N"
+      },
+      "assumptions": [
+        "uniform_field",
+        "edge_effects_neglected",
+        "negligible_magnetic_force",
+        "no_other_forces",
+        "negligible_drag"
+      ],
+      "citations": [
+        "OpenStax College Physics 2e, 19.4 (CC BY)",
+        "OpenStax College Physics 2e, 18.5 (CC BY)",
+        "OpenStax College Physics 2e, 4.5 (CC BY)",
+        "OpenStax College Physics 2e, 4.6 (CC BY)",
+        "definitional"
+      ],
+      "steps": [
+        {
+          "ref": "p.em.charge",
+          "property": "em.charge",
+          "value": 2e-09,
+          "unit": "C",
+          "dimension": {
+            "s": "1",
+            "A": "1"
+          },
+          "rank": "scalar",
+          "display": "2.000e-9 C",
+          "because": {
+            "kind": "given",
+            "detail": "supplied by the problem statement"
+          }
+        },
+        {
+          "ref": "cap.em.potential_difference",
+          "property": "em.potential_difference",
+          "value": 200.0,
+          "unit": "V",
+          "dimension": {
+            "kg": "1",
+            "m": "2",
+            "s": "-3",
+            "A": "-1"
+          },
+          "rank": "scalar",
+          "display": "200 V",
+          "because": {
+            "kind": "given",
+            "detail": "supplied by the problem statement"
+          }
+        },
+        {
+          "ref": "cap.geometry.separation_plates",
+          "property": "geometry.separation_plates",
+          "value": 0.05,
+          "unit": "m",
+          "dimension": {
+            "m": "1"
+          },
+          "rank": "scalar",
+          "display": "0.05 m",
+          "because": {
+            "kind": "given",
+            "detail": "supplied by the problem statement"
+          }
+        },
+        {
+          "ref": "cap.em.electric_field_magnitude",
+          "property": "em.electric_field_magnitude",
+          "value": 4000.0,
+          "unit": "V/m",
+          "dimension": {
+            "kg": "1",
+            "m": "1",
+            "s": "-3",
+            "A": "-1"
+          },
+          "rank": "scalar",
+          "display": "4000 V/m",
+          "because": {
+            "kind": "derived",
+            "formula": "plates.E_mag_from_pd",
+            "expression": "V / d",
+            "substituted": "(200 V)/(0.05 m)",
+            "law": "uniform_field_between_plates",
+            "law_label": "Uniform field between parallel plates",
+            "law_statement": "Away from the edges, the field between oppositely charged parallel plates is uniform with magnitude equal to the potential difference divided by the separation.",
+            "assumes": [
+              "uniform_field",
+              "edge_effects_neglected"
+            ],
+            "cite": "OpenStax College Physics 2e, 19.4 (CC BY)",
+            "inputs": [
+              {
+                "symbol": "V",
+                "from": "cap.em.potential_difference",
+                "value": 200.0,
+                "unit": "V",
+                "dimension": {
+                  "kg": "1",
+                  "m": "2",
+                  "s": "-3",
+                  "A": "-1"
+                },
+                "rank": "scalar",
+                "display": "200 V"
+              },
+              {
+                "symbol": "d",
+                "from": "cap.geometry.separation_plates",
+                "value": 0.05,
+                "unit": "m",
+                "dimension": {
+                  "m": "1"
+                },
+                "rank": "scalar",
+                "display": "0.05 m"
+              }
+            ]
+          }
+        },
+        {
+          "ref": "cap.geometry.direction",
+          "property": "geometry.direction",
+          "value": [
+            0.0,
+            -1.0,
+            0.0
+          ],
+          "unit": "",
+          "dimension": {},
+          "rank": "vector",
+          "display": "[0, -1, 0]",
+          "because": {
+            "kind": "given",
+            "detail": "supplied by the problem statement"
+          }
+        },
+        {
+          "ref": "cap.em.electric_field",
+          "property": "em.electric_field",
+          "value": [
+            0.0,
+            -4000.0,
+            0.0
+          ],
+          "unit": "V/m",
+          "dimension": {
+            "kg": "1",
+            "m": "1",
+            "s": "-3",
+            "A": "-1"
+          },
+          "rank": "vector",
+          "display": "[0, -4000, 0] V/m",
+          "because": {
+            "kind": "derived",
+            "formula": "field.E_vec_from_magnitude_and_direction",
+            "expression": "E * n",
+            "substituted": "(4000 V/m)*([0, -1, 0])",
+            "law": "uniform_field_between_plates",
+            "law_label": "Uniform field between parallel plates",
+            "law_statement": "Away from the edges, the field between oppositely charged parallel plates is uniform with magnitude equal to the potential difference divided by the separation.",
+            "assumes": [
+              "uniform_field"
+            ],
+            "cite": "OpenStax College Physics 2e, 19.4 (CC BY)",
+            "inputs": [
+              {
+                "symbol": "E",
+                "from": "cap.em.electric_field_magnitude",
+                "value": 4000.0,
+                "unit": "V/m",
+                "dimension": {
+                  "kg": "1",
+                  "m": "1",
+                  "s": "-3",
+                  "A": "-1"
+                },
+                "rank": "scalar",
+                "display": "4000 V/m"
+              },
+              {
+                "symbol": "n",
+                "from": "cap.geometry.direction",
+                "value": [
+                  0.0,
+                  -1.0,
+                  0.0
+                ],
+                "unit": "",
+                "dimension": {},
+                "rank": "vector",
+                "display": "[0, -1, 0]"
+              }
+            ]
+          }
+        },
+        {
+          "ref": "p.em.electric_field",
+          "property": "em.electric_field",
+          "value": [
+            0.0,
+            -4000.0,
+            0.0
+          ],
+          "unit": "V/m",
+          "dimension": {
+            "kg": "1",
+            "m": "1",
+            "s": "-3",
+            "A": "-1"
+          },
+          "rank": "vector",
+          "display": "[0, -4000, 0] V/m",
+          "because": {
+            "kind": "derived",
+            "formula": "plates.E_vec_at_charge",
+            "expression": "E",
+            "substituted": "([0, -4000, 0] V/m)",
+            "law": "uniform_field_between_plates",
+            "law_label": "Uniform field between parallel plates",
+            "law_statement": "Away from the edges, the field between oppositely charged parallel plates is uniform with magnitude equal to the potential difference divided by the separation.",
+            "assumes": [
+              "uniform_field"
+            ],
+            "cite": "OpenStax College Physics 2e, 19.4 (CC BY)",
+            "inputs": [
+              {
+                "symbol": "E",
+                "from": "cap.em.electric_field",
+                "value": [
+                  0.0,
+                  -4000.0,
+                  0.0
+                ],
+                "unit": "V/m",
+                "dimension": {
+                  "kg": "1",
+                  "m": "1",
+                  "s": "-3",
+                  "A": "-1"
+                },
+                "rank": "vector",
+                "display": "[0, -4000, 0] V/m"
+              }
+            ]
+          }
+        },
+        {
+          "ref": "p.mechanics.force_em",
+          "property": "mechanics.force_em",
+          "value": [
+            0.0,
+            -8.000000000000001e-06,
+            0.0
+          ],
+          "unit": "N",
+          "dimension": {
+            "kg": "1",
+            "m": "1",
+            "s": "-2"
+          },
+          "rank": "vector",
+          "display": "[0, -8.000e-6, 0] N",
+          "because": {
+            "kind": "derived",
+            "formula": "lorentz.F_vec_electric",
+            "expression": "q * E",
+            "substituted": "([0, -4000, 0] V/m)*(2.000e-9 C)",
+            "law": "lorentz_force",
+            "law_label": "Lorentz force law",
+            "law_statement": "A charge q moving with velocity v through fields E and B experiences force q(E + v x B).",
+            "assumes": [
+              "negligible_magnetic_force"
+            ],
+            "cite": "OpenStax College Physics 2e, 18.5 (CC BY)",
+            "inputs": [
+              {
+                "symbol": "q",
+                "from": "p.em.charge",
+                "value": 2e-09,
+                "unit": "C",
+                "dimension": {
+                  "s": "1",
+                  "A": "1"
+                },
+                "rank": "scalar",
+                "display": "2.000e-9 C"
+              },
+              {
+                "symbol": "E",
+                "from": "p.em.electric_field",
+                "value": [
+                  0.0,
+                  -4000.0,
+                  0.0
+                ],
+                "unit": "V/m",
+                "dimension": {
+                  "kg": "1",
+                  "m": "1",
+                  "s": "-3",
+                  "A": "-1"
+                },
+                "rank": "vector",
+                "display": "[0, -4000, 0] V/m"
+              }
+            ]
+          }
+        },
+        {
+          "ref": "p.mechanics.mass",
+          "property": "mechanics.mass",
+          "value": 1e-09,
+          "unit": "kg",
+          "dimension": {
+            "kg": "1"
+          },
+          "rank": "scalar",
+          "display": "1.000e-9 kg",
+          "because": {
+            "kind": "given",
+            "detail": "supplied by the problem statement"
+          }
+        },
+        {
+          "ref": "env.env.gravity",
+          "property": "env.gravity",
+          "value": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "unit": "m/s²",
+          "dimension": {
+            "m": "1",
+            "s": "-2"
+          },
+          "rank": "vector",
+          "display": "[0, 0, 0] m/s²",
+          "because": {
+            "kind": "given",
+            "detail": "supplied by the problem statement"
+          }
+        },
+        {
+          "ref": "p.mechanics.force_gravity",
+          "property": "mechanics.force_gravity",
+          "value": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "unit": "N",
+          "dimension": {
+            "kg": "1",
+            "m": "1",
+            "s": "-2"
+          },
+          "rank": "vector",
+          "display": "[0, 0, 0] N",
+          "because": {
+            "kind": "derived",
+            "formula": "gravity.F_vec_from_env",
+            "expression": "m * g",
+            "substituted": "([0, 0, 0] m/s²)*(1.000e-9 kg)",
+            "law": "newton_gravitation_uniform",
+            "law_label": "Weight in a uniform gravitational field",
+            "law_statement": "A body of mass m in a uniform gravitational field g experiences a force m*g directed along the field. Uniform is the right idealisation on a bench: g varies by less than a part in a million across a desk.",
+            "assumes": [
+              "uniform_field"
+            ],
+            "cite": "OpenStax College Physics 2e, 4.5 (CC BY)",
+            "inputs": [
+              {
+                "symbol": "m",
+                "from": "p.mechanics.mass",
+                "value": 1e-09,
+                "unit": "kg",
+                "dimension": {
+                  "kg": "1"
+                },
+                "rank": "scalar",
+                "display": "1.000e-9 kg"
+              },
+              {
+                "symbol": "g",
+                "from": "env.env.gravity",
+                "value": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "unit": "m/s²",
+                "dimension": {
+                  "m": "1",
+                  "s": "-2"
+                },
+                "rank": "vector",
+                "display": "[0, 0, 0] m/s²"
+              }
+            ]
+          }
+        },
+        {
+          "ref": "p.mechanics.force",
+          "property": "mechanics.force",
+          "value": [
+            0.0,
+            -8.000000000000001e-06,
+            0.0
+          ],
+          "unit": "N",
+          "dimension": {
+            "kg": "1",
+            "m": "1",
+            "s": "-2"
+          },
+          "rank": "vector",
+          "display": "[0, -8.000e-6, 0] N",
+          "because": {
+            "kind": "derived",
+            "formula": "force.net_from_contributions",
+            "expression": "F_em + F_g",
+            "substituted": "([0, -8.000e-6, 0] N) + ([0, 0, 0] N)",
+            "law": "superposition_of_forces",
+            "law_label": "Superposition of forces",
+            "law_statement": "The net force on a body is the vector sum of the forces acting on it, each computed as if the others were absent. This is why an electric force and a weight can be derived independently and then added.",
+            "assumes": [
+              "no_other_forces",
+              "negligible_drag"
+            ],
+            "cite": "OpenStax College Physics 2e, 4.6 (CC BY)",
+            "inputs": [
+              {
+                "symbol": "F_em",
+                "from": "p.mechanics.force_em",
+                "value": [
+                  0.0,
+                  -8.000000000000001e-06,
+                  0.0
+                ],
+                "unit": "N",
+                "dimension": {
+                  "kg": "1",
+                  "m": "1",
+                  "s": "-2"
+                },
+                "rank": "vector",
+                "display": "[0, -8.000e-6, 0] N"
+              },
+              {
+                "symbol": "F_g",
+                "from": "p.mechanics.force_gravity",
+                "value": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "unit": "N",
+                "dimension": {
+                  "kg": "1",
+                  "m": "1",
+                  "s": "-2"
+                },
+                "rank": "vector",
+                "display": "[0, 0, 0] N"
+              }
+            ]
+          }
+        },
+        {
+          "ref": "p.mechanics.force_magnitude",
+          "property": "mechanics.force_magnitude",
+          "value": 8.000000000000001e-06,
+          "unit": "N",
+          "dimension": {
+            "kg": "1",
+            "m": "1",
+            "s": "-2"
+          },
+          "rank": "scalar",
+          "display": "8.000e-6 N",
+          "because": {
+            "kind": "derived",
+            "formula": "force.magnitude_from_vector",
+            "expression": "mag(F)",
+            "substituted": "mag(([0, -8.000e-6, 0] N))",
+            "law": "definition_magnitude",
+            "law_label": "Magnitude of a vector quantity",
+            "law_statement": "A scalar magnitude property is the Euclidean norm of its vector counterpart. Bookkeeping, not physics, but it must be cited like anything else so no trace step is unexplained.",
+            "assumes": [],
+            "cite": "definitional",
+            "inputs": [
+              {
+                "symbol": "F",
+                "from": "p.mechanics.force",
+                "value": [
+                  0.0,
+                  -8.000000000000001e-06,
+                  0.0
+                ],
+                "unit": "N",
+                "dimension": {
+                  "kg": "1",
+                  "m": "1",
+                  "s": "-2"
+                },
+                "rank": "vector",
+                "display": "[0, -8.000e-6, 0] N"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

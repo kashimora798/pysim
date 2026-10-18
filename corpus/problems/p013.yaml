@@ -1,0 +1,24 @@
+id: p013
+title: The same two charges, immersed in water
+source: "After OpenStax University Physics 2, 5.1 (CC BY)"
+tags: [electrostatics, environment, medium, coulomb]
+text: |
+  A 2.0 uC point charge sits 30 cm from a test point, exactly as in p002 -- but the whole
+  arrangement is immersed in water, whose relative permittivity is about 80. What is the field
+  magnitude at the test point now?
+scene:
+  instances:
+    - {id: env, kind: environment, set: {env.relative_permittivity: "80"}}
+    - {id: q1, kind: point_charge, set: {em.charge: "2.0 uC"}}
+    - {id: p1, kind: field_probe}
+  relations:
+    - {kind: acts_on, from: q1, to: p1, set: {geometry.separation: "30 cm"}}
+target: {instance: p1, prop: em.electric_field_magnitude}
+expect:
+  value: 2496.54
+  unit: V/m
+  tol: 0.002
+  note: >
+    p002 gives 1.997e5 V/m in vacuum; the same charges in water give eighty times less. One
+    changed scene value, a genuinely different answer, and the medium appears as a bound symbol in
+    the trace rather than as an unstated assumption.

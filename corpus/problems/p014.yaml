@@ -1,0 +1,33 @@
+id: p014
+title: Drag on a charged sphere moving into a headwind
+source: "After OpenStax College Physics 2e, 5.2 (CC BY)"
+tags: [environment, wind, drag, mechanics]
+text: |
+  A charged sphere of cross-sectional area 20 cm^2 and drag coefficient 0.47 moves east at
+  10 m/s through air of density 1.225 kg/m^3. The air itself is moving west at 5 m/s, so the
+  sphere meets a 15 m/s headwind. What is the magnitude of the drag force on it?
+scene:
+  instances:
+    - id: air
+      kind: environment
+      set:
+        env.air_density: "1.225 kg/m^3"
+        env.wind_velocity: "[-5, 0, 0] m/s"
+    - id: ball
+      kind: charged_particle
+      set:
+        em.charge: "1.0 nC"
+        mechanics.mass: "0.01 kg"
+        kinematics.velocity: "[10, 0, 0] m/s"
+        geometry.cross_section: "20 cm^2"
+        mechanics.drag_coefficient: "0.47"
+target: {instance: ball, prop: mechanics.force_drag}
+expect:
+  value: 0.129544
+  unit: N
+  tol: 0.0005
+  note: >
+    0.5 * 1.225 * 0.47 * 0.002 * 15^2 = 0.12954 N, opposing the motion. Wind enters only through
+    the RELATIVE velocity: the sphere's 10 m/s east against the air's 5 m/s west gives 15 m/s of
+    relative motion, not 10. Setting the wind to zero drops this to 0.0576 N, which is the point --
+    the surroundings are bound into the derivation, not painted on afterwards.

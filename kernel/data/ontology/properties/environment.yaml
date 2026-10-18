@@ -1,0 +1,50 @@
+# The surroundings, as physics.
+#
+# These are not decoration. `env.gravity` and `env.relative_permittivity` are bound into real
+# formulas, so changing them changes the derived answer and the trace that explains it. Defaults
+# describe an idealised vacuum with no gravity — exactly what a textbook electrostatics problem
+# assumes — and making that assumption an editable scene value rather than a footnote in a
+# formula's `assumes` list is the point of having it at all.
+domain: environment
+properties:
+  env.gravity:
+    symbol: g
+    dim: acceleration
+    rank: vector
+    kind: field
+    si_unit: m/s^2
+    description: Gravitational field of the surroundings, +Y up. Zero for the idealised case.
+
+  env.wind_velocity:
+    symbol: v_wind
+    dim: velocity
+    rank: vector
+    kind: field
+    si_unit: m/s
+    description: Bulk velocity of the surrounding medium.
+
+  env.relative_permittivity:
+    symbol: eps_r
+    dim: dimensionless
+    rank: scalar
+    kind: lumped
+    si_unit: "1"
+    description: >
+      Permittivity of the medium relative to vacuum. 1 is vacuum, air is ~1.0006, water ~80.
+      Dividing Coulomb's law by this is why immersing the same charges in water weakens the field.
+
+  env.air_density:
+    symbol: rho_air
+    dim: {kg: 1, m: -3}
+    rank: scalar
+    kind: lumped
+    si_unit: kg/m^3
+    description: Density of the surrounding medium. Zero means no drag.
+
+  env.temperature:
+    symbol: T
+    dim: {K: 1}
+    rank: scalar
+    kind: lumped
+    si_unit: K
+    description: Temperature of the surroundings.

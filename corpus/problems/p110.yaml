@@ -1,0 +1,21 @@
+id: p110
+title: Two capacitors in parallel
+source: "After OpenStax College Physics 2e, 19.6 (CC BY)"
+tags: [circuits, capacitor, parallel, reduction, chapter1]
+text: |
+  A 2.0 uF and a 3.0 uF capacitor are connected in parallel across a 10 V supply. What is the
+  total charge stored?
+scene:
+  instances:
+    - {id: c1, kind: capacitor, set: {electric.capacitance: "2.0 uF"}}
+    - {id: c2, kind: capacitor, set: {electric.capacitance: "3.0 uF"}}
+    - {id: pp, kind: parallel_pair, set: {em.potential_difference: "10 V"}}
+  relations:
+    - {kind: parallel_a, from: pp, to: c1}
+    - {kind: parallel_b, from: pp, to: c2}
+target: {instance: pp, prop: electric.charge_stored}
+expect:
+  value: 5.0e-5
+  unit: C
+  tol: 0.001
+  note: "In parallel capacitances ADD -- the opposite way round to resistors. 5 uF at 10 V."

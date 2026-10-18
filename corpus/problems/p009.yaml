@@ -1,0 +1,26 @@
+id: p009
+title: Time of flight for an electron crossing a gap
+source: "After OpenStax College Physics 2e, 19.2 (CC BY)"
+tags: [electrostatics, kinematics, time]
+text: |
+  An electron is released from rest at one plate of a parallel-plate capacitor with a potential
+  difference of 50 V across a 1.0 cm gap. How long does it take to reach the other plate?
+scene:
+  instances:
+    - id: cap
+      kind: parallel_plate_capacitor
+      set:
+        em.potential_difference: "50 V"
+        geometry.separation_plates: "1.0 cm"
+    - id: e1
+      kind: electron
+      set:
+        kinematics.speed@initial: "0 m/s"
+  relations:
+    - {kind: inside, from: e1, to: cap}
+target: {instance: e1, prop: kinematics.time}
+expect:
+  value: 4.769e-9
+  unit: s
+  tol: 0.01
+  note: "t = sqrt(2s/a) from rest, where a comes from the field through force and Newton II."
