@@ -1,7 +1,10 @@
 # FieldForge XR — Meta VR Start Developer Competition 2026
 
-**Deadline: Tue 18 Nov 2026, 12:00pm PST.** Today is 11 Oct. **5 weeks 3 days.**
-Plan to submit **Mon 17 Nov** — never on deadline day.
+**Deadline: Wed 18 Nov 2026, 12:00 pm PST (Thu 19 Nov, 1:30 am IST).** Today is 11 Oct.
+**5 weeks 3 days.** Plan to submit **Mon 16 Nov** — never on deadline day.
+> **Correction 19 Oct:** the 18 Nov 2026 is a Wednesday, not Tuesday. The repo previously
+> wrote "Tue 18 Nov"; the checklist dated 19 Oct is authoritative (12 pm PST = 1:30 am IST next
+> day).
 
 ---
 

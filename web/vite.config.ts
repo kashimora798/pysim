@@ -41,5 +41,10 @@ export default defineConfig({
     esbuildOptions: { target: 'esnext' },
   },
   publicDir: 'public',
+  // GitHub Pages serves a project site under https://<user>.github.io/<repo>/.
+  // `base: './'` keeps every asset request relative, so the same bundle works
+  // on Pages, Vercel, Netlify, or localhost without a hardcoded origin. The
+  // physics loader respects `import.meta.env.BASE_URL` (see src/physics/kernel.ts),
+  // so keep both in sync: a relative base here means a relative fetch there.
   base: './',
 });

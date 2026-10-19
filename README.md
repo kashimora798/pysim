@@ -64,7 +64,26 @@ corpus/problems/   problems with expected answers -- the coverage set
 tests/
 ```
 
+## Live XR bench
+
+Deployed on every push: **https://kashimora798.github.io/pysim/**  
+Enable once: GitHub → Settings → Pages → Source: *GitHub Actions*.
+
+Seated, hands-only, no controller ever required. Palm-up shelf → place → pinch-to-wire →
+solve → trust card. Desktop fallback via ray + canvas pointer.
+
+`vite.config.ts` uses `base: './'` and `src/physics/kernel.ts` loads `physics/` relative to
+`BASE_URL`, so the same bundle works on Pages, Vercel, Netlify, or localhost without
+a hardcoded origin.
+
+## Submission
+
+See `docs/SUBMISSION_CHECKLIST.md` (hard deadline Wed 18 Nov 2026 12 pm PST / Thu 19 Nov
+1:30 am IST; target Mon 16 Nov). Pass/fail test plan: `docs/testing-guide.md`.
+Devpost draft: `docs/DEVPOST_DRAFT.md`. Licence & asset audit: `docs/licences.md`.
+
 ## Licence posture
 
 Permissive dependencies only: BSD / MIT / Apache / PSF. No GPL or LGPL code is imported.
-See `docs/licences.md` for the audit and for what was deliberately excluded.
+See `docs/licences.md` for the audit, deliberately excluded projects, and bundled binary
+assets (`chime.mp3`, `webxr.png`, banner).

@@ -1,0 +1,32 @@
+name: ci
+on:
+  push:
+    branches-ignore: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - run: pip install -e ".[dev]"
+      - run: python -m kernel.cli audit --coverage
+      - run: python -m kernel.cli export
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - working-directory: web
+        run: npm ci
+      - working-directory: web
+        run: npm run typecheck
+      - working-directory: web
+        run: npm run verify:kernel
+      - working-directory: web
+        run: npm run build

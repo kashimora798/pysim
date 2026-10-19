@@ -15,7 +15,8 @@
     "preview": "vite preview",
     "physics:export": "cd .. && .venv/Scripts/python -m kernel.cli export",
     "verify:kernel": "node --experimental-strip-types scripts/verify-kernel.mts",
-    "prebuild": "npm run typecheck && npm run verify:kernel"
+    "prebuild": "npm run typecheck && npm run verify:kernel",
+    "check:bundle": "node scripts/check-bundle.mjs"
   },
   "dependencies": {
     "@iwsdk/core": "1.0.1",
