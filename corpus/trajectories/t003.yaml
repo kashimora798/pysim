@@ -1,0 +1,32 @@
+id: t003
+title: A projectile thrown at an angle, in three dimensions
+source: "OpenStax College Physics 2e, 3.4 (CC BY)"
+tags: [projectile, vectors, time-evolution, engine-c]
+text: |
+  A ball is thrown from the origin at 10 m/s horizontally and 10 m/s upward, in still air
+  with no drag. Where is it, and what is its velocity, after one second?
+
+  Vector state: three components, integrated together. The horizontal component must be
+  untouched, because there is no horizontal force — a property of the trajectory, not of the
+  integrator, and one a student can check by eye.
+problem: projectile_in_gravity
+refs:
+  ref_position: ball.geometry.position
+  ref_velocity: ball.kinematics.velocity
+args:
+  gravity: [0.0, -9.80665, 0.0]
+  v0: [10.0, 10.0, 0.0]
+  x0: [0.0, 0.0, 0.0]
+t_span: [0, 1]
+dt: 0.001
+method: rk4
+target: {ref: ball.kinematics.velocity}
+expect:
+  value: 10.00187
+  unit: m/s
+  tol: 0.0001
+  note: >
+    |v| = sqrt(10^2 + (10 - 9.80665)^2) = 10.00187 m/s: one second of gravity has almost
+    cancelled the 10 m/s the ball was thrown upward with. The magnitude is what the expectation
+    checks; the component-by-component check (vx unchanged at exactly 10 m/s) is asserted in
+    the test suite, where a single number would hide it.

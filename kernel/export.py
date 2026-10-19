@@ -23,9 +23,9 @@ from pathlib import Path
 
 from . import exprs
 from .dims import BASE, Dim
-from .engine_chain import Resolver
 from .kb import KnowledgeBase, load_kb
 from .scene import Problem, load_corpus
+from .solve import solve_problem
 from .trace import build_simspec
 from .units import Quantity, display_unit, format_quantity
 from .validate import CORPUS_DIR, audit
@@ -140,6 +140,7 @@ def build_kb_json(kb: KnowledgeBase, audit_summary: dict) -> dict:
             },
             "law": f.law,
             "assumes": list(f.assumes),
+            "appliesTo": list(f.applies_to),
             "cite": f.cite,
             "cost": f.cost,
             "note": f.note.strip(),
@@ -248,7 +249,10 @@ def export(
             "resolved": sum(1 for r in rows if r.resolved),
             "agreeing": sum(1 for r in rows if r.agrees),
             "multipath": sum(1 for r in rows if r.paths > 1),
+            "bySystem": sum(1 for r in rows if r.engine == "system"),
+            "crossChecked": sum(1 for r in rows if r.cross_check),
         },
+        "engines": ["chain", "system"],
     }
 
     kb_json = build_kb_json(kb, audit_summary)
@@ -260,8 +264,11 @@ def export(
     manifest = []
     spec_bytes = 0
     for problem in problems:
-        derivations = Resolver(kb, problem.scene).resolve(problem.target)
-        spec = build_simspec(problem, derivations, kb)
+        solved = solve_problem(kb, problem)
+        derivations = solved.derivations
+        if not derivations:
+            raise ExportError(f"refusing to export: {problem.id} resolves under neither engine")
+        spec = build_simspec(problem, derivations, kb, engines=list(solved.engines_tried))
         text = spec.to_json()
         (specs_dir / f"{problem.id}.json").write_text(text, encoding="utf-8")
         spec_bytes += len(text.encode("utf-8"))
@@ -280,6 +287,9 @@ def export(
                 "paths": len(data["paths"]),
                 "laws": sorted({law for p in data["paths"] for law in p["laws"]}),
                 "components": sorted({i["kind"] for i in data["scene"]["instances"]}),
+                "engines": list(solved.engines_tried),
+                "engine": solved.engine,
+                "simultaneous": data["checks"].get("simultaneous", False),
                 "spec": f"specs/{problem.id}.json",
             }
         )

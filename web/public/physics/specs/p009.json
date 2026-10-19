@@ -243,8 +243,10 @@
   "checks": {
     "dimensions": "pass",
     "engines": [
-      "chain"
+      "chain",
+      "system"
     ],
+    "simultaneous": false,
     "paths_found": 2,
     "paths_agree": true,
     "path_spread": 1.7345269429920422e-16

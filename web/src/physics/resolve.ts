@@ -964,6 +964,14 @@ export class Resolver {
     visited: Set<string>,
     depth: number,
   ): Derivation[] {
+    // A row that names the components it is a law of is not a row for anything else. The
+    // kernel enforces this for Engine B; the browser port enforces it here, or the two would
+    // answer the same scene differently.
+    const appliesTo = formula.appliesTo ?? [];
+    if (appliesTo.length > 0) {
+      const owner = this.scene.instances[ref.instance];
+      if (!owner || !appliesTo.includes(owner.kind)) return [];
+    }
     const out: Derivation[] = [];
     for (const bindingMap of this.roleBindings(formula, ref)) {
       const resolved = this.resolveInputs(formula, ref, bindingMap, visited, depth);

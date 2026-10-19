@@ -160,6 +160,12 @@ class Formula:
     roles: dict[str, RoleSpec] = field(default_factory=dict)
     law: str | None = None
     assumes: tuple[str, ...] = ()
+    #: Component kinds this row is a law *of*. Empty means universal: P = I*V holds for a battery
+    #: as much as for a resistor, and saying otherwise would be inventing a restriction. It is
+    #: the rows that are NOT universal that must say so — Ohm's law is not true across a
+    #: battery's terminals, and a knowledge base that lets it be applied there will assemble a
+    #: system with no solution and call the physics contradictory.
+    applies_to: tuple[str, ...] = ()
     cite: str = ""
     cost: int = 1
     note: str = ""
@@ -420,6 +426,7 @@ def _build_formula(key: str, spec: dict, path: Path) -> Formula:
         roles=roles,
         law=(str(spec["law"]) if spec.get("law") else None),
         assumes=tuple(spec.get("assumes") or ()),
+        applies_to=tuple(spec.get("applies_to") or ()),
         cite=str(spec.get("cite", "")),
         cost=int(spec.get("cost", 1)),
         note=str(spec.get("note", "")),

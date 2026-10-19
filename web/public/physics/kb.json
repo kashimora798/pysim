@@ -18,15 +18,21 @@
    "properties": 56,
    "constants": 10,
    "components": 25,
-   "formulas": 68,
-   "laws": 25
+   "formulas": 76,
+   "laws": 28
   },
   "coverage": {
-   "total": 24,
-   "resolved": 24,
-   "agreeing": 24,
-   "multipath": 4
-  }
+   "total": 26,
+   "resolved": 26,
+   "agreeing": 26,
+   "multipath": 4,
+   "bySystem": 2,
+   "crossChecked": 24
+  },
+  "engines": [
+   "chain",
+   "system"
+  ]
  },
  "base": [
   "kg",
@@ -1358,7 +1364,7 @@
     "kirchhoff_voltage_law"
    ],
    "model3d": "battery.glb",
-   "description": "An ideal source of constant emf. Two terminals; current leaves the positive one. Ideal here means zero internal resistance, which the assumption list on every formula states plainly.",
+   "description": "A source of constant emf with an internal resistance. Two terminals; current leaves the positive one. The internal resistance is what the branch law divides by, and it defaults to zero — an ideal source — which is the case every assumption list in this chapter states.",
    "slots": {
     "electric.emf": {
      "role": "settable",
@@ -1366,6 +1372,27 @@
      "default": null,
      "defaultQuantity": null,
      "note": ""
+    },
+    "electric.resistance": {
+     "role": "settable",
+     "required": false,
+     "default": "0 ohm",
+     "defaultQuantity": {
+      "value": 0.0,
+      "dim": [
+       1.0,
+       2.0,
+       -3.0,
+       -2.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      "rank": "scalar",
+      "unit": "Ω",
+      "display": "0 Ω"
+     },
+     "note": "internal resistance; 0 = ideal source"
     },
     "em.potential_difference": {
      "role": "observable",
@@ -3027,6 +3054,7 @@
     "same_current_through_both",
     "ideal_wires"
    ],
+   "appliesTo": [],
    "cite": "OpenStax College Physics 2e, 21.1 (CC BY)",
    "cost": 1,
    "note": ""
@@ -3105,6 +3133,7 @@
     "same_voltage_across_both",
     "ideal_wires"
    ],
+   "appliesTo": [],
    "cite": "OpenStax College Physics 2e, 21.1 (CC BY)",
    "cost": 1,
    "note": "The product-over-sum form rather than the reciprocal sum, because it is one expression instead of two and the dimension checker can verify it directly."
@@ -3180,6 +3209,7 @@
    "assumes": [
     "same_charge_on_both"
    ],
+   "appliesTo": [],
    "cite": "OpenStax College Physics 2e, 19.6 (CC BY)",
    "cost": 1,
    "note": "Capacitors combine the opposite way round to resistors — in series they reduce."
@@ -3238,9 +3268,372 @@
    "assumes": [
     "same_voltage_across_both"
    ],
+   "appliesTo": [],
    "cite": "OpenStax College Physics 2e, 19.6 (CC BY)",
    "cost": 1,
    "note": ""
+  },
+  "branch.I_from_emf_V_R": {
+   "solvesFor": "electric.current",
+   "producesState": null,
+   "scope": "self",
+   "roles": {},
+   "exprText": "(emf - V) / r",
+   "ast": {
+    "k": "mul",
+    "a": [
+     {
+      "k": "pow",
+      "b": {
+       "k": "sym",
+       "n": "r"
+      },
+      "e": -1.0
+     },
+     {
+      "k": "add",
+      "a": [
+       {
+        "k": "sym",
+        "n": "emf"
+       },
+       {
+        "k": "mul",
+        "a": [
+         {
+          "k": "num",
+          "v": -1.0
+         },
+         {
+          "k": "sym",
+          "n": "V"
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   "bindings": {
+    "emf": {
+     "prop": "electric.emf",
+     "const": null,
+     "from": "self",
+     "state": null
+    },
+    "V": {
+     "prop": "em.potential_difference",
+     "const": null,
+     "from": "self",
+     "state": null
+    },
+    "r": {
+     "prop": "electric.resistance",
+     "const": null,
+     "from": "self",
+     "state": null
+    }
+   },
+   "law": "kirchhoff_voltage_law",
+   "assumes": [
+    "steady_state",
+    "ohmic_internal_resistance",
+    "ideal_wires"
+   ],
+   "appliesTo": [
+    "battery"
+   ],
+   "cite": "OpenStax College Physics 2e, 21.2 (CC BY)",
+   "cost": 1,
+   "note": "The current a real source delivers is set by how far its terminal voltage sits below its emf. With r = 0 this row is unusable, which is correct: an ideal source's current is fixed by the rest of the circuit, not by this equation."
+  },
+  "branch.V_from_emf_I_R": {
+   "solvesFor": "em.potential_difference",
+   "producesState": null,
+   "scope": "self",
+   "roles": {},
+   "exprText": "emf - I * r",
+   "ast": {
+    "k": "add",
+    "a": [
+     {
+      "k": "sym",
+      "n": "emf"
+     },
+     {
+      "k": "mul",
+      "a": [
+       {
+        "k": "num",
+        "v": -1.0
+       },
+       {
+        "k": "sym",
+        "n": "I"
+       },
+       {
+        "k": "sym",
+        "n": "r"
+       }
+      ]
+     }
+    ]
+   },
+   "bindings": {
+    "emf": {
+     "prop": "electric.emf",
+     "const": null,
+     "from": "self",
+     "state": null
+    },
+    "I": {
+     "prop": "electric.current",
+     "const": null,
+     "from": "self",
+     "state": null
+    },
+    "r": {
+     "prop": "electric.resistance",
+     "const": null,
+     "from": "self",
+     "state": null
+    }
+   },
+   "law": "kirchhoff_voltage_law",
+   "assumes": [
+    "steady_state",
+    "ohmic_internal_resistance",
+    "ideal_wires"
+   ],
+   "appliesTo": [
+    "battery"
+   ],
+   "cite": "OpenStax College Physics 2e, 21.2 (CC BY)",
+   "cost": 2,
+   "note": "The same branch law read the other way: the terminal voltage sags below the emf by exactly the internal drop. Not different physics — but a direction the assembly needs, because a node's voltage is set by the currents through it as much as it sets them."
+  },
+  "parallel.I_from_members": {
+   "solvesFor": "electric.current",
+   "producesState": null,
+   "scope": "pair",
+   "roles": {
+    "a": {
+     "via": "parallel_a",
+     "kinds": []
+    },
+    "b": {
+     "via": "parallel_b",
+     "kinds": []
+    }
+   },
+   "exprText": "Ia + Ib",
+   "ast": {
+    "k": "add",
+    "a": [
+     {
+      "k": "sym",
+      "n": "Ia"
+     },
+     {
+      "k": "sym",
+      "n": "Ib"
+     }
+    ]
+   },
+   "bindings": {
+    "Ia": {
+     "prop": "electric.current",
+     "const": null,
+     "from": "a",
+     "state": null
+    },
+    "Ib": {
+     "prop": "electric.current",
+     "const": null,
+     "from": "b",
+     "state": null
+    }
+   },
+   "law": "kirchhoff_current_law",
+   "assumes": [
+    "steady_state",
+    "no_charge_accumulation"
+   ],
+   "appliesTo": [],
+   "cite": "OpenStax College Physics 2e, 21.3 (CC BY)",
+   "cost": 1,
+   "note": "Kirchhoff's current law in the same binary shape as the reduction rules: the current into a parallel combination is the sum of the currents through its members. Roles are deliberately kind-agnostic here — the law is about the junction, not about what is wired to it."
+  },
+  "parallel.V_shared_from_member": {
+   "solvesFor": "em.potential_difference",
+   "producesState": null,
+   "scope": "pair",
+   "roles": {
+    "member": {
+     "via": "parallel_a",
+     "kinds": []
+    }
+   },
+   "exprText": "V",
+   "ast": {
+    "k": "sym",
+    "n": "V"
+   },
+   "bindings": {
+    "V": {
+     "prop": "em.potential_difference",
+     "const": null,
+     "from": "member",
+     "state": null
+    }
+   },
+   "law": "kirchhoff_voltage_law",
+   "assumes": [
+    "same_voltage_across_both"
+   ],
+   "appliesTo": [],
+   "cite": "OpenStax College Physics 2e, 21.1 (CC BY)",
+   "cost": 3,
+   "note": "`parallel.V_shared_to_member` hands the group's voltage down to a member. This is the same equality read upwards: the group's voltage is whatever its members share, so when the member's voltage is what the assembly is solving for, the group follows."
+  },
+  "parallel.V_shared_from_member_b": {
+   "solvesFor": "em.potential_difference",
+   "producesState": null,
+   "scope": "pair",
+   "roles": {
+    "member": {
+     "via": "parallel_b",
+     "kinds": []
+    }
+   },
+   "exprText": "V",
+   "ast": {
+    "k": "sym",
+    "n": "V"
+   },
+   "bindings": {
+    "V": {
+     "prop": "em.potential_difference",
+     "const": null,
+     "from": "member",
+     "state": null
+    }
+   },
+   "law": "kirchhoff_voltage_law",
+   "assumes": [
+    "same_voltage_across_both"
+   ],
+   "appliesTo": [],
+   "cite": "OpenStax College Physics 2e, 21.1 (CC BY)",
+   "cost": 3,
+   "note": ""
+  },
+  "source_pair.I_from_loop": {
+   "solvesFor": "electric.current",
+   "producesState": null,
+   "scope": "pair",
+   "roles": {
+    "loop": {
+     "via": "driven_by",
+     "kinds": [
+      "circuit_loop"
+     ]
+    }
+   },
+   "exprText": "I",
+   "ast": {
+    "k": "sym",
+    "n": "I"
+   },
+   "bindings": {
+    "I": {
+     "prop": "electric.current",
+     "const": null,
+     "from": "loop",
+     "state": null
+    }
+   },
+   "law": "kirchhoff_current_law",
+   "assumes": [
+    "single_loop",
+    "no_charge_accumulation"
+   ],
+   "appliesTo": [],
+   "cite": "OpenStax College Physics 2e, 21.3 (CC BY)",
+   "cost": 3,
+   "note": "`loop.I_from_source_pair` hands the source combination's current to the loop; this hands the loop's demand back to the combination. They are one statement — a node cannot accumulate charge — and the assembly needs whichever direction it is asked for."
+  },
+  "loop.I_from_source_pair": {
+   "solvesFor": "electric.current",
+   "producesState": null,
+   "scope": "pair",
+   "roles": {
+    "src": {
+     "via": "driven_by",
+     "kinds": [
+      "series_pair",
+      "parallel_pair"
+     ]
+    }
+   },
+   "exprText": "I",
+   "ast": {
+    "k": "sym",
+    "n": "I"
+   },
+   "bindings": {
+    "I": {
+     "prop": "electric.current",
+     "const": null,
+     "from": "src",
+     "state": null
+    }
+   },
+   "law": "kirchhoff_current_law",
+   "assumes": [
+    "single_loop",
+    "no_charge_accumulation"
+   ],
+   "appliesTo": [],
+   "cite": "OpenStax College Physics 2e, 21.3 (CC BY)",
+   "cost": 2,
+   "note": "The link row that closes a node: whatever current the source combination delivers, the loop draws. `loop.V_from_source` copies an emf from a battery; this copies a current from a *combination*, whose current no single row can state."
+  },
+  "loop.V_from_source_pair": {
+   "solvesFor": "em.potential_difference",
+   "producesState": null,
+   "scope": "pair",
+   "roles": {
+    "src": {
+     "via": "driven_by",
+     "kinds": [
+      "series_pair",
+      "parallel_pair"
+     ]
+    }
+   },
+   "exprText": "V",
+   "ast": {
+    "k": "sym",
+    "n": "V"
+   },
+   "bindings": {
+    "V": {
+     "prop": "em.potential_difference",
+     "const": null,
+     "from": "src",
+     "state": null
+    }
+   },
+   "law": "kirchhoff_voltage_law",
+   "assumes": [
+    "ideal_wires",
+    "single_loop"
+   ],
+   "appliesTo": [],
+   "cite": "OpenStax College Physics 2e, 21.2 (CC BY)",
+   "cost": 2,
+   "note": "The loop's driving potential difference is the *terminal* voltage of the source combination, not its open-circuit emf. Under load those differ, which is the whole reason the terminal voltage has to be solved for rather than read off."
   },
   "loop.R_from_load": {
    "solvesFor": "electric.resistance",
@@ -3275,6 +3668,7 @@
     "ideal_wires",
     "ideal_source"
    ],
+   "appliesTo": [],
    "cite": "OpenStax College Physics 2e, 21.1 (CC BY)",
    "cost": 1,
    "note": "The loop's total resistance is its load's, whatever that load reduced from. Trivial as algebra, essential as a link: it is what carries a reduced network's resistance into the loop where the current lives."
@@ -3309,6 +3703,7 @@
     "ideal_source",
     "no_internal_resistance"
    ],
+   "appliesTo": [],
    "cite": "OpenStax College Physics 2e, 21.2 (CC BY)",
    "cost": 1,
    "note": ""
@@ -3354,6 +3749,9 @@
    "assumes": [
     "steady_state",
     "ohmic_load"
+   ],
+   "appliesTo": [
+    "circuit_loop"
    ],
    "cite": "OpenStax College Physics 2e, 20.2 (CC BY)",
    "cost": 1,
@@ -3401,6 +3799,10 @@
     "ohmic",
     "steady_state"
    ],
+   "appliesTo": [
+    "resistor",
+    "lamp"
+   ],
    "cite": "OpenStax College Physics 2e, 20.2 (CC BY)",
    "cost": 2,
    "note": ""
@@ -3442,6 +3844,10 @@
    "assumes": [
     "ohmic",
     "steady_state"
+   ],
+   "appliesTo": [
+    "resistor",
+    "lamp"
    ],
    "cite": "OpenStax College Physics 2e, 20.2 (CC BY)",
    "cost": 2,
@@ -3489,6 +3895,10 @@
     "ohmic",
     "steady_state"
    ],
+   "appliesTo": [
+    "resistor",
+    "lamp"
+   ],
    "cite": "OpenStax College Physics 2e, 20.2 (CC BY)",
    "cost": 3,
    "note": ""
@@ -3522,6 +3932,7 @@
    "assumes": [
     "same_current_through_both"
    ],
+   "appliesTo": [],
    "cite": "OpenStax College Physics 2e, 21.1 (CC BY)",
    "cost": 2,
    "note": "In series the current is common, so a member inherits the group's current. Together with the member_b variant this is how a reading on one element reaches the other."
@@ -3555,6 +3966,7 @@
    "assumes": [
     "same_current_through_both"
    ],
+   "appliesTo": [],
    "cite": "OpenStax College Physics 2e, 21.1 (CC BY)",
    "cost": 2,
    "note": ""
@@ -3588,6 +4000,7 @@
    "assumes": [
     "same_voltage_across_both"
    ],
+   "appliesTo": [],
    "cite": "OpenStax College Physics 2e, 21.1 (CC BY)",
    "cost": 2,
    "note": ""
@@ -3621,6 +4034,7 @@
    "assumes": [
     "same_voltage_across_both"
    ],
+   "appliesTo": [],
    "cite": "OpenStax College Physics 2e, 21.1 (CC BY)",
    "cost": 2,
    "note": ""
@@ -3654,6 +4068,7 @@
    "assumes": [
     "single_loop"
    ],
+   "appliesTo": [],
    "cite": "OpenStax College Physics 2e, 21.1 (CC BY)",
    "cost": 2,
    "note": "A single loop's current passes through its load, which is how the answer reaches a part."
@@ -3688,6 +4103,7 @@
     "ideal_wires",
     "single_loop"
    ],
+   "appliesTo": [],
    "cite": "OpenStax College Physics 2e, 21.2 (CC BY)",
    "cost": 3,
    "note": ""
@@ -3729,6 +4145,7 @@
    "assumes": [
     "steady_state"
    ],
+   "appliesTo": [],
    "cite": "OpenStax College Physics 2e, 20.4 (CC BY)",
    "cost": 1,
    "note": ""
@@ -3775,6 +4192,7 @@
     "steady_state",
     "ohmic"
    ],
+   "appliesTo": [],
    "cite": "OpenStax College Physics 2e, 20.4 (CC BY)",
    "cost": 1,
    "note": ""
@@ -3825,6 +4243,7 @@
     "steady_state",
     "ohmic"
    ],
+   "appliesTo": [],
    "cite": "OpenStax College Physics 2e, 20.4 (CC BY)",
    "cost": 1,
    "note": "Three forms of the same law. They are NOT alternative paths in the multi-path sense — all three cite joule_heating, so the resolver's law-set dedup collapses them to one. That is correct: picking V^2/R over I^2*R is an algebraic convenience, not different physics."
@@ -3866,6 +4285,7 @@
    "assumes": [
     "linear_dielectric"
    ],
+   "appliesTo": [],
    "cite": "OpenStax College Physics 2e, 19.5 (CC BY)",
    "cost": 1,
    "note": ""
@@ -3915,6 +4335,7 @@
    "assumes": [
     "linear_dielectric"
    ],
+   "appliesTo": [],
    "cite": "OpenStax College Physics 2e, 19.7 (CC BY)",
    "cost": 1,
    "note": ""
@@ -3965,6 +4386,7 @@
    "assumes": [
     "single_rc_branch"
    ],
+   "appliesTo": [],
    "cite": "OpenStax College Physics 2e, 21.6 (CC BY)",
    "cost": 1,
    "note": ""
@@ -4052,6 +4474,7 @@
     "vacuum",
     "outside_any_conductor"
    ],
+   "appliesTo": [],
    "cite": "OpenStax College Physics 2e, 18.5 (CC BY)",
    "cost": 1,
    "note": "The inverse square is the whole claim. A 1/r**3 slip here is dimensionally detectable, which is why the compiler compares this expression's inferred dimension against the declared solves_for property before the formula is ever used."
@@ -4139,6 +4562,7 @@
     "vacuum",
     "zero_at_infinity"
    ],
+   "appliesTo": [],
    "cite": "OpenStax College Physics 2e, 19.3 (CC BY)",
    "cost": 1,
    "note": ""
@@ -4185,6 +4609,7 @@
     "uniform_field",
     "edge_effects_neglected"
    ],
+   "appliesTo": [],
    "cite": "OpenStax College Physics 2e, 19.4 (CC BY)",
    "cost": 1,
    "note": ""
@@ -4220,6 +4645,7 @@
    "assumes": [
     "uniform_field"
    ],
+   "appliesTo": [],
    "cite": "OpenStax College Physics 2e, 19.4 (CC BY)",
    "cost": 1,
    "note": "In a uniform region the field at an enclosed object is the region's field. Trivial as algebra, essential as a link: it is what carries a field value across the `inside` relation."
@@ -4276,6 +4702,7 @@
     "infinite_plane",
     "vacuum"
    ],
+   "appliesTo": [],
    "cite": "OpenStax University Physics 2, 6.4 (CC BY)",
    "cost": 1,
    "note": ""
@@ -4357,6 +4784,7 @@
     "infinite_line",
     "vacuum"
    ],
+   "appliesTo": [],
    "cite": "OpenStax University Physics 2, 6.4 (CC BY)",
    "cost": 1,
    "note": ""
@@ -4421,6 +4849,7 @@
     "spherical_symmetry",
     "vacuum"
    ],
+   "appliesTo": [],
    "cite": "OpenStax University Physics 2, 6.4 (CC BY)",
    "cost": 2,
    "note": "Outside a spherically symmetric charge, the field is that of a point charge at its centre."
@@ -4462,6 +4891,7 @@
    "assumes": [
     "uniform_density"
    ],
+   "appliesTo": [],
    "cite": "definitional",
    "cost": 1,
    "note": ""
@@ -4505,6 +4935,7 @@
    "assumes": [
     "sphere"
    ],
+   "appliesTo": [],
    "cite": "geometry",
    "cost": 1,
    "note": ""
@@ -4567,6 +4998,7 @@
     "cavity_entirely_inside",
     "vacuum"
    ],
+   "appliesTo": [],
    "cite": "OpenStax University Physics 2, 6.4 + superposition (CC BY)",
    "cost": 1,
    "note": "The cavity field. Treat the holed sphere as a full sphere of density rho plus a sphere of density -rho filling the cavity. Inside a uniform sphere E = rho*r/(3*eps0) measured from its own centre, so the two contributions leave exactly rho*a/(3*eps0) along the offset a -- independent of position. Uniform field inside the hole, hence exact projectile motion for a charge released there. This is the case the market has no simulation for."
@@ -4600,6 +5032,7 @@
    "assumes": [
     "cavity_entirely_inside"
    ],
+   "appliesTo": [],
    "cite": "OpenStax University Physics 2, 6.4 (CC BY)",
    "cost": 1,
    "note": ""
@@ -4627,6 +5060,7 @@
     "electrostatic_equilibrium",
     "no_charge_in_cavity"
    ],
+   "appliesTo": [],
    "cite": "OpenStax University Physics 2, 6.5 (CC BY)",
    "cost": 1,
    "note": "Exactly zero, whatever the shell carries and whatever surrounds it. The formula needs no inputs at all: its entire precondition is the `inside_cavity_of` relation to a conductor, which scope/via/role_kinds already state. A literal zero is dimensionally polymorphic -- the zero element belongs to every dimension space -- so the dimension checker admits it against a V/m target without weakening anything else."
@@ -4668,6 +5102,7 @@
    "assumes": [
     "uniform_field"
    ],
+   "appliesTo": [],
    "cite": "OpenStax College Physics 2e, 19.4 (CC BY)",
    "cost": 1,
    "note": "A magnitude plus a direction is a vector. Trivial, but it is what reconnects the scalar plate-field chain to the vector force chain, and the renderer samples the result to draw field arrows."
@@ -4702,6 +5137,7 @@
    "assumes": [
     "uniform_field"
    ],
+   "appliesTo": [],
    "cite": "OpenStax College Physics 2e, 19.4 (CC BY)",
    "cost": 1,
    "note": ""
@@ -4732,6 +5168,7 @@
    },
    "law": "definition_magnitude",
    "assumes": [],
+   "appliesTo": [],
    "cite": "definitional",
    "cost": 1,
    "note": ""
@@ -4762,6 +5199,7 @@
    },
    "law": "definition_magnitude",
    "assumes": [],
+   "appliesTo": [],
    "cite": "definitional",
    "cost": 1,
    "note": ""
@@ -4792,6 +5230,7 @@
    },
    "law": "definition_magnitude",
    "assumes": [],
+   "appliesTo": [],
    "cite": "definitional",
    "cost": 1,
    "note": ""
@@ -4825,6 +5264,7 @@
    "assumes": [
     "uniform_field"
    ],
+   "appliesTo": [],
    "cite": "OpenStax University Physics 2, 11.3 (CC BY)",
    "cost": 1,
    "note": ""
@@ -4866,6 +5306,7 @@
    "assumes": [
     "negligible_magnetic_force"
    ],
+   "appliesTo": [],
    "cite": "OpenStax College Physics 2e, 18.5 (CC BY)",
    "cost": 1,
    "note": "The link that makes the whole project cross-domain. `q` is electromagnetic, the result is mechanical, and the formula knows about neither domain -- only about property keys."
@@ -4923,6 +5364,7 @@
    "assumes": [
     "no_electric_field"
    ],
+   "appliesTo": [],
    "cite": "OpenStax University Physics 2, 11.2 (CC BY)",
    "cost": 2,
    "note": ""
@@ -4971,6 +5413,7 @@
    "assumes": [
     "uniform_field"
    ],
+   "appliesTo": [],
    "cite": "OpenStax College Physics 2e, 4.5 (CC BY)",
    "cost": 1,
    "note": "Binds the scene's environment rather than a constant, so the weight a body feels is whatever the user has set gravity to. With the default [0,0,0] this is exactly zero, which is the idealisation textbook electrostatics problems assume."
@@ -5097,6 +5540,7 @@
     "subsonic",
     "no_lift"
    ],
+   "appliesTo": [],
    "cite": "OpenStax College Physics 2e, 5.2 (CC BY)",
    "cost": 1,
    "note": "Wind acts only through the RELATIVE velocity v - v_wind, so a body drifting with the wind feels nothing. Both air density and cross-section default to zero, which makes drag opt-in: every existing problem gets exactly zero without having to say so."
@@ -5139,6 +5583,7 @@
     "no_other_forces",
     "negligible_drag"
    ],
+   "appliesTo": [],
    "cite": "OpenStax College Physics 2e, 4.6 (CC BY)",
    "cost": 1,
    "note": "Superposition as an actual sum. Separating the electric and gravitational contributions is what keeps this ONE derivation instead of two rival paths that would disagree the moment gravity stopped being zero.\nDrag is deliberately NOT in this sum. It only exists when the scene states a velocity, an area and a medium density, and a chain resolver cannot express \"include this term only if it resolves\" -- an optional contribution would either manufacture a phantom zero path or make two net formulas disagree. `mechanics.force_drag` is therefore derivable on its own and visualised on its own, and folding it in is work for the equation assembler (Engine B), where contributions are collected rather than chained. Honest limitation, recorded here rather than papered over."
@@ -5169,6 +5614,7 @@
    },
    "law": "definition_magnitude",
    "assumes": [],
+   "appliesTo": [],
    "cite": "definitional",
    "cost": 1,
    "note": ""
@@ -5215,6 +5661,7 @@
     "constant_mass",
     "non_relativistic"
    ],
+   "appliesTo": [],
    "cite": "OpenStax College Physics 2e, 4.3 (CC BY)",
    "cost": 1,
    "note": ""
@@ -5261,6 +5708,7 @@
     "constant_mass",
     "non_relativistic"
    ],
+   "appliesTo": [],
    "cite": "OpenStax College Physics 2e, 4.3 (CC BY)",
    "cost": 1,
    "note": ""
@@ -5291,6 +5739,7 @@
    },
    "law": "definition_magnitude",
    "assumes": [],
+   "appliesTo": [],
    "cite": "definitional",
    "cost": 1,
    "note": ""
@@ -5348,6 +5797,7 @@
     "constant_acceleration",
     "straight_line"
    ],
+   "appliesTo": [],
    "cite": "OpenStax College Physics 2e, 2.5 (CC BY)",
    "cost": 1,
    "note": ""
@@ -5417,6 +5867,7 @@
     "constant_acceleration",
     "straight_line"
    ],
+   "appliesTo": [],
    "cite": "OpenStax College Physics 2e, 2.5 (CC BY)",
    "cost": 1,
    "note": "The time-free form. Where the energy route is also available this gives a second, genuinely different derivation of the same answer -- a real alternative path, not an algebraic rearrangement, because it cites kinematics where the other cites energy conservation."
@@ -5491,6 +5942,7 @@
     "constant_acceleration",
     "straight_line"
    ],
+   "appliesTo": [],
    "cite": "OpenStax College Physics 2e, 2.5 (CC BY)",
    "cost": 1,
    "note": ""
@@ -5561,6 +6013,7 @@
     "constant_acceleration",
     "straight_line"
    ],
+   "appliesTo": [],
    "cite": "OpenStax College Physics 2e, 2.5 (CC BY)",
    "cost": 1,
    "note": ""
@@ -5621,6 +6074,7 @@
     "straight_line",
     "starts_from_rest"
    ],
+   "appliesTo": [],
    "cite": "OpenStax College Physics 2e, 2.5 (CC BY)",
    "cost": 2,
    "note": ""
@@ -5651,6 +6105,7 @@
    },
    "law": "definition_magnitude",
    "assumes": [],
+   "appliesTo": [],
    "cite": "definitional",
    "cost": 1,
    "note": ""
@@ -5681,6 +6136,7 @@
    },
    "law": "definition_magnitude",
    "assumes": [],
+   "appliesTo": [],
    "cite": "definitional",
    "cost": 1,
    "note": ""
@@ -5715,6 +6171,7 @@
     "full_traverse",
     "released_at_one_plate"
    ],
+   "appliesTo": [],
    "cite": "geometry of the problem",
    "cost": 2,
    "note": "A charge released at one plate and arriving at the other has travelled the gap. Geometry rather than physics, but it has to be a cited step or the kinematics route to final speed would contain an unexplained number."
@@ -5788,6 +6245,7 @@
    "assumes": [
     "constant_acceleration"
    ],
+   "appliesTo": [],
    "cite": "OpenStax College Physics 2e, 2.5 (CC BY)",
    "cost": 1,
    "note": "The vector form -- this is what the renderer samples to draw a curved trajectory."
@@ -5844,6 +6302,7 @@
    "assumes": [
     "constant_acceleration"
    ],
+   "appliesTo": [],
    "cite": "OpenStax College Physics 2e, 2.5 (CC BY)",
    "cost": 1,
    "note": ""
@@ -5893,6 +6352,7 @@
    "assumes": [
     "non_relativistic"
    ],
+   "appliesTo": [],
    "cite": "OpenStax College Physics 2e, 7.2 (CC BY)",
    "cost": 1,
    "note": ""
@@ -5951,6 +6411,7 @@
    "assumes": [
     "non_relativistic"
    ],
+   "appliesTo": [],
    "cite": "OpenStax College Physics 2e, 7.2 (CC BY)",
    "cost": 1,
    "note": ""
@@ -5978,6 +6439,7 @@
     "starts_from_rest",
     "no_other_forces"
    ],
+   "appliesTo": [],
    "cite": "OpenStax College Physics 2e, 7.2 (CC BY)",
    "cost": 1,
    "note": ""
@@ -6028,6 +6490,7 @@
     "full_traverse",
     "no_other_forces"
    ],
+   "appliesTo": [],
    "cite": "OpenStax College Physics 2e, 19.1 (CC BY)",
    "cost": 1,
    "note": "Work done on a charge crossing the full gap. Pairs with energy.K_from_work_at_rest and energy.v_from_K_m to give the energy route to final speed -- the alternative to the kinematics route, citing a different law."
@@ -6069,6 +6532,7 @@
    "assumes": [
     "zero_at_infinity"
    ],
+   "appliesTo": [],
    "cite": "OpenStax College Physics 2e, 19.1 (CC BY)",
    "cost": 1,
    "note": ""
@@ -6111,6 +6575,7 @@
     "constant_force",
     "force_along_displacement"
    ],
+   "appliesTo": [],
    "cite": "OpenStax College Physics 2e, 7.1 (CC BY)",
    "cost": 2,
    "note": ""
@@ -6152,6 +6617,7 @@
    "assumes": [
     "non_relativistic"
    ],
+   "appliesTo": [],
    "cite": "OpenStax College Physics 2e, 8.1 (CC BY)",
    "cost": 1,
    "note": ""
@@ -6222,6 +6688,7 @@
     "velocity_perpendicular_to_B",
     "non_relativistic"
    ],
+   "appliesTo": [],
    "cite": "OpenStax University Physics 2, 11.3 (CC BY)",
    "cost": 1,
    "note": ""
@@ -6290,6 +6757,7 @@
     "velocity_perpendicular_to_B",
     "non_relativistic"
    ],
+   "appliesTo": [],
    "cite": "OpenStax University Physics 2, 11.3 (CC BY)",
    "cost": 1,
    "note": "Independent of speed -- the fact that makes the cyclotron work."
@@ -6496,6 +6964,34 @@
    ],
    "cite": "definitional"
   },
+  "simultaneous_solve": {
+   "label": "Simultaneous assembly (Engine B)",
+   "statement": "Where no single law isolates one unknown, the local laws of every element and junction are assembled and solved together. Each equation still cites the law that wrote it; only the ordering changes, from a chain to a block. Charge conservation and energy conservation hold on the network, not on any one element, so the block is the honest unit of reasoning.",
+   "governs": [
+    "electric.current",
+    "em.potential_difference",
+    "electric.resistance"
+   ],
+   "cite": "definitional (solver: see docs/architecture.md, Engine B)"
+  },
+  "time_evolution": {
+   "label": "Time evolution (Engine C)",
+   "statement": "Where the answer is a function of time rather than a value, the instantaneous laws give the derivatives and an integrator accumulates them from the stated initial conditions. The integrator changes no physics: it samples a trajectory the laws already determine.",
+   "governs": [
+    "kinematics.velocity",
+    "kinematics.speed",
+    "kinematics.displacement",
+    "geometry.position",
+    "kinematics.time"
+   ],
+   "cite": "definitional (solver: see docs/architecture.md, Engine C)"
+  },
+  "superposition_linear_algebra": {
+   "label": "Linear superposition and exact algebra",
+   "statement": "The mathematical toolkit — differentiation, integration, quadrature, linear-system solving — changes no physics. It is called explicitly, by name, and every call is a cited step whose input and output dimensions are checked before the number is produced.",
+   "governs": [],
+   "cite": "definitional (see docs/architecture.md, Mathematical toolkit)"
+  },
   "newton_gravitation_uniform": {
    "label": "Weight in a uniform gravitational field",
    "statement": "A body of mass m in a uniform gravitational field g experiences a force m*g directed along the field. Uniform is the right idealisation on a bench: g varies by less than a part in a million across a desk.",
@@ -6547,19 +7043,27 @@
    "parallel.C_from_members",
    "series.C_from_members"
   ],
-  "em.potential_difference": [
-   "loop.V_from_source",
-   "ohm.V_from_I_R",
-   "parallel.V_shared_to_member",
-   "parallel.V_shared_to_member_b",
-   "loop.V_shared_to_load"
-  ],
   "electric.current": [
+   "branch.I_from_emf_V_R",
    "loop.I_from_V_R",
+   "parallel.I_from_members",
+   "loop.I_from_source_pair",
    "loop.I_shared_to_load",
    "ohm.I_from_V_R",
    "series.I_shared_to_member",
-   "series.I_shared_to_member_b"
+   "series.I_shared_to_member_b",
+   "source_pair.I_from_loop"
+  ],
+  "em.potential_difference": [
+   "loop.V_from_source",
+   "branch.V_from_emf_I_R",
+   "loop.V_from_source_pair",
+   "ohm.V_from_I_R",
+   "parallel.V_shared_to_member",
+   "parallel.V_shared_to_member_b",
+   "loop.V_shared_to_load",
+   "parallel.V_shared_from_member",
+   "parallel.V_shared_from_member_b"
   ],
   "electric.power": [
    "power.P_from_I_R",
@@ -6699,5 +7203,5 @@
   "1,1,-2,0,0,0,0": "N",
   "1,1,-1,0,0,0,0": "kg·m/s"
  },
- "contentHash": "5f438303d71ac8fc"
+ "contentHash": "5c21c4aabd5618b9"
 }

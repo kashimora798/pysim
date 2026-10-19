@@ -181,8 +181,16 @@ def build_simspec(
     problem: Problem,
     derivations: list[Derivation],
     kb: KnowledgeBase,
+    *,
+    engines: list[str] | None = None,
+    trajectory: dict | None = None,
 ) -> SimSpec:
-    """Compile a resolved problem into a renderable, self-justifying spec."""
+    """Compile a resolved problem into a renderable, self-justifying spec.
+
+    ``engines`` names the engines that reached the answer — chain, system, or
+    both when they cross-checked each other. ``trajectory`` carries an Engine C
+    trajectory, for answers that are functions of time rather than values.
+    """
     if not derivations:
         raise ValueError("cannot build a SimSpec from zero derivations")
 
@@ -261,7 +269,7 @@ def build_simspec(
     ]
     spread = (max(values) - min(values)) / max(max(values), 1e-30) if len(values) > 1 else 0.0
 
-    return SimSpec(
+    spec = SimSpec(
         {
             "fieldforge": SPEC_VERSION,
             "problem": {
@@ -278,7 +286,11 @@ def build_simspec(
             "citations": list(best.citations),
             "checks": {
                 "dimensions": "pass",
-                "engines": ["chain"],
+                "engines": engines or ["chain"],
+                "simultaneous": any(
+                    any("Engine B" in assumption for assumption in d.assumptions)
+                    for d in derivations
+                ),
                 "paths_found": len(derivations),
                 "paths_agree": spread <= 1e-6,
                 "path_spread": spread,
@@ -287,6 +299,9 @@ def build_simspec(
             "paths": [_path_json(d, kb) for d in derivations],
         }
     )
+    if trajectory is not None:
+        spec.data["trajectory"] = trajectory
+    return spec
 
 
 def scene_order_remainder(scene: Scene, already: list[str]) -> list[str]:

@@ -15,9 +15,11 @@ from rich.panel import Panel
 from rich.table import Table
 from rich.text import Text
 
-from .engine_chain import Derivation, Resolver
+from .engine_chain import Derivation
+from .engine_system import SystemEngine
 from .kb import KnowledgeBase, load_kb
-from .scene import Problem, Ref, load_corpus, load_problem
+from .scene import Ref, load_problem
+from .solve import solve_problem
 from .trace import build_simspec
 from .units import format_quantity
 from .validate import CORPUS_DIR, audit
@@ -117,6 +119,7 @@ def audit_cmd(
 def _print_coverage(rows) -> None:
     table = Table(title="corpus coverage", box=None, header_style="bold", title_justify="left")
     table.add_column("problem")
+    table.add_column("engine")
     table.add_column("paths", justify="right")
     table.add_column("resolved")
     table.add_column("expected")
@@ -130,16 +133,30 @@ def _print_coverage(rows) -> None:
             mark, style = "agrees", "green"
         else:
             mark, style = "DISAGREES", "bold red"
-        table.add_row(r.problem.id, str(r.paths), r.value, r.expected, Text(mark, style=style))
+        engine_style = "magenta" if r.engine == "system" else "cyan"
+        table.add_row(
+            r.problem.id,
+            Text(r.engine, style=engine_style),
+            str(r.paths),
+            r.value,
+            r.expected,
+            Text(mark, style=style),
+        )
     console.print(table)
 
     total = len(rows)
     good = sum(1 for r in rows if r.agrees)
     multi = sum(1 for r in rows if r.paths > 1)
+    by_system = sum(1 for r in rows if r.engine == "system")
+    checked = sum(1 for r in rows if r.cross_check)
     pct = 100.0 * good / total if total else 0.0
     console.print(
         f"coverage [bold]{good}/{total}[/] ([bold]{pct:.0f}%[/])   "
         f"{multi} problem(s) resolved by more than one path"
+    )
+    console.print(
+        f"[dim]engines: {by_system} problem(s) needed Engine B (simultaneous assembly); "
+        f"{checked} cross-checked against Engine A[/]"
     )
 
 
@@ -162,12 +179,27 @@ def solve(
 
     console.print(Panel(problem.text or problem.title, title=problem.id, border_style="cyan"))
 
-    resolver = Resolver(kb, problem.scene)
-    derivations = resolver.resolve(problem.target)
+    solved = solve_problem(kb, problem)
+    derivations = solved.derivations
 
     if not derivations:
-        console.print(f"[bold red]unresolved[/]\n{resolver.failure(problem.target)}")
+        console.print("[bold red]unresolved by either engine[/]")
+        for note in solved.notes:
+            console.print(f"  [dim]{note}[/]")
         raise typer.Exit(code=1)
+
+    if solved.engine == "system":
+        console.print(
+            "[magenta]Engine A cannot reach this target; solved by Engine B, which assembles "
+            "the local laws and solves them together.[/]"
+        )
+        for note in solved.notes:
+            console.print(f"  [dim]{note}[/]")
+    elif solved.cross_check:
+        console.print(
+            f"[dim]cross-check: Engine A and Engine B agree to "
+            f"{solved.cross_check['rel_error']:.1e} relative[/]"
+        )
 
     for index, derivation in enumerate(derivations if all_paths else derivations[:1]):
         label = f"path {index + 1} of {len(derivations)}"
@@ -237,6 +269,55 @@ def coverage(
     for f in report.errors:
         console.print(f"[bold red]error[/] {f.where}: {f.message}")
     if report.errors:
+        raise typer.Exit(code=1)
+
+
+@app.command("trajectories")
+def trajectories_cmd(
+    corpus: Path = typer.Option(None, "--corpus", help="Directory of trajectory YAML files."),
+    json_out: Path | None = typer.Option(None, "--json", help="Write a sampled trajectory here."),
+) -> None:
+    """Integrate every trajectory in the corpus and hold it to its closed form (Engine C)."""
+    from .engine_ode import ODEEngine
+    from .trajectories import check as check_trajectory
+    from .trajectories import load_trajectory_corpus
+
+    entries = load_trajectory_corpus(corpus)
+    if not entries:
+        console.print("[yellow]no trajectory corpus found[/]")
+        return
+
+    engine = ODEEngine()
+    table = Table(title="trajectory corpus", box=None, header_style="bold", title_justify="left")
+    table.add_column("trajectory")
+    table.add_column("method")
+    table.add_column("steps", justify="right")
+    table.add_column("sampled")
+    table.add_column("closed form")
+    table.add_column("")
+    bad = 0
+    for entry in entries:
+        trajectory = engine.integrate(entry.problem)
+        ok, detail = check_trajectory(entry, trajectory)
+        bad += 0 if ok else 1
+        table.add_row(
+            entry.id,
+            trajectory.method,
+            str(trajectory.steps),
+            detail.split(",")[0].replace("got ", ""),
+            (detail.split(",")[1].replace(" want ", "") if "," in detail else "—"),
+            Text("agrees" if ok else "DISAGREES", style="green" if ok else "bold red"),
+        )
+        if json_out and entry.id == entries[0].id:
+            import json
+
+            json_out.write_text(json.dumps(trajectory.to_json(), indent=1), encoding="utf-8")
+    console.print(table)
+    console.print(
+        f"trajectories [bold]{len(entries) - bad}/{len(entries)}[/] reach the value the "
+        "closed form requires"
+    )
+    if bad:
         raise typer.Exit(code=1)
 
 
@@ -323,6 +404,218 @@ def export_cmd(
         )
     )
     console.print("[dim]every validator passed; only verified physics was written[/]")
+
+
+# --------------------------------------------------------------------------- Engine B: system
+
+
+@app.command("system")
+def system_cmd(
+    problem_path: Path = typer.Argument(..., help="A corpus problem YAML file."),
+    target_prop: str | None = typer.Option(None, "--target", "-t", help="Property to solve for."),
+    target_instance: str | None = typer.Option(None, "--instance", "-i", help="Instance to solve for."),
+) -> None:
+    """Assemble the scene's laws and solve them together (Engine B)."""
+    kb = _load()
+    try:
+        problem = load_problem(problem_path, kb)
+    except Exception as exc:
+        console.print(f"[bold red]cannot read problem:[/] {exc}")
+        raise typer.Exit(code=2) from exc
+
+    target = problem.target
+    if target_prop:
+        target = Ref(target_instance or target.instance, target_prop, None)
+
+    console.print(
+        Panel(problem.text or problem.title, title=f"{problem.id} — Engine B", border_style="magenta")
+    )
+    engine = SystemEngine(kb, problem.scene)
+    try:
+        solution = engine.solve(target)
+    except Exception as exc:
+        console.print(f"[bold red]Engine B could not solve it:[/] {exc}")
+        raise typer.Exit(code=1) from exc
+
+    console.print(
+        f"[bold]causalisation:[/] {solution.plan} — "
+        f"{solution.simultaneous_blocks} simultaneous block(s), method {solution.method}"
+    )
+    for index, rows in sorted(solution.block_equations.items()):
+        kind = "simultaneous" if index in solution.system_blocks else "chain step"
+        console.print(f"\n[bold]block {index}[/] ({kind}) — {len(rows)} equation(s)")
+        for line in engine.equations_text(solution.solved_equations.get(index, rows)):
+            console.print(f"  [cyan]{line}[/]")
+
+    console.print()
+    for ref, quantity in solution.values.items():
+        marker = "★" if ref == target else " "
+        console.print(f" {marker} [bold]{ref}[/] = {format_quantity(quantity)}")
+    console.print(f"\n[dim]residual over every assembled equation: {solution.residual:.2e}[/]")
+
+    check = engine.cross_check(target)
+    if "rel_error" in check:
+        style = "green" if check["agree"] else "bold red"
+        console.print(
+            f"[{style}]cross-check with Engine A: relative difference "
+            f"{check['rel_error']:.2e}[/]"
+        )
+    else:
+        console.print(
+            f"[dim]{check.get('note', 'Engine A cannot reach this target')}[/]"
+        )
+
+
+# --------------------------------------------------------------------------- Engine C: ODE
+
+
+@app.command("ode")
+def ode_cmd(
+    example: str = typer.Argument("projectile", help="projectile | rc | gravity"),
+    dt: float = typer.Option(0.001, "--dt", help="Time step"),
+    t1: float = typer.Option(1.0, "--t1", help="End time"),
+    method: str = typer.Option("rk4", "--method", help="euler | rk4 | rk45"),
+    spec_out: Path | None = typer.Option(None, "--json", help="Write the trajectory JSON here."),
+) -> None:
+    """Integrate a problem whose answer is a function of time (Engine C)."""
+    from .engine_ode import (
+        ODEEngine,
+        constant_acceleration,
+        projectile_in_gravity,
+        rc_charging,
+        rc_closed_form,
+    )
+
+    console.print(
+        Panel(f"Engine C — {example}, {method}, dt={dt}, t=[0, {t1}]", border_style="green")
+    )
+    engine = ODEEngine()
+    check: str | None = None
+    if example == "projectile":
+        position, velocity = Ref("p", "geometry.position"), Ref("p", "kinematics.velocity")
+        problem = constant_acceleration(position, velocity, 2.0, t_span=(0, t1), dt=dt, method=method)
+        trajectory = engine.integrate(problem)
+        a, t_end = 2.0, trajectory.t[-1]
+        check = (
+            f"algebraic kinematics: v = a*t = {a * t_end:.9g}, "
+            f"s = a*t^2/2 = {a * t_end**2 / 2:.9g}"
+        )
+    elif example == "rc":
+        voltage = Ref("c1", "em.potential_difference")
+        problem = rc_charging(voltage, 5.0, 10_000.0, 100e-6, t_span=(0, t1), dt=dt, method=method)
+        trajectory = engine.integrate(problem)
+        check = (
+            f"closed form V(t) = Vs(1 - e^-t/RC) = "
+            f"{rc_closed_form(5.0, 0.0, 10_000.0, 100e-6, trajectory.t[-1]):.9g} V"
+        )
+    elif example == "gravity":
+        position, velocity = Ref("ball", "geometry.position"), Ref("ball", "kinematics.velocity")
+        problem = projectile_in_gravity(position, velocity, t_span=(0, t1), dt=dt, method=method)
+        trajectory = engine.integrate(problem)
+    else:
+        console.print(f"[red]unknown example {example!r}; try projectile, rc or gravity[/]")
+        raise typer.Exit(code=2)
+
+    console.print(
+        f"[bold]{trajectory.steps} steps[/] over t = [{trajectory.t[0]:.6g}, "
+        f"{trajectory.t[-1]:.6g}] s, method {trajectory.method}"
+    )
+    for variable in trajectory.problem.variables:
+        series = trajectory.y[variable.ref]
+        final = series[-1]
+        shown = (
+            "[" + ", ".join(f"{c:.6g}" for c in final) + "]" if isinstance(final, tuple) else f"{final:.6g}"
+        )
+        console.print(f"  [bold]{variable.ref}[/] : {shown} {_unit_of(variable.dim)}")
+    if check:
+        console.print(f"[dim]cross-check against algebra: {check}[/]")
+
+    if spec_out:
+        import json
+
+        spec_out.write_text(json.dumps(trajectory.to_json(), indent=1), encoding="utf-8")
+        console.print(f"[dim]trajectory -> {spec_out}[/]")
+
+
+def _coerce(text: str):
+    """Read a command-line argument as a number or a list where it clearly is one.
+
+    The toolkit is a Python API first; the command line is a convenience for
+    looking at it, so arguments are read leniently and errors are reported with
+    the signature rather than as a traceback.
+    """
+    import json
+
+    if text.startswith(("[", "{")):
+        try:
+            return json.loads(text)
+        except ValueError:
+            return text
+    for cast in (int, float):
+        try:
+            return cast(text)
+        except ValueError:
+            continue
+    return text
+
+
+def _unit_of(dim) -> str:
+    from .units import display_unit
+
+    return display_unit(dim)
+
+
+# --------------------------------------------------------------------------- math toolkit
+
+
+@app.command("math")
+def math_cmd(
+    name: str = typer.Argument(None, help="Tool name, or 'list' to see them all."),
+    args: list[str] = typer.Argument(None, help="Positional arguments for the tool."),
+) -> None:
+    """Call a mathematical tool by name: differentiate, integrate, solve_system, ..."""
+    from .math_tools import TOOLS, call as call_tool, describe as describe_tools
+
+    if name in (None, "list", "tools"):
+        table = Table(title="mathematical toolkit", box=None, header_style="bold", title_justify="left")
+        table.add_column("tool")
+        table.add_column("signature")
+        table.add_column("dims", justify="center")
+        for entry in describe_tools():
+            table.add_row(
+                f"[cyan]{entry['name']}[/]", entry["signature"],
+                "yes" if entry["dimension_aware"] == "True" else "no",
+            )
+        console.print(table)
+        console.print(
+            "[dim]call one with: ff math <tool> <positional args...> — the toolkit is "
+            "also importable from kernel.math_tools by any engine[/]"
+        )
+        return
+
+    if name not in TOOLS:
+        console.print(f"[red]unknown tool {name!r}[/]; available: {', '.join(sorted(TOOLS))}")
+        raise typer.Exit(code=2)
+
+    entry = TOOLS[name]
+    positional = [_coerce(arg) for arg in (args or [])]
+    try:
+        result = call_tool(name, *positional)
+    except TypeError as exc:
+        console.print(f"[yellow]{name}: {exc}[/]\n[dim]signature: {entry.signature}[/]")
+        raise typer.Exit(code=2) from exc
+    except Exception as exc:
+        console.print(f"[red]{name} failed:[/] {exc}")
+        raise typer.Exit(code=1) from exc
+
+    console.print(f"[bold cyan]{name}[/]  [dim]{entry.signature}[/]")
+    if isinstance(result, tuple):
+        for item in result:
+            console.print(f"  {item}")
+    elif hasattr(result, "expression"):
+        console.print(f"  [bold]{result.expression}[/]   [{result.dim}]")
+    else:
+        console.print(f"  {result}")
 
 
 if __name__ == "__main__":

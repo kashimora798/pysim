@@ -1,0 +1,32 @@
+id: p111
+title: Two cells of different emf in parallel, feeding a load
+source: "Classic; see also OpenStax College Physics 2e, 21.3 (CC BY) for Kirchhoff's rules"
+tags: [circuits, kirchhoff, simultaneous, internal-resistance, engine-b, flagship]
+text: |
+  A cell of emf 1 V with internal resistance 2 ohms is connected in parallel with a cell of
+  emf 2 V with internal resistance 1 ohm, the like poles together. The combination drives a
+  1 ohm resistor. What current does the resistor draw?
+scene:
+  instances:
+    - {id: b1, kind: battery, set: {electric.emf: "1 V", electric.resistance: "2 ohm"}}
+    - {id: b2, kind: battery, set: {electric.emf: "2 V", electric.resistance: "1 ohm"}}
+    - {id: pp, kind: parallel_pair}
+    - {id: r_load, kind: resistor, set: {electric.resistance: "1 ohm"}}
+    - {id: loop, kind: circuit_loop}
+  relations:
+    - {kind: parallel_a, from: pp, to: b1}
+    - {kind: parallel_b, from: pp, to: b2}
+    - {kind: driven_by, from: loop, to: pp}
+    - {kind: loads, from: loop, to: r_load}
+target: {instance: loop, prop: electric.current}
+expect:
+  value: 1.0
+  unit: A
+  tol: 0.001
+  note: >
+    The case Engine A cannot do, and the reason Engine B exists. The terminal voltage V of the
+    pair is set by both branches at once: each branch obeys I = (emf - V)/r, the branches sum,
+    and the load draws V/R. Writing V = (1-V)/2 + (2-V)/1 gives V = 1 V, hence 1 A. No single
+    row in the knowledge base can be walked backwards to V, so the equations must be assembled
+    and solved together. Engine A honestly reports failure here.
+engine: system

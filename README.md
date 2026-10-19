@@ -22,7 +22,20 @@ makes a network call or consults a model.
 
 ## Status
 
-Milestones M0–M3 of the plan: the compiler and the chain resolver, as a CLI. No 3D renderer yet.
+Milestones M0–M4 of the plan: the compiler and all three engines, as a CLI. No 3D renderer yet.
+
+**Three engines, one knowledge base, cross-checked against each other:**
+
+| engine | what it answers | where |
+|---|---|---|
+| **A** — chain | algebraic chains: `field → qE → a → v` | `kernel/engine_chain.py` |
+| **B** — system | simultaneous systems: two cells in parallel, any scene where no single law isolates an unknown | `kernel/engine_system.py` |
+| **C** — ODE | time evolution: a charging capacitor, a trajectory | `kernel/engine_ode.py` |
+
+Plus `kernel/math_tools.py`, the explicit mathematical toolkit — differentiation, integration,
+quadrature, gradients, linear and symbolic solving — registered by name and callable by any
+engine (`ff math list`). Wherever both A and B reach an answer they must agree to 1e-9, and the
+coverage run reports the comparison for every corpus problem.
 
 Domain: **charged particles and electrostatic fields** — chosen because nothing in the market
 occupies generative + lawful + 3D here, and because the `field → qE force → acceleration →
@@ -56,11 +69,16 @@ kernel/
   validate.py      the 6 validators
   scene.py         scenes, instances, bindings, relations
   engine_chain.py  Engine A: backward-chaining resolver (multi-path)
+  engine_system.py Engine B: acausal assembly of simultaneous systems
+  engine_ode.py    Engine C: time evolution by explicit integration
+  math_tools.py    the mathematical toolkit, callable by name
+  solve.py         engine selection + cross-checking
   trace.py         trace -> SimSpec JSON
   cli.py           ff
   ontology/        property + constant tables (YAML)
   kb/              component, formula and law tables (YAML)
-corpus/problems/   problems with expected answers -- the coverage set
+corpus/problems/   problems with expected answers -- the coverage set (Engines A + B)
+corpus/trajectories/  time-evolution problems with closed-form answers (Engine C)
 tests/
 ```
 

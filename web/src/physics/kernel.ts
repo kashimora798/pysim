@@ -218,6 +218,13 @@ export interface FormulaDef {
   bindings: Record<string, BindingDef>;
   law: string | null;
   assumes: string[];
+  /**
+   * Component kinds this row is a law *of*. Empty means universal — P = I*V holds for a battery
+   * as much as for a resistor. The rows that are not universal say so, because Ohm's law
+   * across a battery's terminals is false, and a browser-side resolver that applied it anyway
+   * would disagree with the kernel that exported this bundle.
+   */
+  appliesTo?: string[];
   cite: string;
   cost: number;
   note: string;
@@ -256,7 +263,17 @@ export interface KnowledgeBase {
     warnings: number;
     backlog: string[];
     counts: Record<string, number>;
-    coverage: { total: number; resolved: number; agreeing: number; multipath: number };
+    coverage: {
+      total: number;
+      resolved: number;
+      agreeing: number;
+      multipath: number;
+      /** Problems only Engine B could reach — genuinely simultaneous systems. */
+      bySystem?: number;
+      /** Problems where both engines answered and were compared. */
+      crossChecked?: number;
+    };
+    engines?: string[];
   };
   base: string[];
   properties: Record<string, PropertyDef>;
@@ -325,6 +342,8 @@ export interface SimSpec {
   checks: {
     dimensions: string;
     engines: string[];
+    /** True when the answer came from a simultaneous block rather than a chain. */
+    simultaneous?: boolean;
     paths_found: number;
     paths_agree: boolean;
     path_spread: number;

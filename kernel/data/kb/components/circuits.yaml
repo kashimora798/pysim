@@ -10,12 +10,14 @@ components:
     label: Battery
     tags: [source, circuit, emf]
     description: >
-      An ideal source of constant emf. Two terminals; current leaves the positive one. Ideal here
-      means zero internal resistance, which the assumption list on every formula states plainly.
+      A source of constant emf with an internal resistance. Two terminals; current leaves the
+      positive one. The internal resistance is what the branch law divides by, and it defaults to
+      zero — an ideal source — which is the case every assumption list in this chapter states.
     laws: [ohms_law, kirchhoff_voltage_law]
     model3d: battery.glb
     properties:
       electric.emf:        {role: settable, required: true}
+      electric.resistance: {role: settable, default: "0 ohm", note: "internal resistance; 0 = ideal source"}
       em.potential_difference: {role: observable}
       electric.current:    {role: observable}
       electric.power:      {role: observable}

@@ -49,6 +49,18 @@
             },
             "rank": "scalar",
             "display": "9 V"
+          },
+          "bat.electric.resistance": {
+            "value": 0.0,
+            "unit": "Ω",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-2"
+            },
+            "rank": "scalar",
+            "display": "0 Ω"
           }
         }
       },
@@ -238,8 +250,10 @@
   "checks": {
     "dimensions": "pass",
     "engines": [
-      "chain"
+      "chain",
+      "system"
     ],
+    "simultaneous": false,
     "paths_found": 1,
     "paths_agree": true,
     "path_spread": 0.0
@@ -254,7 +268,7 @@
       "narrate": "Place Battery.",
       "because": {
         "kind": "scene",
-        "detail": "An ideal source of constant emf. Two terminals; current leaves the positive one. Ideal here means zero internal resistance, which the assumption list on every formula states plainly.",
+        "detail": "A source of constant emf with an internal resistance. Two terminals; current leaves the positive one. The internal resistance is what the branch law divides by, and it defaults to zero — an ideal source — which is the case every assumption list in this chapter states.",
         "laws": [
           "ohms_law",
           "kirchhoff_voltage_law"

@@ -1,6 +1,6 @@
 {
  "schema": "1",
- "contentHash": "5f438303d71ac8fc",
+ "contentHash": "5c21c4aabd5618b9",
  "problems": [
   {
    "id": "p001",
@@ -33,6 +33,12 @@
     "environment",
     "parallel_plate_capacitor"
    ],
+   "engines": [
+    "chain",
+    "system"
+   ],
+   "engine": "chain",
+   "simultaneous": false,
    "spec": "specs/p001.json"
   },
   {
@@ -57,6 +63,12 @@
     "field_probe",
     "point_charge"
    ],
+   "engines": [
+    "chain",
+    "system"
+   ],
+   "engine": "chain",
+   "simultaneous": false,
    "spec": "specs/p002.json"
   },
   {
@@ -88,6 +100,12 @@
     "environment",
     "spherical_cavity_in_charged_sphere"
    ],
+   "engines": [
+    "chain",
+    "system"
+   ],
+   "engine": "chain",
+   "simultaneous": false,
    "spec": "specs/p003.json"
   },
   {
@@ -113,6 +131,12 @@
     "environment",
     "field_probe"
    ],
+   "engines": [
+    "chain",
+    "system"
+   ],
+   "engine": "chain",
+   "simultaneous": false,
    "spec": "specs/p004.json"
   },
   {
@@ -135,6 +159,12 @@
     "environment",
     "infinite_charged_plane"
    ],
+   "engines": [
+    "chain",
+    "system"
+   ],
+   "engine": "chain",
+   "simultaneous": false,
    "spec": "specs/p005.json"
   },
   {
@@ -159,6 +189,12 @@
     "environment",
     "uniform_magnetic_field_region"
    ],
+   "engines": [
+    "chain",
+    "system"
+   ],
+   "engine": "chain",
+   "simultaneous": false,
    "spec": "specs/p006.json"
   },
   {
@@ -183,6 +219,12 @@
     "field_probe",
     "point_charge"
    ],
+   "engines": [
+    "chain",
+    "system"
+   ],
+   "engine": "chain",
+   "simultaneous": false,
    "spec": "specs/p007.json"
   },
   {
@@ -210,6 +252,12 @@
     "environment",
     "parallel_plate_capacitor"
    ],
+   "engines": [
+    "chain",
+    "system"
+   ],
+   "engine": "chain",
+   "simultaneous": false,
    "spec": "specs/p008.json"
   },
   {
@@ -242,6 +290,12 @@
     "environment",
     "parallel_plate_capacitor"
    ],
+   "engines": [
+    "chain",
+    "system"
+   ],
+   "engine": "chain",
+   "simultaneous": false,
    "spec": "specs/p009.json"
   },
   {
@@ -264,6 +318,12 @@
     "environment",
     "uniform_charged_sphere"
    ],
+   "engines": [
+    "chain",
+    "system"
+   ],
+   "engine": "chain",
+   "simultaneous": false,
    "spec": "specs/p010.json"
   },
   {
@@ -298,6 +358,12 @@
     "environment",
     "spherical_cavity_in_charged_sphere"
    ],
+   "engines": [
+    "chain",
+    "system"
+   ],
+   "engine": "chain",
+   "simultaneous": false,
    "spec": "specs/p011.json"
   },
   {
@@ -327,6 +393,12 @@
     "environment",
     "parallel_plate_capacitor"
    ],
+   "engines": [
+    "chain",
+    "system"
+   ],
+   "engine": "chain",
+   "simultaneous": false,
    "spec": "specs/p012.json"
   },
   {
@@ -353,6 +425,12 @@
     "field_probe",
     "point_charge"
    ],
+   "engines": [
+    "chain",
+    "system"
+   ],
+   "engine": "chain",
+   "simultaneous": false,
    "spec": "specs/p013.json"
   },
   {
@@ -377,6 +455,12 @@
     "charged_particle",
     "environment"
    ],
+   "engines": [
+    "chain",
+    "system"
+   ],
+   "engine": "chain",
+   "simultaneous": false,
    "spec": "specs/p014.json"
   },
   {
@@ -404,6 +488,12 @@
     "environment",
     "resistor"
    ],
+   "engines": [
+    "chain",
+    "system"
+   ],
+   "engine": "chain",
+   "simultaneous": false,
    "spec": "specs/p101.json"
   },
   {
@@ -433,6 +523,12 @@
     "resistor",
     "series_pair"
    ],
+   "engines": [
+    "chain",
+    "system"
+   ],
+   "engine": "chain",
+   "simultaneous": false,
    "spec": "specs/p102.json"
   },
   {
@@ -463,6 +559,12 @@
     "parallel_pair",
     "resistor"
    ],
+   "engines": [
+    "chain",
+    "system"
+   ],
+   "engine": "chain",
+   "simultaneous": false,
    "spec": "specs/p103.json"
   },
   {
@@ -490,6 +592,12 @@
     "environment",
     "lamp"
    ],
+   "engines": [
+    "chain",
+    "system"
+   ],
+   "engine": "chain",
+   "simultaneous": false,
    "spec": "specs/p104.json"
   },
   {
@@ -524,6 +632,12 @@
     "resistor",
     "series_pair"
    ],
+   "engines": [
+    "chain",
+    "system"
+   ],
+   "engine": "chain",
+   "simultaneous": false,
    "spec": "specs/p105.json"
   },
   {
@@ -554,6 +668,12 @@
     "resistor",
     "series_pair"
    ],
+   "engines": [
+    "chain",
+    "system"
+   ],
+   "engine": "chain",
+   "simultaneous": false,
    "spec": "specs/p106.json"
   },
   {
@@ -577,6 +697,12 @@
     "capacitor",
     "environment"
    ],
+   "engines": [
+    "chain",
+    "system"
+   ],
+   "engine": "chain",
+   "simultaneous": false,
    "spec": "specs/p107.json"
   },
   {
@@ -601,6 +727,12 @@
     "capacitor",
     "environment"
    ],
+   "engines": [
+    "chain",
+    "system"
+   ],
+   "engine": "chain",
+   "simultaneous": false,
    "spec": "specs/p108.json"
   },
   {
@@ -626,6 +758,12 @@
     "environment",
     "resistor"
    ],
+   "engines": [
+    "chain",
+    "system"
+   ],
+   "engine": "chain",
+   "simultaneous": false,
    "spec": "specs/p109.json"
   },
   {
@@ -652,7 +790,86 @@
     "environment",
     "parallel_pair"
    ],
+   "engines": [
+    "chain",
+    "system"
+   ],
+   "engine": "chain",
+   "simultaneous": false,
    "spec": "specs/p110.json"
+  },
+  {
+   "id": "p111",
+   "title": "Two cells of different emf in parallel, feeding a load",
+   "text": "A cell of emf 1 V with internal resistance 2 ohms is connected in parallel with a cell of\nemf 2 V with internal resistance 1 ohm, the like poles together. The combination drives a\n1 ohm resistor. What current does the resistor draw?",
+   "source": "Classic; see also OpenStax College Physics 2e, 21.3 (CC BY) for Kirchhoff's rules",
+   "tags": [
+    "circuits",
+    "kirchhoff",
+    "simultaneous",
+    "internal-resistance",
+    "engine-b",
+    "flagship"
+   ],
+   "target": "loop.electric.current",
+   "answer": "1 A",
+   "beats": 25,
+   "paths": 1,
+   "laws": [
+    "kirchhoff_current_law",
+    "kirchhoff_voltage_law",
+    "series_resistance"
+   ],
+   "components": [
+    "battery",
+    "circuit_loop",
+    "environment",
+    "parallel_pair",
+    "resistor"
+   ],
+   "engines": [
+    "chain",
+    "system"
+   ],
+   "engine": "system",
+   "simultaneous": true,
+   "spec": "specs/p111.json"
+  },
+  {
+   "id": "p112",
+   "title": "The same two cells, one reversed",
+   "text": "The cells of the previous problem are reconnected so that they oppose each other: the 2 V\ncell is reversed while the 1 V cell and the 1 ohm load are unchanged. What current does the\nload draw now, and in which direction does it flow?",
+   "source": "Classic; the reversed case of p111",
+   "tags": [
+    "circuits",
+    "kirchhoff",
+    "simultaneous",
+    "internal-resistance",
+    "engine-b"
+   ],
+   "target": "loop.electric.current",
+   "answer": "-0.6 A",
+   "beats": 25,
+   "paths": 1,
+   "laws": [
+    "kirchhoff_current_law",
+    "kirchhoff_voltage_law",
+    "series_resistance"
+   ],
+   "components": [
+    "battery",
+    "circuit_loop",
+    "environment",
+    "parallel_pair",
+    "resistor"
+   ],
+   "engines": [
+    "chain",
+    "system"
+   ],
+   "engine": "system",
+   "simultaneous": true,
+   "spec": "specs/p112.json"
   }
  ]
 }

@@ -1,0 +1,30 @@
+id: p112
+title: The same two cells, one reversed
+source: "Classic; the reversed case of p111"
+tags: [circuits, kirchhoff, simultaneous, internal-resistance, engine-b]
+text: |
+  The cells of the previous problem are reconnected so that they oppose each other: the 2 V
+  cell is reversed while the 1 V cell and the 1 ohm load are unchanged. What current does the
+  load draw now, and in which direction does it flow?
+scene:
+  instances:
+    - {id: b1, kind: battery, set: {electric.emf: "1 V", electric.resistance: "2 ohm"}}
+    - {id: b2, kind: battery, set: {electric.emf: "-2 V", electric.resistance: "1 ohm"}}
+    - {id: pp, kind: parallel_pair}
+    - {id: r_load, kind: resistor, set: {electric.resistance: "1 ohm"}}
+    - {id: loop, kind: circuit_loop}
+  relations:
+    - {kind: parallel_a, from: pp, to: b1}
+    - {kind: parallel_b, from: pp, to: b2}
+    - {kind: driven_by, from: loop, to: pp}
+    - {kind: loads, from: loop, to: r_load}
+target: {instance: loop, prop: electric.current}
+expect:
+  value: -0.6
+  unit: A
+  tol: 0.001
+  note: >
+    V = (1-V)/2 + (-2-V)/1  =>  V = -0.6 V, so the load carries 0.6 A the other way round. The
+    magnitude is 3/5 A. Same four equations as p111, one sign changed: the assembled system does
+    not care, which is the point of solving it rather than remembering a formula for it.
+engine: system

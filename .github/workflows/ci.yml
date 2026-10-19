@@ -16,6 +16,7 @@ jobs:
           cache: pip
       - run: pip install -e ".[dev]"
       - run: python -m kernel.cli audit --coverage
+      - run: python -m kernel.cli trajectories
       - run: python -m kernel.cli export
       - uses: actions/setup-node@v4
         with:

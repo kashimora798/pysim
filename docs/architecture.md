@@ -9,6 +9,9 @@ problem text ──(LLM, boundary)──▶ Scene ──▶ [ VALIDATE ] ──�
                      │              PHYSICS KERNEL (no AI)              │
                      │   Engine A: chain  │  Engine B: system  │  C: ODE │
                      │           └──── cross-check must agree ───┘       │
+                     │                     ▲                            │
+                     │        MATHEMATICAL TOOLKIT (explicit calls)      │
+                     │   differentiate · integrate · solve · quadrature  │
                      └───────────────────────────┬──────────────────────┘
                                                  │ Trace — ordered, every step cited
                                                  ▼
@@ -18,7 +21,8 @@ problem text ──(LLM, boundary)──▶ Scene ──▶ [ VALIDATE ] ──�
                                   (dumb)      (KaTeX)        (agents)
 ```
 
-Engine A is built. B and C are not yet — see *What is missing* below.
+All three engines are built, over one knowledge base, and they cross-check each other.
+`ff coverage` reports which engine answered each corpus problem.
 
 ## The one rule
 
@@ -131,22 +135,125 @@ keying, p003 correctly collapses to one path while p001, p009 and p011 keep two:
 conservation* versus *constant-acceleration kinematics*, which is a real choice a student
 benefits from seeing.
 
-The corpus asserts that all paths of a problem agree to within 1e-9. **That cross-check is the
-verification story** — the visible trust machinery the research document asks for in §6.4. It is
-also what will catch a knowledge-base bug when Engine B lands.
+The corpus asserts that all paths of a problem agree to within 1e-9, and that Engine A and
+Engine B agree to within 1e-9 wherever both can answer. **Those cross-checks are the verification
+story** — the visible trust machinery the research document asks for in §6.4. They are also what
+catches a knowledge-base bug the moment one is introduced: two engines of different construction,
+reading the same tables, cannot both be wrong in the same way by accident.
 
 ### What Engine A cannot do
 
 Honestly scoped: it handles **algebraic chains**. It cannot do
 
-- **simultaneous systems** — no formula solves for the current in a Wheatstone bridge in
-  isolation; that needs assembling equations and solving a matrix;
-- **time evolution** — the answer is a function, not a value;
-- **field integrals** over a distribution.
+- **simultaneous systems** — two cells of different emf in parallel have a terminal voltage no
+  single row determines. That needs **Engine B** below;
+- **time evolution** — the answer is a function, not a value. That needs **Engine C** below;
+- **field integrals** over a distribution — the toolkit has them
+  (`integrate`, `quadrature`), but nothing in the knowledge base asks for one yet.
 
-Those need Engine B (acausal assembly) and Engine C (ODE/DAE). They are not written yet. Engine A
-is the special case of Engine B where the system happens to be triangular — which is also why
-they will be able to cross-check each other.
+Engine A is the special case of Engine B in which every strongly-connected component of the
+dependency graph happens to hold one unknown. That is not a coincidence but the design: Engine B
+causalises first, and only solves simultaneously where it must.
+
+## Engine B: acausal assembly
+
+`kernel/engine_system.py`. For the problems where no single law isolates any unknown: two cells
+of different emf in parallel, a loaded bridge, any scene where the same quantity is both a cause
+and a consequence.
+
+Engine B does not flatten everything into one matrix. The knowledge base deliberately carries
+several rearrangements of each law — `I = V/R`, `V = I*R`, `R = V/I` — because Engine A needs to
+walk a chain in whichever direction the givens point. A naive flattening therefore assembles a
+*structurally singular* system: rows that are the same relation, which leaves unknowns free while
+still letting a numeric solver return a number. Three guards prevent that.
+
+**1. One producer per unknown, chosen by fewest new unknowns.** Working backwards from the
+target, each unknown gets the cheapest law that could produce it. This makes the dependency graph
+the *smallest* graph that could answer the question.
+
+**2. Tarjan over that graph.** Components emerge with every dependency already emitted, so
+anything triangular stays a chain — Engine A's territory, reached through the same rows — and
+only a genuine cycle becomes a simultaneous block.
+
+**3. Structural rank, then the rank at the answer.** A block is accepted only when its equations
+are independent enough to determine its unknowns. If they are not, the law that removes the most
+freedom is added and the block grows. Two subtleties the guards exist for:
+
+* the generic rank of a Jacobian can exceed its rank *on the solution set* — the determinant can
+  be a multiple of one of the equations — so uniqueness is re-tested at the answer, not just at a
+  random point;
+* a square subset chosen generically can still collapse, so when a subset yields a family rather
+  than a number, the solver's own free variable is used to fetch a law for exactly that quantity,
+  and failing that, the whole over-determined block is solved as assembled.
+
+If the knowledge base runs out of laws first, Engine B says so — "under-determined, these
+equations leave one degree of freedom" — rather than returning a root it converged on.
+
+### A law must say what it is a law of
+
+Building Engine B exposed a real modelling bug. `ohm.I_from_V_R` was unrestricted, so the
+assembler applied Ohm's law across a *battery's* terminals, where it is false: a source obeys
+`V = emf - I*r`. The assembled system then had no solution at all, because the physics had been
+contradicted rather than under-specified.
+
+Formula rows may now declare `applies_to: [battery]`, `[resistor, lamp]`, `[circuit_loop]`. An
+empty list means universal — `P = I*V` holds for a battery as much as for a resistor, and
+pretending otherwise would invent a restriction. Only the rows that are *not* universal have to
+say so. The browser port of the resolver honours the same field, so the exported bundle and the
+kernel that produced it cannot disagree.
+
+## Engine C: time evolution
+
+`kernel/engine_ode.py`. For answers that are functions: a capacitor charging, a projectile
+flying, anything where "what is it?" is the wrong question and "what does it do?" is the right
+one.
+
+The physics still comes from the same tables. Engine C adds three declarations — this property is
+the derivative of that one, here is the initial condition, here is the integrator — and then
+samples. Methods are named on the result (`euler`, `rk4`, `rk45` via SciPy when installed),
+because *the answer depends on the method* is exactly what a physics engine must say out loud.
+
+The engine's first duty after integrating is to check itself. Where algebra has an answer —
+constant acceleration, exponential RC charging — the tests hold the integrator to it, and `ff ode`
+prints the closed form next to the sampled one. RK4 is exact for constant acceleration to machine
+precision; Euler visibly is not, and the difference is recorded rather than hidden.
+
+Vector state is supported (three components per vector variable), and a trajectory exports to
+SimSpec-shaped beats, so a renderer can play back a curve without a separate animation format.
+
+`corpus/trajectories/` is Engine C's counterpart to the algebraic corpus: each entry declares a
+builder, its arguments, the integration settings, and the closed-form value the sampled answer
+must reach. `ff trajectories` runs all of them and reports which agree. The tolerance is looser
+than the algebraic corpus's on purpose — an integrator has a truncation error that belongs to the
+method and the step size, not to a mistake — and the method and `dt` are recorded alongside it.
+
+## The mathematical toolkit
+
+`kernel/math_tools.py`. Differentiation, integration, limits, series, gradient, divergence, curl,
+Laplacian, rearrangement, symbolic and linear system solving, determinants, inverses, quadrature
+and numerical differentiation — plus the ODE integrator itself.
+
+The design point is that these are **explicit, callable tools**, not machinery buried inside a
+solver. Every one is registered by name and reachable three ways:
+
+```python
+from kernel.math_tools import differentiate, call, TOOLS
+differentiate("x**2", "x", dims={"x": Dim.of(m=1)})     # -> 2*x  [m]
+call("rearrange", "V - I*R", "I")                        # -> V/R
+sorted(TOOLS)                                            # the whole registry
+```
+
+and from the command line as `ff math list` / `ff math rearrange "V - I*R" I`.
+
+Three properties are enforced. **Nothing integrates by accident** — a caller names the tool, so a
+trace can say "and here we integrated". **Dimensions are carried where they can be**:
+differentiation divides by the variable's dimension, integration multiplies by it, a gradient's
+components carry the field's dimension per length. **No tool invents physics** — they know nothing
+of charge or circuits; the knowledge base decides what is lawful and this module only does
+arithmetic.
+
+A tool that cannot know the dimensions (a purely numerical quadrature over an expression already
+in SI) says so: it returns a plain float and leaves the tagging to the caller.
 
 ## Trace is the storyboard
 
@@ -173,7 +280,7 @@ Run by `ff audit`.
 | 3 | `rank` | error | scalar and vector silently interchanged |
 | 4 | `units` | error | a property's `si_unit` disagrees with its declared dimension |
 | 5 | `orphans` | warning | a property nothing can produce, or nothing consumes |
-| 6 | `coverage` | error | a corpus problem that fails to resolve or reach its known answer |
+| 6 | `coverage` | error | a corpus problem that fails to resolve or reach its known answer — under *either* engine, or where both answer and disagree |
 
 Checks 1–4 are hard failures: invalid physics cannot enter the building. Checks 5–6 report.
 
@@ -216,17 +323,18 @@ cross product.
 
 In rough order of value:
 
-1. **Engine B** — acausal assembly: components contribute constitutive equations, topology
-   contributes connection equations, solve the system. Unlocks circuits and anything
-   simultaneous. Should cross-check against Engine A on every problem both can reach.
-2. **Engine C** — ODE/DAE integration for genuine time evolution, so a trajectory is sampled
-   rather than evaluated at one instant.
-3. **The renderer** — a three.js player for SimSpec. The contract is ready; nothing consumes it.
-4. **The LLM boundary** — prose → `Scene`, with the structured scene shown for editing.
-5. **MCP server** — the `§6.2` tool surface over the kernel.
-6. **More corpus.** Eleven problems is a proof, not a product. The moat is a large corpus of
+1. **The renderer** — a three.js / IWSDK player for SimSpec. The contract is ready and the
+   precompiled traces are exported; the free-build bench still needs the resolver port finished
+   (it mirrors Engine A in TypeScript).
+2. **The LLM boundary** — prose → `Scene`, with the structured scene shown for editing.
+3. **MCP server** — the `§6.2` tool surface over the kernel. The mathematical toolkit is already
+   a named registry, which is the shape such a server wants.
+4. **Field integrals in the corpus.** The toolkit can integrate; no knowledge-base row asks it
+   to yet. A charged rod or disc solved by quadrature is the natural next flagship, and it would
+   be the first problem only Engine B plus the toolkit can do.
+5. **More corpus.** Twenty-six problems is a proof, not a product. The moat is a large corpus of
    machine-checked golden traces, and growing it is the work that compounds.
 
-A note on #3: do not let a game physics engine (Rapier, cannon-es) integrate the motion. Those
+A note on #1: do not let a game physics engine (Rapier, cannon-es) integrate the motion. Those
 are plausible, not lawful. The kernel computes the trajectory; the renderer only applies
 transforms. Using a game integrator would quietly void the entire positioning.

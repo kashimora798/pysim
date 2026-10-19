@@ -1,0 +1,27 @@
+id: t002
+title: A body falling from rest under constant acceleration
+source: "OpenStax College Physics 2e, 2.5 (CC BY)"
+tags: [kinematics, time-evolution, engine-c, cross-check]
+text: |
+  A body is released from rest and accelerates at 2 m/s^2. Where is it, and how fast is it
+  moving, after 3 s?
+
+  This is the calibration case: Engine A gets here with v = u + a*t in one step, so the two
+  engines must agree exactly. RK4 is exact for a quadratic, and the tolerance below is
+  machine precision rather than the looser one the exponential case needs.
+problem: constant_acceleration
+refs:
+  ref_position: p.geometry.position
+  ref_velocity: p.kinematics.velocity
+args: {acceleration: 2.0, x0: 0.0, v0: 0.0}
+t_span: [0, 3]
+dt: 0.01
+method: rk4
+target: {ref: p.kinematics.velocity}
+expect:
+  value: 6.0
+  unit: m/s
+  tol: 1.0e-9
+  note: >
+    v = u + a*t = 0 + 2*3 = 6 m/s, and the sampled trajectory must land on it exactly. The
+    displacement, s = a*t^2/2 = 9 m, is checked by the same run.

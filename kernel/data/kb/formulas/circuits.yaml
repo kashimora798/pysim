@@ -73,6 +73,151 @@ formulas:
     cite: "OpenStax College Physics 2e, 19.6 (CC BY)"
     cost: 1
 
+  # ------------------------------------------------- branches (Engine B territory)
+  #
+  # Everything above is a *reduction*: it collapses a network to one number by composition, and
+  # Engine A can walk it backwards. A source with internal resistance feeding a node cannot be
+  # reduced that way — its current depends on the terminal voltage, which depends on every other
+  # branch. These rows state the *local* laws instead: one KVL equation per branch and one KCL
+  # equation per node. No row here can be walked backwards on its own, which is exactly why they
+  # need Engine B to be assembled and solved together.
+
+  branch.I_from_emf_V_R:
+    solves_for: electric.current
+    scope: self
+    bindings:
+      emf: {prop: electric.emf}
+      V:   {prop: em.potential_difference}
+      r:   {prop: electric.resistance}
+    expr: "(emf - V) / r"
+    law: kirchhoff_voltage_law
+    applies_to: [battery]
+    assumes: [steady_state, ohmic_internal_resistance, ideal_wires]
+    cite: "OpenStax College Physics 2e, 21.2 (CC BY)"
+    cost: 1
+    note: >
+      The current a real source delivers is set by how far its terminal voltage sits below its
+      emf. With r = 0 this row is unusable, which is correct: an ideal source's current is fixed
+      by the rest of the circuit, not by this equation.
+
+  branch.V_from_emf_I_R:
+    solves_for: em.potential_difference
+    scope: self
+    bindings:
+      emf: {prop: electric.emf}
+      I:   {prop: electric.current}
+      r:   {prop: electric.resistance}
+    expr: "emf - I * r"
+    law: kirchhoff_voltage_law
+    applies_to: [battery]
+    assumes: [steady_state, ohmic_internal_resistance, ideal_wires]
+    cite: "OpenStax College Physics 2e, 21.2 (CC BY)"
+    cost: 2
+    note: >
+      The same branch law read the other way: the terminal voltage sags below the emf by exactly
+      the internal drop. Not different physics — but a direction the assembly needs, because a
+      node's voltage is set by the currents through it as much as it sets them.
+
+  parallel.I_from_members:
+    solves_for: electric.current
+    scope: pair
+    roles:
+      a: {via: parallel_a}
+      b: {via: parallel_b}
+    bindings:
+      Ia: {prop: electric.current, from: a}
+      Ib: {prop: electric.current, from: b}
+    expr: "Ia + Ib"
+    law: kirchhoff_current_law
+    assumes: [steady_state, no_charge_accumulation]
+    cite: "OpenStax College Physics 2e, 21.3 (CC BY)"
+    cost: 1
+    note: >
+      Kirchhoff's current law in the same binary shape as the reduction rules: the current into a
+      parallel combination is the sum of the currents through its members. Roles are deliberately
+      kind-agnostic here — the law is about the junction, not about what is wired to it.
+
+  parallel.V_shared_from_member:
+    solves_for: em.potential_difference
+    scope: pair
+    roles:
+      member: {via: parallel_a}
+    bindings:
+      V: {prop: em.potential_difference, from: member}
+    expr: "V"
+    law: kirchhoff_voltage_law
+    assumes: [same_voltage_across_both]
+    cite: "OpenStax College Physics 2e, 21.1 (CC BY)"
+    cost: 3
+    note: >
+      `parallel.V_shared_to_member` hands the group's voltage down to a member. This is the same
+      equality read upwards: the group's voltage is whatever its members share, so when the
+      member's voltage is what the assembly is solving for, the group follows.
+
+  parallel.V_shared_from_member_b:
+    solves_for: em.potential_difference
+    scope: pair
+    roles:
+      member: {via: parallel_b}
+    bindings:
+      V: {prop: em.potential_difference, from: member}
+    expr: "V"
+    law: kirchhoff_voltage_law
+    assumes: [same_voltage_across_both]
+    cite: "OpenStax College Physics 2e, 21.1 (CC BY)"
+    cost: 3
+
+  source_pair.I_from_loop:
+    solves_for: electric.current
+    scope: pair
+    roles:
+      loop: {via: driven_by, kinds: [circuit_loop]}
+    bindings:
+      I: {prop: electric.current, from: loop}
+    expr: "I"
+    law: kirchhoff_current_law
+    assumes: [single_loop, no_charge_accumulation]
+    cite: "OpenStax College Physics 2e, 21.3 (CC BY)"
+    cost: 3
+    note: >
+      `loop.I_from_source_pair` hands the source combination's current to the loop; this hands the
+      loop's demand back to the combination. They are one statement — a node cannot accumulate
+      charge — and the assembly needs whichever direction it is asked for.
+
+  loop.I_from_source_pair:
+    solves_for: electric.current
+    scope: pair
+    roles:
+      src: {via: driven_by, kinds: [series_pair, parallel_pair]}
+    bindings:
+      I: {prop: electric.current, from: src}
+    expr: "I"
+    law: kirchhoff_current_law
+    assumes: [single_loop, no_charge_accumulation]
+    cite: "OpenStax College Physics 2e, 21.3 (CC BY)"
+    cost: 2
+    note: >
+      The link row that closes a node: whatever current the source combination delivers, the loop
+      draws. `loop.V_from_source` copies an emf from a battery; this copies a current from a
+      *combination*, whose current no single row can state.
+
+  loop.V_from_source_pair:
+    solves_for: em.potential_difference
+    scope: pair
+    roles:
+      src: {via: driven_by, kinds: [series_pair, parallel_pair]}
+    bindings:
+      V: {prop: em.potential_difference, from: src}
+    expr: "V"
+    law: kirchhoff_voltage_law
+    assumes: [ideal_wires, single_loop]
+    cite: "OpenStax College Physics 2e, 21.2 (CC BY)"
+    cost: 2
+    note: >
+      The loop's driving potential difference is the *terminal* voltage of the source combination,
+      not its open-circuit emf. Under load those differ, which is the whole reason the terminal
+      voltage has to be solved for rather than read off.
+
   # ---------------------------------------------------------------- the closed loop
 
   loop.R_from_load:
@@ -113,6 +258,7 @@ formulas:
       R: {prop: electric.resistance}
     expr: "V / R"
     law: ohms_law
+    applies_to: [circuit_loop]
     assumes: [steady_state, ohmic_load]
     cite: "OpenStax College Physics 2e, 20.2 (CC BY)"
     cost: 1
@@ -128,6 +274,7 @@ formulas:
       R: {prop: electric.resistance}
     expr: "V / R"
     law: ohms_law
+    applies_to: [resistor, lamp]
     assumes: [ohmic, steady_state]
     cite: "OpenStax College Physics 2e, 20.2 (CC BY)"
     cost: 2
@@ -140,6 +287,7 @@ formulas:
       R: {prop: electric.resistance}
     expr: "I * R"
     law: ohms_law
+    applies_to: [resistor, lamp]
     assumes: [ohmic, steady_state]
     cite: "OpenStax College Physics 2e, 20.2 (CC BY)"
     cost: 2
@@ -152,6 +300,7 @@ formulas:
       I: {prop: electric.current}
     expr: "V / I"
     law: ohms_law
+    applies_to: [resistor, lamp]
     assumes: [ohmic, steady_state]
     cite: "OpenStax College Physics 2e, 20.2 (CC BY)"
     cost: 3

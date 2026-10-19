@@ -10,6 +10,7 @@ import pytest
 from kernel.engine_chain import Resolver
 from kernel.kb import load_kb
 from kernel.scene import Ref, SceneError, build_scene, load_corpus, load_problem
+from kernel.solve import solve_problem
 from kernel.trace import build_simspec
 from kernel.validate import CORPUS_DIR
 
@@ -36,7 +37,8 @@ def _ids(problems):
 def test_every_problem_resolves_to_its_known_answer(kb, problems):
     failures = []
     for problem in problems:
-        derivations = Resolver(kb, problem.scene).resolve(problem.target)
+        # Engine A first, Engine B where the system is genuinely simultaneous.
+        derivations = solve_problem(kb, problem).derivations
         if not derivations:
             failures.append(f"{problem.id}: unresolved")
             continue
@@ -102,7 +104,7 @@ def test_shielded_cavity_resolves_with_no_inputs(kb, problems):
 def test_every_step_is_justified(kb, problems):
     """No step may exist without either being given or citing a formula."""
     for problem in problems:
-        for derivation in Resolver(kb, problem.scene).resolve(problem.target):
+        for derivation in solve_problem(kb, problem).derivations:
             for step in derivation.steps:
                 assert step.is_given or step.formula is not None
                 assert step.cite, f"{problem.id}: {step.ref} has no citation"
@@ -192,8 +194,8 @@ def test_components_arrive_stocked(kb):
 
 def test_simspec_is_json_and_every_beat_is_justified(kb, problems):
     for problem in problems:
-        derivations = Resolver(kb, problem.scene).resolve(problem.target)
-        spec = build_simspec(problem, derivations, kb)
+        solved = solve_problem(kb, problem)
+        spec = build_simspec(problem, solved.derivations, kb, engines=list(solved.engines_tried))
         data = json.loads(spec.to_json())
 
         assert data["fieldforge"]

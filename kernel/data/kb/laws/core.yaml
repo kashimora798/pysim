@@ -109,3 +109,32 @@ laws:
        em.electric_field_magnitude, em.magnetic_field_magnitude, em.charge_magnitude,
        kinematics.acceleration_magnitude]
     cite: "definitional"
+
+  simultaneous_solve:
+    label: Simultaneous assembly (Engine B)
+    statement: >
+      Where no single law isolates one unknown, the local laws of every element and junction are
+      assembled and solved together. Each equation still cites the law that wrote it; only the
+      ordering changes, from a chain to a block. Charge conservation and energy conservation hold
+      on the network, not on any one element, so the block is the honest unit of reasoning.
+    governs: [electric.current, em.potential_difference, electric.resistance]
+    cite: "definitional (solver: see docs/architecture.md, Engine B)"
+
+  time_evolution:
+    label: Time evolution (Engine C)
+    statement: >
+      Where the answer is a function of time rather than a value, the instantaneous laws give the
+      derivatives and an integrator accumulates them from the stated initial conditions. The
+      integrator changes no physics: it samples a trajectory the laws already determine.
+    governs: [kinematics.velocity, kinematics.speed, kinematics.displacement, geometry.position,
+              kinematics.time]
+    cite: "definitional (solver: see docs/architecture.md, Engine C)"
+
+  superposition_linear_algebra:
+    label: Linear superposition and exact algebra
+    statement: >
+      The mathematical toolkit — differentiation, integration, quadrature, linear-system solving —
+      changes no physics. It is called explicitly, by name, and every call is a cited step whose
+      input and output dimensions are checked before the number is produced.
+    governs: []
+    cite: "definitional (see docs/architecture.md, Mathematical toolkit)"

@@ -298,12 +298,16 @@ class CoverageRow:
     expected: str = ""
     agrees: bool | None = None
     detail: str = ""
+    #: Which engine produced the answer: "chain" (A) or "system" (B).
+    engine: str = "chain"
+    #: Set when both engines answered — they must not disagree.
+    cross_check: dict = field(default_factory=dict)
 
 
 def check_coverage(
     kb: KnowledgeBase, report: Report, corpus_dir: Path | None = None
 ) -> list[CoverageRow]:
-    from .engine_chain import Resolver
+    from .solve import solve_problem
 
     corpus_dir = corpus_dir or CORPUS_DIR
     rows: list[CoverageRow] = []
@@ -314,11 +318,16 @@ def check_coverage(
     problems = load_corpus(corpus_dir, kb)
     for problem in problems:
         at = f"corpus:{problem.id}"
-        resolver = Resolver(kb, problem.scene)
-        derivations = resolver.resolve(problem.target)
+        solved = solve_problem(kb, problem)
+        derivations = solved.derivations
 
         if not derivations:
-            report.add("coverage", "error", at, str(resolver.failure(problem.target)))
+            report.add(
+                "coverage",
+                "error",
+                at,
+                "neither engine could resolve it:\n  - " + "\n  - ".join(solved.notes),
+            )
             rows.append(CoverageRow(problem=problem, resolved=False, paths=0))
             continue
 
@@ -328,7 +337,21 @@ def check_coverage(
             resolved=True,
             paths=len(derivations),
             value=format_quantity(best.value),
+            engine=solved.engine,
+            cross_check=solved.cross_check,
         )
+
+        # Two engines of different construction must not disagree. If they do, the knowledge
+        # base has grown a contradiction, and every other number it produces is suspect.
+        if solved.cross_check and not solved.cross_check.get("agree", True):
+            report.add(
+                "coverage",
+                "error",
+                at,
+                f"engines disagree: Engine A resolved {format_quantity(solved.cross_check['chain'])} "
+                f"but Engine B resolved {format_quantity(solved.cross_check['system'])} "
+                f"(relative difference {solved.cross_check['rel_error']:.2e})",
+            )
 
         if problem.expect is not None:
             from .units import parse_quantity
@@ -367,6 +390,8 @@ def check_coverage(
     report.stats["corpus_resolved"] = resolved
     report.stats["corpus_correct"] = agreeing
     report.stats["corpus_multipath"] = sum(1 for r in rows if r.paths > 1)
+    report.stats["corpus_by_system"] = sum(1 for r in rows if r.engine == "system")
+    report.stats["corpus_cross_checked"] = sum(1 for r in rows if r.cross_check)
     return rows
 
 

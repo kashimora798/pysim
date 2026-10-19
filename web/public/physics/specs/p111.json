@@ -1,0 +1,1623 @@
+{
+  "fieldforge": "0.1",
+  "problem": {
+    "id": "p111",
+    "title": "Two cells of different emf in parallel, feeding a load",
+    "text": "A cell of emf 1 V with internal resistance 2 ohms is connected in parallel with a cell of\nemf 2 V with internal resistance 1 ohm, the like poles together. The combination drives a\n1 ohm resistor. What current does the resistor draw?",
+    "source": "Classic; see also OpenStax College Physics 2e, 21.3 (CC BY) for Kirchhoff's rules",
+    "tags": [
+      "circuits",
+      "kirchhoff",
+      "simultaneous",
+      "internal-resistance",
+      "engine-b",
+      "flagship"
+    ]
+  },
+  "target": "loop.electric.current",
+  "answer": {
+    "value": 1.0,
+    "unit": "A",
+    "dimension": {
+      "A": "1"
+    },
+    "rank": "scalar",
+    "display": "1 A"
+  },
+  "scene": {
+    "instances": [
+      {
+        "id": "b1",
+        "kind": "battery",
+        "label": "Battery",
+        "model3d": "battery.glb",
+        "tags": [
+          "source",
+          "circuit",
+          "emf"
+        ],
+        "given": {
+          "b1.electric.emf": {
+            "value": 1.0,
+            "unit": "V",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-1"
+            },
+            "rank": "scalar",
+            "display": "1 V"
+          },
+          "b1.electric.resistance": {
+            "value": 2.0,
+            "unit": "Ω",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-2"
+            },
+            "rank": "scalar",
+            "display": "2 Ω"
+          }
+        }
+      },
+      {
+        "id": "b2",
+        "kind": "battery",
+        "label": "Battery",
+        "model3d": "battery.glb",
+        "tags": [
+          "source",
+          "circuit",
+          "emf"
+        ],
+        "given": {
+          "b2.electric.emf": {
+            "value": 2.0,
+            "unit": "V",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-1"
+            },
+            "rank": "scalar",
+            "display": "2 V"
+          },
+          "b2.electric.resistance": {
+            "value": 1.0,
+            "unit": "Ω",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-2"
+            },
+            "rank": "scalar",
+            "display": "1 Ω"
+          }
+        }
+      },
+      {
+        "id": "pp",
+        "kind": "parallel_pair",
+        "label": "Parallel combination",
+        "model3d": null,
+        "tags": [
+          "combination",
+          "circuit",
+          "resistive"
+        ],
+        "given": {}
+      },
+      {
+        "id": "r_load",
+        "kind": "resistor",
+        "label": "Resistor",
+        "model3d": "resistor.glb",
+        "tags": [
+          "passive",
+          "circuit",
+          "resistive"
+        ],
+        "given": {
+          "r_load.electric.resistance": {
+            "value": 1.0,
+            "unit": "Ω",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-2"
+            },
+            "rank": "scalar",
+            "display": "1 Ω"
+          }
+        }
+      },
+      {
+        "id": "loop",
+        "kind": "circuit_loop",
+        "label": "Circuit loop",
+        "model3d": null,
+        "tags": [
+          "circuit",
+          "topology"
+        ],
+        "given": {}
+      },
+      {
+        "id": "env",
+        "kind": "environment",
+        "label": "Environment",
+        "model3d": null,
+        "tags": [
+          "environment",
+          "scene",
+          "settings"
+        ],
+        "given": {
+          "env.env.air_density": {
+            "value": 0.0,
+            "unit": "kg·m⁻³",
+            "dimension": {
+              "kg": "1",
+              "m": "-3"
+            },
+            "rank": "scalar",
+            "display": "0 kg·m⁻³"
+          },
+          "env.env.gravity": {
+            "value": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "unit": "m/s²",
+            "dimension": {
+              "m": "1",
+              "s": "-2"
+            },
+            "rank": "vector",
+            "display": "[0, 0, 0] m/s²"
+          },
+          "env.env.relative_permittivity": {
+            "value": 1.0,
+            "unit": "",
+            "dimension": {},
+            "rank": "scalar",
+            "display": "1"
+          },
+          "env.env.temperature": {
+            "value": 293.15,
+            "unit": "K",
+            "dimension": {
+              "K": "1"
+            },
+            "rank": "scalar",
+            "display": "293.1 K"
+          },
+          "env.env.wind_velocity": {
+            "value": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "unit": "m/s",
+            "dimension": {
+              "m": "1",
+              "s": "-1"
+            },
+            "rank": "vector",
+            "display": "[0, 0, 0] m/s"
+          }
+        }
+      }
+    ],
+    "relations": [
+      {
+        "kind": "parallel_a",
+        "from": "pp",
+        "to": "b1",
+        "given": {}
+      },
+      {
+        "kind": "parallel_b",
+        "from": "pp",
+        "to": "b2",
+        "given": {}
+      },
+      {
+        "kind": "driven_by",
+        "from": "loop",
+        "to": "pp",
+        "given": {}
+      },
+      {
+        "kind": "loads",
+        "from": "loop",
+        "to": "r_load",
+        "given": {}
+      }
+    ]
+  },
+  "assumptions": [
+    "single_loop",
+    "no_charge_accumulation",
+    "solved simultaneously with 8 other unknown(s) in a block of 13 equation(s), all of them verified — no single law isolates this value (Engine B)",
+    "ideal_wires",
+    "ideal_source",
+    "same_voltage_across_both",
+    "steady_state",
+    "ohmic_internal_resistance"
+  ],
+  "citations": [
+    "OpenStax College Physics 2e, 21.3 (CC BY)",
+    "OpenStax College Physics 2e, 21.1 (CC BY)",
+    "OpenStax College Physics 2e, 21.2 (CC BY)"
+  ],
+  "checks": {
+    "dimensions": "pass",
+    "engines": [
+      "chain",
+      "system"
+    ],
+    "simultaneous": true,
+    "paths_found": 1,
+    "paths_agree": true,
+    "path_spread": 0.0
+  },
+  "timeline": [
+    {
+      "beat": 1,
+      "kind": "place",
+      "instance": "r_load",
+      "component": "resistor",
+      "model3d": "resistor.glb",
+      "narrate": "Place Resistor.",
+      "because": {
+        "kind": "scene",
+        "detail": "An ohmic element: the voltage across it is proportional to the current through it. The workhorse of the chapter and the first thing a student picks up off the shelf.",
+        "laws": [
+          "ohms_law",
+          "joule_heating"
+        ]
+      }
+    },
+    {
+      "beat": 2,
+      "kind": "place",
+      "instance": "b1",
+      "component": "battery",
+      "model3d": "battery.glb",
+      "narrate": "Place Battery.",
+      "because": {
+        "kind": "scene",
+        "detail": "A source of constant emf with an internal resistance. Two terminals; current leaves the positive one. The internal resistance is what the branch law divides by, and it defaults to zero — an ideal source — which is the case every assumption list in this chapter states.",
+        "laws": [
+          "ohms_law",
+          "kirchhoff_voltage_law"
+        ]
+      }
+    },
+    {
+      "beat": 3,
+      "kind": "place",
+      "instance": "b2",
+      "component": "battery",
+      "model3d": "battery.glb",
+      "narrate": "Place Battery.",
+      "because": {
+        "kind": "scene",
+        "detail": "A source of constant emf with an internal resistance. Two terminals; current leaves the positive one. The internal resistance is what the branch law divides by, and it defaults to zero — an ideal source — which is the case every assumption list in this chapter states.",
+        "laws": [
+          "ohms_law",
+          "kirchhoff_voltage_law"
+        ]
+      }
+    },
+    {
+      "beat": 4,
+      "kind": "place",
+      "instance": "pp",
+      "component": "parallel_pair",
+      "model3d": null,
+      "narrate": "Place Parallel combination.",
+      "because": {
+        "kind": "scene",
+        "detail": "Two elements across the same two nodes, so they share a voltage and their currents add. Carries a resistance of its own for the same compositional reason as a series pair.",
+        "laws": [
+          "parallel_resistance",
+          "kirchhoff_current_law"
+        ]
+      }
+    },
+    {
+      "beat": 5,
+      "kind": "place",
+      "instance": "loop",
+      "component": "circuit_loop",
+      "model3d": null,
+      "narrate": "Place Circuit loop.",
+      "because": {
+        "kind": "scene",
+        "detail": "A closed loop: one source driving one resistive thing, which may itself be a whole reduced network. This is the component the wiring interaction produces when the student closes the circuit, and it is where the current the whole chapter is about actually lives.",
+        "laws": [
+          "ohms_law",
+          "kirchhoff_voltage_law"
+        ]
+      }
+    },
+    {
+      "beat": 6,
+      "kind": "place",
+      "instance": "env",
+      "component": "environment",
+      "model3d": null,
+      "narrate": "Place Environment.",
+      "because": {
+        "kind": "scene",
+        "detail": "The surrounding medium and fields. Defaults are an idealised vacuum with no gravity, which is what textbook electrostatics problems assume -- stated here as an editable value instead of a footnote.",
+        "laws": [
+          "newton_gravitation_uniform",
+          "superposition_of_forces",
+          "medium_permittivity"
+        ]
+      }
+    },
+    {
+      "beat": 7,
+      "kind": "relate",
+      "relation": "parallel_a",
+      "from": "pp",
+      "to": "b1",
+      "narrate": "pp is parallel a b1.",
+      "because": {
+        "kind": "scene",
+        "detail": "stated by the problem's geometry"
+      }
+    },
+    {
+      "beat": 8,
+      "kind": "relate",
+      "relation": "parallel_b",
+      "from": "pp",
+      "to": "b2",
+      "narrate": "pp is parallel b b2.",
+      "because": {
+        "kind": "scene",
+        "detail": "stated by the problem's geometry"
+      }
+    },
+    {
+      "beat": 9,
+      "kind": "relate",
+      "relation": "driven_by",
+      "from": "loop",
+      "to": "pp",
+      "narrate": "loop is driven by pp.",
+      "because": {
+        "kind": "scene",
+        "detail": "stated by the problem's geometry"
+      }
+    },
+    {
+      "beat": 10,
+      "kind": "relate",
+      "relation": "loads",
+      "from": "loop",
+      "to": "r_load",
+      "narrate": "loop is loads r_load.",
+      "because": {
+        "kind": "scene",
+        "detail": "stated by the problem's geometry"
+      }
+    },
+    {
+      "beat": 11,
+      "kind": "given",
+      "instance": "r_load",
+      "ref": "r_load.electric.resistance",
+      "property": "electric.resistance",
+      "channel": null,
+      "value": 1.0,
+      "unit": "Ω",
+      "dimension": {
+        "kg": "1",
+        "m": "2",
+        "s": "-3",
+        "A": "-2"
+      },
+      "rank": "scalar",
+      "display": "1 Ω",
+      "narrate": "r_load: resistance is 1 Ω, as stated.",
+      "because": {
+        "kind": "given",
+        "detail": "supplied by the problem statement"
+      }
+    },
+    {
+      "beat": 12,
+      "kind": "given",
+      "instance": "b1",
+      "ref": "b1.electric.emf",
+      "property": "electric.emf",
+      "channel": null,
+      "value": 1.0,
+      "unit": "V",
+      "dimension": {
+        "kg": "1",
+        "m": "2",
+        "s": "-3",
+        "A": "-1"
+      },
+      "rank": "scalar",
+      "display": "1 V",
+      "narrate": "b1: emf is 1 V, as stated.",
+      "because": {
+        "kind": "given",
+        "detail": "supplied by the problem statement"
+      }
+    },
+    {
+      "beat": 13,
+      "kind": "given",
+      "instance": "b1",
+      "ref": "b1.electric.resistance",
+      "property": "electric.resistance",
+      "channel": null,
+      "value": 2.0,
+      "unit": "Ω",
+      "dimension": {
+        "kg": "1",
+        "m": "2",
+        "s": "-3",
+        "A": "-2"
+      },
+      "rank": "scalar",
+      "display": "2 Ω",
+      "narrate": "b1: resistance is 2 Ω, as stated.",
+      "because": {
+        "kind": "given",
+        "detail": "supplied by the problem statement"
+      }
+    },
+    {
+      "beat": 14,
+      "kind": "given",
+      "instance": "b2",
+      "ref": "b2.electric.emf",
+      "property": "electric.emf",
+      "channel": null,
+      "value": 2.0,
+      "unit": "V",
+      "dimension": {
+        "kg": "1",
+        "m": "2",
+        "s": "-3",
+        "A": "-1"
+      },
+      "rank": "scalar",
+      "display": "2 V",
+      "narrate": "b2: emf is 2 V, as stated.",
+      "because": {
+        "kind": "given",
+        "detail": "supplied by the problem statement"
+      }
+    },
+    {
+      "beat": 15,
+      "kind": "given",
+      "instance": "b2",
+      "ref": "b2.electric.resistance",
+      "property": "electric.resistance",
+      "channel": null,
+      "value": 1.0,
+      "unit": "Ω",
+      "dimension": {
+        "kg": "1",
+        "m": "2",
+        "s": "-3",
+        "A": "-2"
+      },
+      "rank": "scalar",
+      "display": "1 Ω",
+      "narrate": "b2: resistance is 1 Ω, as stated.",
+      "because": {
+        "kind": "given",
+        "detail": "supplied by the problem statement"
+      }
+    },
+    {
+      "beat": 16,
+      "kind": "resolve",
+      "instance": "pp",
+      "ref": "pp.electric.current",
+      "property": "electric.current",
+      "channel": null,
+      "value": 1.0,
+      "unit": "A",
+      "dimension": {
+        "A": "1"
+      },
+      "rank": "scalar",
+      "display": "1 A",
+      "narrate": "pp: current resolves to 1 A.",
+      "because": {
+        "kind": "derived",
+        "formula": "source_pair.I_from_loop",
+        "expression": "I",
+        "substituted": "(1 A)",
+        "law": "kirchhoff_current_law",
+        "law_label": "Kirchhoff's current law",
+        "law_statement": "The algebraic sum of currents entering any node is zero: charge does not accumulate at a junction. This is what makes currents add in a parallel combination.",
+        "assumes": [
+          "single_loop",
+          "no_charge_accumulation",
+          "solved simultaneously with 8 other unknown(s) in a block of 13 equation(s), all of them verified — no single law isolates this value (Engine B)"
+        ],
+        "cite": "OpenStax College Physics 2e, 21.3 (CC BY)",
+        "inputs": [
+          {
+            "symbol": "I",
+            "from": "loop.electric.current",
+            "value": 1.0,
+            "unit": "A",
+            "dimension": {
+              "A": "1"
+            },
+            "rank": "scalar",
+            "display": "1 A"
+          }
+        ]
+      }
+    },
+    {
+      "beat": 17,
+      "kind": "resolve",
+      "instance": "loop",
+      "ref": "loop.electric.resistance",
+      "property": "electric.resistance",
+      "channel": null,
+      "value": 1.0,
+      "unit": "Ω",
+      "dimension": {
+        "kg": "1",
+        "m": "2",
+        "s": "-3",
+        "A": "-2"
+      },
+      "rank": "scalar",
+      "display": "1 Ω",
+      "narrate": "loop: resistance resolves to 1 Ω.",
+      "because": {
+        "kind": "derived",
+        "formula": "loop.R_from_load",
+        "expression": "R",
+        "substituted": "(1 Ω)",
+        "law": "series_resistance",
+        "law_label": "Resistances in series add",
+        "law_statement": "Two elements carrying the same current present the sum of their resistances, because their potential differences add while the current is common: R = R_a + R_b.",
+        "assumes": [
+          "ideal_wires",
+          "ideal_source",
+          "solved simultaneously with 8 other unknown(s) in a block of 13 equation(s), all of them verified — no single law isolates this value (Engine B)"
+        ],
+        "cite": "OpenStax College Physics 2e, 21.1 (CC BY)",
+        "inputs": [
+          {
+            "symbol": "R",
+            "from": "r_load.electric.resistance",
+            "value": 1.0,
+            "unit": "Ω",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-2"
+            },
+            "rank": "scalar",
+            "display": "1 Ω"
+          }
+        ]
+      }
+    },
+    {
+      "beat": 18,
+      "kind": "resolve",
+      "instance": "loop",
+      "ref": "loop.em.potential_difference",
+      "property": "em.potential_difference",
+      "channel": "potential_shading",
+      "value": 1.0,
+      "unit": "V",
+      "dimension": {
+        "kg": "1",
+        "m": "2",
+        "s": "-3",
+        "A": "-1"
+      },
+      "rank": "scalar",
+      "display": "1 V",
+      "narrate": "loop: potential difference resolves to 1 V.",
+      "because": {
+        "kind": "derived",
+        "formula": "loop.V_from_source_pair",
+        "expression": "V",
+        "substituted": "(1 V)",
+        "law": "kirchhoff_voltage_law",
+        "law_label": "Kirchhoff's voltage law",
+        "law_statement": "The algebraic sum of potential differences around any closed loop is zero: energy per unit charge returns to where it started. This is what makes voltages add in a series combination.",
+        "assumes": [
+          "ideal_wires",
+          "single_loop",
+          "solved simultaneously with 8 other unknown(s) in a block of 13 equation(s), all of them verified — no single law isolates this value (Engine B)"
+        ],
+        "cite": "OpenStax College Physics 2e, 21.2 (CC BY)",
+        "inputs": [
+          {
+            "symbol": "V",
+            "from": "pp.em.potential_difference",
+            "value": 1.0,
+            "unit": "V",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-1"
+            },
+            "rank": "scalar",
+            "display": "1 V"
+          }
+        ]
+      }
+    },
+    {
+      "beat": 19,
+      "kind": "resolve",
+      "instance": "pp",
+      "ref": "pp.em.potential_difference",
+      "property": "em.potential_difference",
+      "channel": "potential_shading",
+      "value": 1.0,
+      "unit": "V",
+      "dimension": {
+        "kg": "1",
+        "m": "2",
+        "s": "-3",
+        "A": "-1"
+      },
+      "rank": "scalar",
+      "display": "1 V",
+      "narrate": "pp: potential difference resolves to 1 V.",
+      "because": {
+        "kind": "derived",
+        "formula": "parallel.V_shared_from_member",
+        "expression": "V",
+        "substituted": "(1 V)",
+        "law": "kirchhoff_voltage_law",
+        "law_label": "Kirchhoff's voltage law",
+        "law_statement": "The algebraic sum of potential differences around any closed loop is zero: energy per unit charge returns to where it started. This is what makes voltages add in a series combination.",
+        "assumes": [
+          "same_voltage_across_both",
+          "solved simultaneously with 8 other unknown(s) in a block of 13 equation(s), all of them verified — no single law isolates this value (Engine B)"
+        ],
+        "cite": "OpenStax College Physics 2e, 21.1 (CC BY)",
+        "inputs": [
+          {
+            "symbol": "V",
+            "from": "b1.em.potential_difference",
+            "value": 1.0,
+            "unit": "V",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-1"
+            },
+            "rank": "scalar",
+            "display": "1 V"
+          }
+        ]
+      }
+    },
+    {
+      "beat": 20,
+      "kind": "resolve",
+      "instance": "b1",
+      "ref": "b1.em.potential_difference",
+      "property": "em.potential_difference",
+      "channel": "potential_shading",
+      "value": 1.0,
+      "unit": "V",
+      "dimension": {
+        "kg": "1",
+        "m": "2",
+        "s": "-3",
+        "A": "-1"
+      },
+      "rank": "scalar",
+      "display": "1 V",
+      "narrate": "b1: potential difference resolves to 1 V.",
+      "because": {
+        "kind": "derived",
+        "formula": "parallel.V_shared_to_member",
+        "expression": "V",
+        "substituted": "(1 V)",
+        "law": "kirchhoff_voltage_law",
+        "law_label": "Kirchhoff's voltage law",
+        "law_statement": "The algebraic sum of potential differences around any closed loop is zero: energy per unit charge returns to where it started. This is what makes voltages add in a series combination.",
+        "assumes": [
+          "same_voltage_across_both",
+          "solved simultaneously with 8 other unknown(s) in a block of 13 equation(s), all of them verified — no single law isolates this value (Engine B)"
+        ],
+        "cite": "OpenStax College Physics 2e, 21.1 (CC BY)",
+        "inputs": [
+          {
+            "symbol": "V",
+            "from": "pp.em.potential_difference",
+            "value": 1.0,
+            "unit": "V",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-1"
+            },
+            "rank": "scalar",
+            "display": "1 V"
+          }
+        ]
+      }
+    },
+    {
+      "beat": 21,
+      "kind": "resolve",
+      "instance": "b1",
+      "ref": "b1.electric.current",
+      "property": "electric.current",
+      "channel": null,
+      "value": 0.0,
+      "unit": "A",
+      "dimension": {
+        "A": "1"
+      },
+      "rank": "scalar",
+      "display": "0 A",
+      "narrate": "b1: current resolves to 0 A.",
+      "because": {
+        "kind": "derived",
+        "formula": "branch.I_from_emf_V_R",
+        "expression": "(emf - V) / r",
+        "substituted": "(-(1 V) + (1 V))/(2 Ω)",
+        "law": "kirchhoff_voltage_law",
+        "law_label": "Kirchhoff's voltage law",
+        "law_statement": "The algebraic sum of potential differences around any closed loop is zero: energy per unit charge returns to where it started. This is what makes voltages add in a series combination.",
+        "assumes": [
+          "steady_state",
+          "ohmic_internal_resistance",
+          "ideal_wires",
+          "solved simultaneously with 8 other unknown(s) in a block of 13 equation(s), all of them verified — no single law isolates this value (Engine B)"
+        ],
+        "cite": "OpenStax College Physics 2e, 21.2 (CC BY)",
+        "inputs": [
+          {
+            "symbol": "emf",
+            "from": "b1.electric.emf",
+            "value": 1.0,
+            "unit": "V",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-1"
+            },
+            "rank": "scalar",
+            "display": "1 V"
+          },
+          {
+            "symbol": "r",
+            "from": "b1.electric.resistance",
+            "value": 2.0,
+            "unit": "Ω",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-2"
+            },
+            "rank": "scalar",
+            "display": "2 Ω"
+          },
+          {
+            "symbol": "V",
+            "from": "b1.em.potential_difference",
+            "value": 1.0,
+            "unit": "V",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-1"
+            },
+            "rank": "scalar",
+            "display": "1 V"
+          }
+        ]
+      }
+    },
+    {
+      "beat": 22,
+      "kind": "resolve",
+      "instance": "b2",
+      "ref": "b2.electric.current",
+      "property": "electric.current",
+      "channel": null,
+      "value": 1.0,
+      "unit": "A",
+      "dimension": {
+        "A": "1"
+      },
+      "rank": "scalar",
+      "display": "1 A",
+      "narrate": "b2: current resolves to 1 A.",
+      "because": {
+        "kind": "derived",
+        "formula": "branch.I_from_emf_V_R",
+        "expression": "(emf - V) / r",
+        "substituted": "(-(1 V) + (2 V))/(1 Ω)",
+        "law": "kirchhoff_voltage_law",
+        "law_label": "Kirchhoff's voltage law",
+        "law_statement": "The algebraic sum of potential differences around any closed loop is zero: energy per unit charge returns to where it started. This is what makes voltages add in a series combination.",
+        "assumes": [
+          "steady_state",
+          "ohmic_internal_resistance",
+          "ideal_wires",
+          "solved simultaneously with 8 other unknown(s) in a block of 13 equation(s), all of them verified — no single law isolates this value (Engine B)"
+        ],
+        "cite": "OpenStax College Physics 2e, 21.2 (CC BY)",
+        "inputs": [
+          {
+            "symbol": "emf",
+            "from": "b2.electric.emf",
+            "value": 2.0,
+            "unit": "V",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-1"
+            },
+            "rank": "scalar",
+            "display": "2 V"
+          },
+          {
+            "symbol": "r",
+            "from": "b2.electric.resistance",
+            "value": 1.0,
+            "unit": "Ω",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-2"
+            },
+            "rank": "scalar",
+            "display": "1 Ω"
+          },
+          {
+            "symbol": "V",
+            "from": "b2.em.potential_difference",
+            "value": 1.0,
+            "unit": "V",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-1"
+            },
+            "rank": "scalar",
+            "display": "1 V"
+          }
+        ]
+      }
+    },
+    {
+      "beat": 23,
+      "kind": "resolve",
+      "instance": "b2",
+      "ref": "b2.em.potential_difference",
+      "property": "em.potential_difference",
+      "channel": "potential_shading",
+      "value": 1.0,
+      "unit": "V",
+      "dimension": {
+        "kg": "1",
+        "m": "2",
+        "s": "-3",
+        "A": "-1"
+      },
+      "rank": "scalar",
+      "display": "1 V",
+      "narrate": "b2: potential difference resolves to 1 V.",
+      "because": {
+        "kind": "derived",
+        "formula": "parallel.V_shared_to_member_b",
+        "expression": "V",
+        "substituted": "(1 V)",
+        "law": "kirchhoff_voltage_law",
+        "law_label": "Kirchhoff's voltage law",
+        "law_statement": "The algebraic sum of potential differences around any closed loop is zero: energy per unit charge returns to where it started. This is what makes voltages add in a series combination.",
+        "assumes": [
+          "same_voltage_across_both",
+          "solved simultaneously with 8 other unknown(s) in a block of 13 equation(s), all of them verified — no single law isolates this value (Engine B)"
+        ],
+        "cite": "OpenStax College Physics 2e, 21.1 (CC BY)",
+        "inputs": [
+          {
+            "symbol": "V",
+            "from": "pp.em.potential_difference",
+            "value": 1.0,
+            "unit": "V",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-1"
+            },
+            "rank": "scalar",
+            "display": "1 V"
+          }
+        ]
+      }
+    },
+    {
+      "beat": 24,
+      "kind": "resolve",
+      "instance": "loop",
+      "ref": "loop.electric.current",
+      "property": "electric.current",
+      "channel": null,
+      "value": 1.0,
+      "unit": "A",
+      "dimension": {
+        "A": "1"
+      },
+      "rank": "scalar",
+      "display": "1 A",
+      "narrate": "loop: current resolves to 1 A.",
+      "because": {
+        "kind": "derived",
+        "formula": "loop.I_from_source_pair",
+        "expression": "I",
+        "substituted": "(1 A)",
+        "law": "kirchhoff_current_law",
+        "law_label": "Kirchhoff's current law",
+        "law_statement": "The algebraic sum of currents entering any node is zero: charge does not accumulate at a junction. This is what makes currents add in a parallel combination.",
+        "assumes": [
+          "single_loop",
+          "no_charge_accumulation",
+          "solved simultaneously with 8 other unknown(s) in a block of 13 equation(s), all of them verified — no single law isolates this value (Engine B)"
+        ],
+        "cite": "OpenStax College Physics 2e, 21.3 (CC BY)",
+        "inputs": [
+          {
+            "symbol": "I",
+            "from": "pp.electric.current",
+            "value": 1.0,
+            "unit": "A",
+            "dimension": {
+              "A": "1"
+            },
+            "rank": "scalar",
+            "display": "1 A"
+          }
+        ]
+      }
+    },
+    {
+      "beat": 25,
+      "kind": "answer",
+      "ref": "loop.electric.current",
+      "property": "electric.current",
+      "value": 1.0,
+      "unit": "A",
+      "dimension": {
+        "A": "1"
+      },
+      "rank": "scalar",
+      "display": "1 A",
+      "narrate": "Answer: 1 A.",
+      "because": {
+        "kind": "summary",
+        "laws": [
+          "kirchhoff_current_law",
+          "kirchhoff_voltage_law",
+          "series_resistance"
+        ],
+        "paths_found": 1
+      }
+    }
+  ],
+  "paths": [
+    {
+      "cost": 9,
+      "laws": [
+        "kirchhoff_current_law",
+        "kirchhoff_voltage_law",
+        "series_resistance"
+      ],
+      "formulas": [
+        "source_pair.I_from_loop",
+        "loop.R_from_load",
+        "loop.V_from_source_pair",
+        "parallel.V_shared_from_member",
+        "parallel.V_shared_to_member",
+        "branch.I_from_emf_V_R",
+        "branch.I_from_emf_V_R",
+        "parallel.V_shared_to_member_b",
+        "loop.I_from_source_pair"
+      ],
+      "value": {
+        "value": 1.0,
+        "unit": "A",
+        "dimension": {
+          "A": "1"
+        },
+        "rank": "scalar",
+        "display": "1 A"
+      },
+      "assumptions": [
+        "single_loop",
+        "no_charge_accumulation",
+        "solved simultaneously with 8 other unknown(s) in a block of 13 equation(s), all of them verified — no single law isolates this value (Engine B)",
+        "ideal_wires",
+        "ideal_source",
+        "same_voltage_across_both",
+        "steady_state",
+        "ohmic_internal_resistance"
+      ],
+      "citations": [
+        "OpenStax College Physics 2e, 21.3 (CC BY)",
+        "OpenStax College Physics 2e, 21.1 (CC BY)",
+        "OpenStax College Physics 2e, 21.2 (CC BY)"
+      ],
+      "steps": [
+        {
+          "ref": "r_load.electric.resistance",
+          "property": "electric.resistance",
+          "value": 1.0,
+          "unit": "Ω",
+          "dimension": {
+            "kg": "1",
+            "m": "2",
+            "s": "-3",
+            "A": "-2"
+          },
+          "rank": "scalar",
+          "display": "1 Ω",
+          "because": {
+            "kind": "given",
+            "detail": "supplied by the problem statement"
+          }
+        },
+        {
+          "ref": "b1.electric.emf",
+          "property": "electric.emf",
+          "value": 1.0,
+          "unit": "V",
+          "dimension": {
+            "kg": "1",
+            "m": "2",
+            "s": "-3",
+            "A": "-1"
+          },
+          "rank": "scalar",
+          "display": "1 V",
+          "because": {
+            "kind": "given",
+            "detail": "supplied by the problem statement"
+          }
+        },
+        {
+          "ref": "b1.electric.resistance",
+          "property": "electric.resistance",
+          "value": 2.0,
+          "unit": "Ω",
+          "dimension": {
+            "kg": "1",
+            "m": "2",
+            "s": "-3",
+            "A": "-2"
+          },
+          "rank": "scalar",
+          "display": "2 Ω",
+          "because": {
+            "kind": "given",
+            "detail": "supplied by the problem statement"
+          }
+        },
+        {
+          "ref": "b2.electric.emf",
+          "property": "electric.emf",
+          "value": 2.0,
+          "unit": "V",
+          "dimension": {
+            "kg": "1",
+            "m": "2",
+            "s": "-3",
+            "A": "-1"
+          },
+          "rank": "scalar",
+          "display": "2 V",
+          "because": {
+            "kind": "given",
+            "detail": "supplied by the problem statement"
+          }
+        },
+        {
+          "ref": "b2.electric.resistance",
+          "property": "electric.resistance",
+          "value": 1.0,
+          "unit": "Ω",
+          "dimension": {
+            "kg": "1",
+            "m": "2",
+            "s": "-3",
+            "A": "-2"
+          },
+          "rank": "scalar",
+          "display": "1 Ω",
+          "because": {
+            "kind": "given",
+            "detail": "supplied by the problem statement"
+          }
+        },
+        {
+          "ref": "pp.electric.current",
+          "property": "electric.current",
+          "value": 1.0,
+          "unit": "A",
+          "dimension": {
+            "A": "1"
+          },
+          "rank": "scalar",
+          "display": "1 A",
+          "because": {
+            "kind": "derived",
+            "formula": "source_pair.I_from_loop",
+            "expression": "I",
+            "substituted": "(1 A)",
+            "law": "kirchhoff_current_law",
+            "law_label": "Kirchhoff's current law",
+            "law_statement": "The algebraic sum of currents entering any node is zero: charge does not accumulate at a junction. This is what makes currents add in a parallel combination.",
+            "assumes": [
+              "single_loop",
+              "no_charge_accumulation",
+              "solved simultaneously with 8 other unknown(s) in a block of 13 equation(s), all of them verified — no single law isolates this value (Engine B)"
+            ],
+            "cite": "OpenStax College Physics 2e, 21.3 (CC BY)",
+            "inputs": [
+              {
+                "symbol": "I",
+                "from": "loop.electric.current",
+                "value": 1.0,
+                "unit": "A",
+                "dimension": {
+                  "A": "1"
+                },
+                "rank": "scalar",
+                "display": "1 A"
+              }
+            ]
+          }
+        },
+        {
+          "ref": "loop.electric.resistance",
+          "property": "electric.resistance",
+          "value": 1.0,
+          "unit": "Ω",
+          "dimension": {
+            "kg": "1",
+            "m": "2",
+            "s": "-3",
+            "A": "-2"
+          },
+          "rank": "scalar",
+          "display": "1 Ω",
+          "because": {
+            "kind": "derived",
+            "formula": "loop.R_from_load",
+            "expression": "R",
+            "substituted": "(1 Ω)",
+            "law": "series_resistance",
+            "law_label": "Resistances in series add",
+            "law_statement": "Two elements carrying the same current present the sum of their resistances, because their potential differences add while the current is common: R = R_a + R_b.",
+            "assumes": [
+              "ideal_wires",
+              "ideal_source",
+              "solved simultaneously with 8 other unknown(s) in a block of 13 equation(s), all of them verified — no single law isolates this value (Engine B)"
+            ],
+            "cite": "OpenStax College Physics 2e, 21.1 (CC BY)",
+            "inputs": [
+              {
+                "symbol": "R",
+                "from": "r_load.electric.resistance",
+                "value": 1.0,
+                "unit": "Ω",
+                "dimension": {
+                  "kg": "1",
+                  "m": "2",
+                  "s": "-3",
+                  "A": "-2"
+                },
+                "rank": "scalar",
+                "display": "1 Ω"
+              }
+            ]
+          }
+        },
+        {
+          "ref": "loop.em.potential_difference",
+          "property": "em.potential_difference",
+          "value": 1.0,
+          "unit": "V",
+          "dimension": {
+            "kg": "1",
+            "m": "2",
+            "s": "-3",
+            "A": "-1"
+          },
+          "rank": "scalar",
+          "display": "1 V",
+          "because": {
+            "kind": "derived",
+            "formula": "loop.V_from_source_pair",
+            "expression": "V",
+            "substituted": "(1 V)",
+            "law": "kirchhoff_voltage_law",
+            "law_label": "Kirchhoff's voltage law",
+            "law_statement": "The algebraic sum of potential differences around any closed loop is zero: energy per unit charge returns to where it started. This is what makes voltages add in a series combination.",
+            "assumes": [
+              "ideal_wires",
+              "single_loop",
+              "solved simultaneously with 8 other unknown(s) in a block of 13 equation(s), all of them verified — no single law isolates this value (Engine B)"
+            ],
+            "cite": "OpenStax College Physics 2e, 21.2 (CC BY)",
+            "inputs": [
+              {
+                "symbol": "V",
+                "from": "pp.em.potential_difference",
+                "value": 1.0,
+                "unit": "V",
+                "dimension": {
+                  "kg": "1",
+                  "m": "2",
+                  "s": "-3",
+                  "A": "-1"
+                },
+                "rank": "scalar",
+                "display": "1 V"
+              }
+            ]
+          }
+        },
+        {
+          "ref": "pp.em.potential_difference",
+          "property": "em.potential_difference",
+          "value": 1.0,
+          "unit": "V",
+          "dimension": {
+            "kg": "1",
+            "m": "2",
+            "s": "-3",
+            "A": "-1"
+          },
+          "rank": "scalar",
+          "display": "1 V",
+          "because": {
+            "kind": "derived",
+            "formula": "parallel.V_shared_from_member",
+            "expression": "V",
+            "substituted": "(1 V)",
+            "law": "kirchhoff_voltage_law",
+            "law_label": "Kirchhoff's voltage law",
+            "law_statement": "The algebraic sum of potential differences around any closed loop is zero: energy per unit charge returns to where it started. This is what makes voltages add in a series combination.",
+            "assumes": [
+              "same_voltage_across_both",
+              "solved simultaneously with 8 other unknown(s) in a block of 13 equation(s), all of them verified — no single law isolates this value (Engine B)"
+            ],
+            "cite": "OpenStax College Physics 2e, 21.1 (CC BY)",
+            "inputs": [
+              {
+                "symbol": "V",
+                "from": "b1.em.potential_difference",
+                "value": 1.0,
+                "unit": "V",
+                "dimension": {
+                  "kg": "1",
+                  "m": "2",
+                  "s": "-3",
+                  "A": "-1"
+                },
+                "rank": "scalar",
+                "display": "1 V"
+              }
+            ]
+          }
+        },
+        {
+          "ref": "b1.em.potential_difference",
+          "property": "em.potential_difference",
+          "value": 1.0,
+          "unit": "V",
+          "dimension": {
+            "kg": "1",
+            "m": "2",
+            "s": "-3",
+            "A": "-1"
+          },
+          "rank": "scalar",
+          "display": "1 V",
+          "because": {
+            "kind": "derived",
+            "formula": "parallel.V_shared_to_member",
+            "expression": "V",
+            "substituted": "(1 V)",
+            "law": "kirchhoff_voltage_law",
+            "law_label": "Kirchhoff's voltage law",
+            "law_statement": "The algebraic sum of potential differences around any closed loop is zero: energy per unit charge returns to where it started. This is what makes voltages add in a series combination.",
+            "assumes": [
+              "same_voltage_across_both",
+              "solved simultaneously with 8 other unknown(s) in a block of 13 equation(s), all of them verified — no single law isolates this value (Engine B)"
+            ],
+            "cite": "OpenStax College Physics 2e, 21.1 (CC BY)",
+            "inputs": [
+              {
+                "symbol": "V",
+                "from": "pp.em.potential_difference",
+                "value": 1.0,
+                "unit": "V",
+                "dimension": {
+                  "kg": "1",
+                  "m": "2",
+                  "s": "-3",
+                  "A": "-1"
+                },
+                "rank": "scalar",
+                "display": "1 V"
+              }
+            ]
+          }
+        },
+        {
+          "ref": "b1.electric.current",
+          "property": "electric.current",
+          "value": 0.0,
+          "unit": "A",
+          "dimension": {
+            "A": "1"
+          },
+          "rank": "scalar",
+          "display": "0 A",
+          "because": {
+            "kind": "derived",
+            "formula": "branch.I_from_emf_V_R",
+            "expression": "(emf - V) / r",
+            "substituted": "(-(1 V) + (1 V))/(2 Ω)",
+            "law": "kirchhoff_voltage_law",
+            "law_label": "Kirchhoff's voltage law",
+            "law_statement": "The algebraic sum of potential differences around any closed loop is zero: energy per unit charge returns to where it started. This is what makes voltages add in a series combination.",
+            "assumes": [
+              "steady_state",
+              "ohmic_internal_resistance",
+              "ideal_wires",
+              "solved simultaneously with 8 other unknown(s) in a block of 13 equation(s), all of them verified — no single law isolates this value (Engine B)"
+            ],
+            "cite": "OpenStax College Physics 2e, 21.2 (CC BY)",
+            "inputs": [
+              {
+                "symbol": "emf",
+                "from": "b1.electric.emf",
+                "value": 1.0,
+                "unit": "V",
+                "dimension": {
+                  "kg": "1",
+                  "m": "2",
+                  "s": "-3",
+                  "A": "-1"
+                },
+                "rank": "scalar",
+                "display": "1 V"
+              },
+              {
+                "symbol": "r",
+                "from": "b1.electric.resistance",
+                "value": 2.0,
+                "unit": "Ω",
+                "dimension": {
+                  "kg": "1",
+                  "m": "2",
+                  "s": "-3",
+                  "A": "-2"
+                },
+                "rank": "scalar",
+                "display": "2 Ω"
+              },
+              {
+                "symbol": "V",
+                "from": "b1.em.potential_difference",
+                "value": 1.0,
+                "unit": "V",
+                "dimension": {
+                  "kg": "1",
+                  "m": "2",
+                  "s": "-3",
+                  "A": "-1"
+                },
+                "rank": "scalar",
+                "display": "1 V"
+              }
+            ]
+          }
+        },
+        {
+          "ref": "b2.electric.current",
+          "property": "electric.current",
+          "value": 1.0,
+          "unit": "A",
+          "dimension": {
+            "A": "1"
+          },
+          "rank": "scalar",
+          "display": "1 A",
+          "because": {
+            "kind": "derived",
+            "formula": "branch.I_from_emf_V_R",
+            "expression": "(emf - V) / r",
+            "substituted": "(-(1 V) + (2 V))/(1 Ω)",
+            "law": "kirchhoff_voltage_law",
+            "law_label": "Kirchhoff's voltage law",
+            "law_statement": "The algebraic sum of potential differences around any closed loop is zero: energy per unit charge returns to where it started. This is what makes voltages add in a series combination.",
+            "assumes": [
+              "steady_state",
+              "ohmic_internal_resistance",
+              "ideal_wires",
+              "solved simultaneously with 8 other unknown(s) in a block of 13 equation(s), all of them verified — no single law isolates this value (Engine B)"
+            ],
+            "cite": "OpenStax College Physics 2e, 21.2 (CC BY)",
+            "inputs": [
+              {
+                "symbol": "emf",
+                "from": "b2.electric.emf",
+                "value": 2.0,
+                "unit": "V",
+                "dimension": {
+                  "kg": "1",
+                  "m": "2",
+                  "s": "-3",
+                  "A": "-1"
+                },
+                "rank": "scalar",
+                "display": "2 V"
+              },
+              {
+                "symbol": "r",
+                "from": "b2.electric.resistance",
+                "value": 1.0,
+                "unit": "Ω",
+                "dimension": {
+                  "kg": "1",
+                  "m": "2",
+                  "s": "-3",
+                  "A": "-2"
+                },
+                "rank": "scalar",
+                "display": "1 Ω"
+              },
+              {
+                "symbol": "V",
+                "from": "b2.em.potential_difference",
+                "value": 1.0,
+                "unit": "V",
+                "dimension": {
+                  "kg": "1",
+                  "m": "2",
+                  "s": "-3",
+                  "A": "-1"
+                },
+                "rank": "scalar",
+                "display": "1 V"
+              }
+            ]
+          }
+        },
+        {
+          "ref": "b2.em.potential_difference",
+          "property": "em.potential_difference",
+          "value": 1.0,
+          "unit": "V",
+          "dimension": {
+            "kg": "1",
+            "m": "2",
+            "s": "-3",
+            "A": "-1"
+          },
+          "rank": "scalar",
+          "display": "1 V",
+          "because": {
+            "kind": "derived",
+            "formula": "parallel.V_shared_to_member_b",
+            "expression": "V",
+            "substituted": "(1 V)",
+            "law": "kirchhoff_voltage_law",
+            "law_label": "Kirchhoff's voltage law",
+            "law_statement": "The algebraic sum of potential differences around any closed loop is zero: energy per unit charge returns to where it started. This is what makes voltages add in a series combination.",
+            "assumes": [
+              "same_voltage_across_both",
+              "solved simultaneously with 8 other unknown(s) in a block of 13 equation(s), all of them verified — no single law isolates this value (Engine B)"
+            ],
+            "cite": "OpenStax College Physics 2e, 21.1 (CC BY)",
+            "inputs": [
+              {
+                "symbol": "V",
+                "from": "pp.em.potential_difference",
+                "value": 1.0,
+                "unit": "V",
+                "dimension": {
+                  "kg": "1",
+                  "m": "2",
+                  "s": "-3",
+                  "A": "-1"
+                },
+                "rank": "scalar",
+                "display": "1 V"
+              }
+            ]
+          }
+        },
+        {
+          "ref": "loop.electric.current",
+          "property": "electric.current",
+          "value": 1.0,
+          "unit": "A",
+          "dimension": {
+            "A": "1"
+          },
+          "rank": "scalar",
+          "display": "1 A",
+          "because": {
+            "kind": "derived",
+            "formula": "loop.I_from_source_pair",
+            "expression": "I",
+            "substituted": "(1 A)",
+            "law": "kirchhoff_current_law",
+            "law_label": "Kirchhoff's current law",
+            "law_statement": "The algebraic sum of currents entering any node is zero: charge does not accumulate at a junction. This is what makes currents add in a parallel combination.",
+            "assumes": [
+              "single_loop",
+              "no_charge_accumulation",
+              "solved simultaneously with 8 other unknown(s) in a block of 13 equation(s), all of them verified — no single law isolates this value (Engine B)"
+            ],
+            "cite": "OpenStax College Physics 2e, 21.3 (CC BY)",
+            "inputs": [
+              {
+                "symbol": "I",
+                "from": "pp.electric.current",
+                "value": 1.0,
+                "unit": "A",
+                "dimension": {
+                  "A": "1"
+                },
+                "rank": "scalar",
+                "display": "1 A"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

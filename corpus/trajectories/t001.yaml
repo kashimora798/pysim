@@ -1,0 +1,25 @@
+id: t001
+title: A capacitor charging through a resistor
+source: "OpenStax College Physics 2e, 21.6 (CC BY)"
+tags: [rc, time-evolution, engine-c, flagship]
+text: |
+  A 100 uF capacitor, initially uncharged, is connected to a 5 V supply through a 10 kΩ
+  resistor. What is the potential difference across the capacitor one second later?
+
+  No algebraic chain answers this: the rate of change of the voltage depends on the voltage.
+  The answer is a curve, and the only way to a number is to integrate.
+problem: rc_charging
+refs: {ref_voltage: c1.em.potential_difference}
+args: {supply: 5.0, resistance: 10000.0, capacitance: 100.0e-6, v0: 0.0}
+t_span: [0, 1]
+dt: 0.001
+method: rk4
+target: {ref: c1.em.potential_difference}
+expect:
+  value: 3.1606028
+  unit: V
+  tol: 0.0001
+  note: >
+    The closed form is V(t) = V_supply * (1 - e^(-t/RC)); at t = 1 s with RC = 1 s that is
+    5*(1 - 1/e) = 3.1606 V. RK4 with dt = 1 ms reproduces it to eight significant figures,
+    which is the evidence that the integrator is licensed at all.
