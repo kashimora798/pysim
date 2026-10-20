@@ -229,11 +229,16 @@ In rough order of value:
    scene-editor UI and a deployed proxy remain.
 5. **MCP server** — the `§6.2` tool surface over the kernel. Still outstanding; now unblocked,
    since Engines B/C make the tool answers materially stronger.
+<<<<<<< HEAD
 6. **More corpus.** 37 problems and growing: the p3xx set adds JEE-level and book-level
    problem types (cavity electrostatics, plate deflection, ion-orbit ratios, unbalanced
    Kirchhoff networks — see `docs/jee-corpus.md`), each verified analytically, by audit,
    and by relational tests. Still a proof, not a product: the moat is a large corpus of
    machine-checked golden traces.
+=======
+6. **More corpus.** 26 problems (24 chain + Wheatstone + nodal cross-check) is still a proof,
+   not a product. The moat is a large corpus of machine-checked golden traces.
+>>>>>>> 2a2d2eeb8bab867eb47b5cc42bec52cf7053961d
 
 A note on #3: do not let a game physics engine (Rapier, cannon-es) integrate the motion. Those
 are plausible, not lawful. The kernel computes the trajectory; the renderer only applies
