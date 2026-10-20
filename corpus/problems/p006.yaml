@@ -19,6 +19,7 @@ scene:
         kinematics.velocity: "[1.0e6, 0, 0] m/s"
   relations:
     - {kind: inside, from: p, to: region}
+simulate: {instance: p, duration: 2.62e-7, samples: 160}
 target: {instance: p, prop: em.cyclotron_radius}
 expect:
   value: 0.0208786

@@ -211,6 +211,7 @@
     "OpenStax College Physics 2e, 4.6 (CC BY)",
     "definitional"
   ],
+  "trajectory": null,
   "checks": {
     "dimensions": "pass",
     "engines": [

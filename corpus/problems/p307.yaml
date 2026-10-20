@@ -1,0 +1,21 @@
+id: p307
+title: Energy stored in a parallel capacitor pair (book type)
+source: "Capacitor-combination problem type in the style of HC Verma, Concepts of Physics Vol. 2, ch. Capacitors; statement rewritten and values chosen for this corpus, not reproduced."
+tags: [circuits, capacitor, parallel, energy, book]
+text: |
+  A 4.0 uF capacitor and a 6.0 uF capacitor are connected in parallel across a 20 V
+  supply. How much energy is stored in the combination?
+scene:
+  instances:
+    - {id: c1, kind: capacitor, set: {electric.capacitance: "4.0 uF"}}
+    - {id: c2, kind: capacitor, set: {electric.capacitance: "6.0 uF"}}
+    - {id: pp, kind: parallel_pair, set: {em.potential_difference: "20 V"}}
+  relations:
+    - {kind: parallel_a, from: pp, to: c1}
+    - {kind: parallel_b, from: pp, to: c2}
+target: {instance: pp, prop: electric.energy_stored}
+expect:
+  value: 2.0e-3
+  unit: J
+  tol: 0.001
+  note: "In parallel capacitances add: 10 uF at 20 V stores C*V^2/2 = 2.0e-3 J."

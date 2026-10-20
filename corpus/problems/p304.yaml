@@ -1,0 +1,34 @@
+id: p304
+title: Sulfur ion orbit after acceleration through 1 kV (JEE Advanced type)
+source: "Problem type after the JEE Advanced alpha/sulfur ion-ratio question (dataset: JEEBench, dair-iitd/jeebench, gold ratio 4); statement rewritten, posed for one ion at a time, not reproduced."
+tags: [magnetism, circular-motion, jee-advanced, cyclotron]
+text: |
+  A singly charged sulfur ion (mass 32 u) starts from rest, is accelerated through a
+  potential difference of 1000 V, and then enters a uniform magnetic field of 0.50 T
+  directed perpendicular to its velocity. The accelerating voltage gives it a speed of
+  7.7655e4 m/s. What is the radius of the circular orbit it follows in the field?
+scene:
+  instances:
+    - id: region
+      kind: uniform_magnetic_field_region
+      set:
+        em.magnetic_field: "[0, 0, 0.50] T"
+    - id: ion
+      kind: charged_particle
+      set:
+        em.charge: "1.602176634e-19 C"
+        mechanics.mass: "5.31372501312e-26 kg"
+        kinematics.velocity: "[77655.22, 0, 0] m/s"
+  relations:
+    - {kind: inside, from: ion, to: region}
+simulate: {instance: ion, duration: 4.1677e-6, samples: 160}
+target: {instance: ion, prop: em.cyclotron_radius}
+expect:
+  value: 0.0515097
+  unit: m
+  tol: 0.005
+  note: >
+    r = mv/(qB) with v = sqrt(2qV/m) from the 1 kV acceleration. Together with p305 (the
+    alpha particle through the same voltage and field) the radii stand in the ratio
+    r_S/r_alpha = 4.0 exactly -- the JEE gold answer, reproduced by two independent
+    kernel derivations and asserted in tests/test_jee_corpus.py.

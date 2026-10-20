@@ -17,15 +17,15 @@
   "counts": {
    "properties": 56,
    "constants": 10,
-   "components": 25,
+   "components": 26,
    "formulas": 68,
    "laws": 25
   },
   "coverage": {
-   "total": 24,
-   "resolved": 24,
-   "agreeing": 24,
-   "multipath": 4
+   "total": 37,
+   "resolved": 37,
+   "agreeing": 37,
+   "multipath": 5
   }
  },
  "base": [
@@ -1745,6 +1745,29 @@
      "note": ""
     },
     "electric.power": {
+     "role": "observable",
+     "required": false,
+     "default": null,
+     "defaultQuantity": null,
+     "note": ""
+    }
+   }
+  },
+  "circuit_node": {
+   "label": "Circuit node",
+   "tags": [
+    "circuit",
+    "topology",
+    "node"
+   ],
+   "laws": [
+    "kirchhoff_current_law",
+    "kirchhoff_voltage_law"
+   ],
+   "model3d": null,
+   "description": "A point of one potential in a circuit — a junction where branches meet. Engine B (nodal assembly) solves for its potential with Kirchhoff's current law; branches declare `terminal_a`/`terminal_b` relations to the nodes they join, and a battery declares `positive_terminal`/`negative_terminal`. Created by wiring, like the pairs.",
+   "slots": {
+    "em.electric_potential": {
      "role": "observable",
      "required": false,
      "default": null,
@@ -6699,5 +6722,5 @@
   "1,1,-2,0,0,0,0": "N",
   "1,1,-1,0,0,0,0": "kg·m/s"
  },
- "contentHash": "5f438303d71ac8fc"
+ "contentHash": "f7527a2dc6a65f5c"
 }

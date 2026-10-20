@@ -10,12 +10,12 @@ import { defineComponents } from '@iwsdk/core';
 import {
   Bench,
   Environment,
+  ExperienceButton,
   Part,
   Terminal,
   Wire,
   WireDrag,
 } from './ff/components.js';
-import { Robot } from './robot-component.js';
 
 export default defineComponents([
   Bench,
@@ -24,6 +24,5 @@ export default defineComponents([
   Wire,
   WireDrag,
   Environment,
-  // Starter sample; safe to remove with the robot scene node.
-  Robot,
+  ExperienceButton,
 ]);

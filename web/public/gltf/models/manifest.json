@@ -1,0 +1,151 @@
+{
+  "library": {
+    "name": "KiCad official libraries",
+    "packages3d_repo": "https://github.com/KiCad/kicad-packages3D",
+    "footprints_repo": "https://github.com/KiCad/kicad-footprints",
+    "license": "CC BY-SA 4.0 with the KiCad libraries exception",
+    "license_url": "https://www.kicad.org/libraries/license/"
+  },
+  "models": {
+    "resistor": {
+      "glb": "gltf/models/resistor.glb",
+      "part": "Axial resistor DIN0207, 10.16 mm pitch",
+      "source_step": "Resistor_THT.3dshapes/R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal.step",
+      "source_footprint": "Resistor_THT.pretty/R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal.kicad_mod",
+      "license": "CC BY-SA 4.0 with the KiCad libraries exception",
+      "attribution": "3D model from the KiCad official libraries (kicad-packages3D), CC BY-SA 4.0 with the KiCad libraries exception; converted from STEP for web rendering.",
+      "size_mm": [
+        10.76,
+        2.5,
+        5.49
+      ],
+      "triangles": 2076,
+      "bytes": 43648,
+      "pads": [
+        {
+          "pad": "1",
+          "terminal": "terminal_a",
+          "pos": [
+            -0.4721,
+            0.0
+          ]
+        },
+        {
+          "pad": "2",
+          "terminal": "terminal_b",
+          "pos": [
+            0.4721,
+            0.0
+          ]
+        }
+      ]
+    },
+    "capacitor": {
+      "glb": "gltf/models/capacitor.glb",
+      "part": "Radial electrolytic capacitor, 8.0 mm diameter, 3.5 mm pitch",
+      "source_step": "Capacitor_THT.3dshapes/CP_Radial_D8.0mm_P3.50mm.step",
+      "source_footprint": "Capacitor_THT.pretty/CP_Radial_D8.0mm_P3.50mm.kicad_mod",
+      "license": "CC BY-SA 4.0 with the KiCad libraries exception",
+      "attribution": "3D model from the KiCad official libraries (kicad-packages3D), CC BY-SA 4.0 with the KiCad libraries exception; converted from STEP for web rendering.",
+      "size_mm": [
+        7.98,
+        7.98,
+        10.0
+      ],
+      "triangles": 2468,
+      "bytes": 54640,
+      "pads": [
+        {
+          "pad": "1",
+          "terminal": "terminal_a",
+          "pos": [
+            -0.1759,
+            -0.0
+          ]
+        },
+        {
+          "pad": "2",
+          "terminal": "terminal_b",
+          "pos": [
+            0.1741,
+            -0.0
+          ]
+        }
+      ]
+    },
+    "lamp": {
+      "glb": "gltf/models/lamp.glb",
+      "part": "5 mm LED (the bench lamp is a light-emitting load)",
+      "source_step": "LED_THT.3dshapes/LED_D5.0mm-3.step",
+      "source_footprint": "LED_THT.pretty/LED_D5.0mm-3.kicad_mod",
+      "license": "CC BY-SA 4.0 with the KiCad libraries exception",
+      "attribution": "3D model from the KiCad official libraries (kicad-packages3D), CC BY-SA 4.0 with the KiCad libraries exception; converted from STEP for web rendering.",
+      "size_mm": [
+        5.62,
+        5.79,
+        13.6
+      ],
+      "triangles": 509,
+      "bytes": 12196,
+      "pads": [
+        {
+          "pad": "1",
+          "terminal": "terminal_a",
+          "pos": [
+            -0.1918,
+            -0.0
+          ]
+        },
+        {
+          "pad": "2",
+          "terminal": "terminal_b",
+          "pos": [
+            -0.0051,
+            -0.0
+          ]
+        },
+        {
+          "pad": "3",
+          "terminal": null,
+          "pos": [
+            0.1817,
+            -0.0
+          ]
+        }
+      ]
+    },
+    "battery": {
+      "glb": "gltf/models/battery.glb",
+      "part": "Keystone 2462 2xAA battery holder",
+      "source_step": "Battery.3dshapes/BatteryHolder_Keystone_2462_2xAA.step",
+      "source_footprint": "Battery.pretty/BatteryHolder_Keystone_2462_2xAA.kicad_mod",
+      "license": "CC BY-SA 4.0 with the KiCad libraries exception",
+      "attribution": "3D model from the KiCad official libraries (kicad-packages3D), CC BY-SA 4.0 with the KiCad libraries exception; converted from STEP for web rendering.",
+      "size_mm": [
+        59.51,
+        32.92,
+        20.0
+      ],
+      "triangles": 3740,
+      "bytes": 88600,
+      "pads": [
+        {
+          "pad": "1",
+          "terminal": "positive_terminal",
+          "pos": [
+            -0.4566,
+            -0.1259
+          ]
+        },
+        {
+          "pad": "2",
+          "terminal": "negative_terminal",
+          "pos": [
+            -0.4566,
+            -0.3778
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,24 @@
+id: p306
+title: Energy stored in a series capacitor pair (book type)
+source: "Capacitor-combination problem type in the style of HC Verma, Concepts of Physics Vol. 2, ch. Capacitors; statement rewritten and values chosen for this corpus, not reproduced."
+tags: [circuits, capacitor, series, energy, book]
+text: |
+  A 2.0 uF capacitor and a 3.0 uF capacitor are connected in series across a 12 V
+  battery. How much energy is stored in the combination?
+scene:
+  instances:
+    - {id: c1, kind: capacitor, set: {electric.capacitance: "2.0 uF"}}
+    - {id: c2, kind: capacitor, set: {electric.capacitance: "3.0 uF"}}
+    - {id: sp, kind: series_pair, set: {em.potential_difference: "12 V"}}
+  relations:
+    - {kind: series_a, from: sp, to: c1}
+    - {kind: series_b, from: sp, to: c2}
+target: {instance: sp, prop: electric.energy_stored}
+expect:
+  value: 8.64e-5
+  unit: J
+  tol: 0.001
+  note: >
+    In series the capacitances reduce like parallel resistors: C = 2*3/(2+3) = 1.2 uF,
+    then U = C*V^2/2 = 8.64e-5 J. The series pair carries the voltage, so the energy
+    question is asked of the pair the student wired.

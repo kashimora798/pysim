@@ -134,6 +134,7 @@ class Problem:
     target: Ref
     source: str = ""
     expect: Expectation | None = None
+    simulate: dict | None = None  # {instance, duration, samples} for Engine C
     tags: tuple[str, ...] = ()
     path: Path | None = None
 
@@ -296,6 +297,7 @@ def load_problem(path: Path, kb: KnowledgeBase) -> Problem:
         target=Ref(iid, prop, str(state) if state else None),
         source=str(doc.get("source", "")),
         expect=expect,
+        simulate=(dict(doc["simulate"]) if doc.get("simulate") else None),
         tags=tuple(doc.get("tags") or ()),
         path=path,
     )

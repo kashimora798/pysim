@@ -1,0 +1,36 @@
+id: p302
+title: Charge crossing a cavity at JEE Advanced values (JEE Advanced type)
+source: "Problem type after the JEE Advanced 2015 cavity question (dataset: JEEBench, dair-iitd/jeebench); statement rewritten and values transposed, not reproduced."
+tags: [electrostatics, superposition, cavity, cross-domain, jee-advanced, kinematics]
+text: |
+  Inside the cavity of a uniformly charged insulating sphere (volume charge density
+  3.0e-5 C/m^3, cavity centre offset 1.5 cm from the sphere's centre) a particle of charge
+  2.0 nC and mass 2.0 mg is released from rest. Because the cavity field is uniform, the
+  particle is a perfect projectile. How fast is it moving after travelling 2.0 cm?
+scene:
+  instances:
+    - id: cav
+      kind: spherical_cavity_in_charged_sphere
+      set:
+        em.charge_density_volume: "3.0e-5 C/m^3"
+        geometry.radius: "10 cm"
+        geometry.offset: "[0.015, 0, 0] m"
+    - id: p
+      kind: charged_particle
+      set:
+        em.charge: "2.0 nC"
+        mechanics.mass: "2.0e-6 kg"
+        kinematics.speed@initial: "0 m/s"
+        kinematics.distance: "2.0 cm"
+  relations:
+    - {kind: inside_cavity_of, from: p, to: cav}
+simulate: {instance: p, duration: 0.06, samples: 120}
+target: {instance: p, prop: kinematics.speed, state: final}
+expect:
+  value: 0.82319
+  unit: m/s
+  tol: 0.01
+  note: >
+    E = rho*a/(3*eps0) = 1.694e4 V/m, a = qE/m = 16.94 m/s^2, v = sqrt(2as) = 0.823 m/s.
+    Engine C animates the crossing; its sampled speed at 2.0 cm must agree with this chain
+    answer (asserted in tests/test_jee_corpus.py).

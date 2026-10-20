@@ -22,7 +22,10 @@ makes a network call or consults a model.
 
 ## Status
 
-Milestones M0–M3 of the plan: the compiler and the chain resolver, as a CLI. No 3D renderer yet.
+The compiler and chain resolver (CLI), the verified static export, the TypeScript kernel port,
+and the 3D WebXR bench: desk-anchored parts palette, pinch-to-wire, Auto/Guided/Free modes over
+24 golden problems, a live solver bridge, kernel-resolved field arrows and a hand-as-probe —
+see `docs/xr-experience.md`. Not yet verified on a Quest headset.
 
 Domain: **charged particles and electrostatic fields** — chosen because nothing in the market
 occupies generative + lawful + 3D here, and because the `field → qE force → acceleration →

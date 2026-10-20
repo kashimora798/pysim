@@ -1,6 +1,6 @@
 {
  "schema": "1",
- "contentHash": "5f438303d71ac8fc",
+ "contentHash": "f7527a2dc6a65f5c",
  "problems": [
   {
    "id": "p001",
@@ -653,6 +653,367 @@
     "parallel_pair"
    ],
    "spec": "specs/p110.json"
+  },
+  {
+   "id": "p201",
+   "title": "Wheatstone bridge (Engine B flagship)",
+   "text": "A 10 V battery drives a bridge: 10 ohm and 20 ohm in the left arm, 20 ohm and 10 ohm\nin the right arm, and a 10 ohm bridge wire between the two midpoints. No formula\nisolates the bridge current -- it takes the assembled Kirchhoff system. What flows\nthrough the bridge resistor?",
+   "source": "After OpenStax College Physics 2e, 21.3 (CC BY)",
+   "tags": [
+    "circuits",
+    "bridge",
+    "system",
+    "engine-b",
+    "flagship"
+   ],
+   "target": "r5.electric.current",
+   "answer": "0.1429 A",
+   "beats": 39,
+   "paths": 1,
+   "laws": [
+    "kirchhoff_current_law",
+    "ohms_law"
+   ],
+   "components": [
+    "battery",
+    "circuit_node",
+    "environment",
+    "resistor"
+   ],
+   "spec": "specs/p201.json"
+  },
+  {
+   "id": "p202",
+   "title": "Single loop in nodal form (engines cross-check)",
+   "text": "The p101 loop -- 12 V across 4.0 ohm -- stated the nodal way: two circuit nodes and\none branch. Engine B must reach the same 3 A the chain derives for p101.",
+   "source": "After OpenStax College Physics 2e, 20.2 (CC BY)",
+   "tags": [
+    "circuits",
+    "system",
+    "engine-b",
+    "cross-check"
+   ],
+   "target": "r1.electric.current",
+   "answer": "3 A",
+   "beats": 15,
+   "paths": 1,
+   "laws": [
+    "kirchhoff_current_law",
+    "ohms_law"
+   ],
+   "components": [
+    "battery",
+    "circuit_node",
+    "environment",
+    "resistor"
+   ],
+   "spec": "specs/p202.json"
+  },
+  {
+   "id": "p301",
+   "title": "Electric field inside a cavity carved from a charged sphere (JEE Advanced type)",
+   "text": "A solid insulating sphere of radius 12 cm carries a uniform volume charge density of\n2.0e-5 C/m^3. A spherical cavity is hollowed out inside it; the cavity's centre lies\n4.0 cm from the sphere's centre. Show that the field inside the cavity is uniform, and\nfind its magnitude.",
+   "source": "Problem type after the JEE Advanced 2015 cavity question (dataset: JEEBench, dair-iitd/jeebench); statement rewritten and values transposed, not reproduced.",
+   "tags": [
+    "electrostatics",
+    "superposition",
+    "cavity",
+    "jee-advanced",
+    "gauss"
+   ],
+   "target": "cav.em.electric_field_magnitude",
+   "answer": "30118 V/m",
+   "beats": 7,
+   "paths": 1,
+   "laws": [
+    "definition_magnitude",
+    "superposition_electric"
+   ],
+   "components": [
+    "environment",
+    "spherical_cavity_in_charged_sphere"
+   ],
+   "spec": "specs/p301.json"
+  },
+  {
+   "id": "p302",
+   "title": "Charge crossing a cavity at JEE Advanced values (JEE Advanced type)",
+   "text": "Inside the cavity of a uniformly charged insulating sphere (volume charge density\n3.0e-5 C/m^3, cavity centre offset 1.5 cm from the sphere's centre) a particle of charge\n2.0 nC and mass 2.0 mg is released from rest. Because the cavity field is uniform, the\nparticle is a perfect projectile. How fast is it moving after travelling 2.0 cm?",
+   "source": "Problem type after the JEE Advanced 2015 cavity question (dataset: JEEBench, dair-iitd/jeebench); statement rewritten and values transposed, not reproduced.",
+   "tags": [
+    "electrostatics",
+    "superposition",
+    "cavity",
+    "cross-domain",
+    "jee-advanced",
+    "kinematics"
+   ],
+   "target": "p.kinematics.speed@final",
+   "answer": "0.8232 m/s",
+   "beats": 20,
+   "paths": 2,
+   "laws": [
+    "definition_magnitude",
+    "kinematics_constant_acceleration",
+    "lorentz_force",
+    "newton_gravitation_uniform",
+    "newton_second_law",
+    "superposition_electric",
+    "superposition_of_forces",
+    "work_energy_theorem"
+   ],
+   "components": [
+    "charged_particle",
+    "environment",
+    "spherical_cavity_in_charged_sphere"
+   ],
+   "spec": "specs/p302.json"
+  },
+  {
+   "id": "p303",
+   "title": "Electron deflected between parallel plates (JEE Main type)",
+   "text": "An electron enters the region between two parallel plates (10 V across a 2.0 cm gap)\nmoving horizontally at 4.0e6 m/s, midway between the plates. The plates are 4.0 cm\nlong, so the electron spends 1.0e-8 s in the field. How far is it displaced, in total,\nby the time it leaves the plates -- and what parabolic path does it trace?",
+   "source": "Classical charged-particle deflection problem type (JEE Main / HC Verma Concepts of Physics Vol. 2 style); statement rewritten and values chosen for this corpus, not reproduced.",
+   "tags": [
+    "electrostatics",
+    "projectile",
+    "plates",
+    "jee-main",
+    "book",
+    "kinematics"
+   ],
+   "target": "e1.kinematics.displacement",
+   "answer": "[0.04, 0.004397, 0] m",
+   "beats": 21,
+   "paths": 1,
+   "laws": [
+    "kinematics_constant_acceleration",
+    "lorentz_force",
+    "newton_gravitation_uniform",
+    "newton_second_law",
+    "superposition_of_forces",
+    "uniform_field_between_plates"
+   ],
+   "components": [
+    "electron",
+    "environment",
+    "parallel_plate_capacitor"
+   ],
+   "spec": "specs/p303.json"
+  },
+  {
+   "id": "p304",
+   "title": "Sulfur ion orbit after acceleration through 1 kV (JEE Advanced type)",
+   "text": "A singly charged sulfur ion (mass 32 u) starts from rest, is accelerated through a\npotential difference of 1000 V, and then enters a uniform magnetic field of 0.50 T\ndirected perpendicular to its velocity. The accelerating voltage gives it a speed of\n7.7655e4 m/s. What is the radius of the circular orbit it follows in the field?",
+   "source": "Problem type after the JEE Advanced alpha/sulfur ion-ratio question (dataset: JEEBench, dair-iitd/jeebench, gold ratio 4); statement rewritten, posed for one ion at a time, not reproduced.",
+   "tags": [
+    "magnetism",
+    "circular-motion",
+    "jee-advanced",
+    "cyclotron"
+   ],
+   "target": "ion.em.cyclotron_radius",
+   "answer": "0.05151 m",
+   "beats": 14,
+   "paths": 1,
+   "laws": [
+    "circular_motion_magnetic",
+    "definition_magnitude"
+   ],
+   "components": [
+    "charged_particle",
+    "environment",
+    "uniform_magnetic_field_region"
+   ],
+   "spec": "specs/p304.json"
+  },
+  {
+   "id": "p305",
+   "title": "Alpha particle orbit after acceleration through 1 kV (JEE Advanced type)",
+   "text": "An alpha particle (mass 4 u, charge +2e) starts from rest, is accelerated through a\npotential difference of 1000 V, and then enters a uniform magnetic field of 0.50 T\ndirected perpendicular to its velocity. The accelerating voltage gives it a speed of\n3.1062e5 m/s. What is the radius of the circular orbit it follows in the field?",
+   "source": "Problem type after the JEE Advanced alpha/sulfur ion-ratio question (dataset: JEEBench, dair-iitd/jeebench, gold ratio 4); statement rewritten, posed for one ion at a time, not reproduced.",
+   "tags": [
+    "magnetism",
+    "circular-motion",
+    "jee-advanced",
+    "cyclotron"
+   ],
+   "target": "ion.em.cyclotron_radius",
+   "answer": "0.01288 m",
+   "beats": 14,
+   "paths": 1,
+   "laws": [
+    "circular_motion_magnetic",
+    "definition_magnitude"
+   ],
+   "components": [
+    "charged_particle",
+    "environment",
+    "uniform_magnetic_field_region"
+   ],
+   "spec": "specs/p305.json"
+  },
+  {
+   "id": "p306",
+   "title": "Energy stored in a series capacitor pair (book type)",
+   "text": "A 2.0 uF capacitor and a 3.0 uF capacitor are connected in series across a 12 V\nbattery. How much energy is stored in the combination?",
+   "source": "Capacitor-combination problem type in the style of HC Verma, Concepts of Physics Vol. 2, ch. Capacitors; statement rewritten and values chosen for this corpus, not reproduced.",
+   "tags": [
+    "circuits",
+    "capacitor",
+    "series",
+    "energy",
+    "book"
+   ],
+   "target": "sp.electric.energy_stored",
+   "answer": "8.640e-5 J",
+   "beats": 12,
+   "paths": 1,
+   "laws": [
+    "capacitor_definition"
+   ],
+   "components": [
+    "capacitor",
+    "environment",
+    "series_pair"
+   ],
+   "spec": "specs/p306.json"
+  },
+  {
+   "id": "p307",
+   "title": "Energy stored in a parallel capacitor pair (book type)",
+   "text": "A 4.0 uF capacitor and a 6.0 uF capacitor are connected in parallel across a 20 V\nsupply. How much energy is stored in the combination?",
+   "source": "Capacitor-combination problem type in the style of HC Verma, Concepts of Physics Vol. 2, ch. Capacitors; statement rewritten and values chosen for this corpus, not reproduced.",
+   "tags": [
+    "circuits",
+    "capacitor",
+    "parallel",
+    "energy",
+    "book"
+   ],
+   "target": "pp.electric.energy_stored",
+   "answer": "0.002 J",
+   "beats": 12,
+   "paths": 1,
+   "laws": [
+    "capacitor_definition"
+   ],
+   "components": [
+    "capacitor",
+    "environment",
+    "parallel_pair"
+   ],
+   "spec": "specs/p307.json"
+  },
+  {
+   "id": "p308",
+   "title": "Unbalanced bridge solved nodally (JEE Main type, Engine B)",
+   "text": "A 12 V battery feeds a bridge network: from the top rail, 6.0 ohm leads to node A and\n4.0 ohm leads to node B; node A returns to the bottom rail through 12 ohm, node B\nthrough 12 ohm, and a 6.0 ohm bridge wire joins A to B. The bridge is deliberately\nunbalanced, so no series/parallel reduction can isolate the bridge current. What flows\nthrough the bridge wire, and in which direction?",
+   "source": "Kirchhoff-network problem type (JEE Main current-electricity style); network and values designed for this corpus, not reproduced from any paper.",
+   "tags": [
+    "circuits",
+    "bridge",
+    "system",
+    "engine-b",
+    "jee-main"
+   ],
+   "target": "r5.electric.current",
+   "answer": "-0.07692 A",
+   "beats": 39,
+   "paths": 1,
+   "laws": [
+    "kirchhoff_current_law",
+    "ohms_law"
+   ],
+   "components": [
+    "battery",
+    "circuit_node",
+    "environment",
+    "resistor"
+   ],
+   "spec": "specs/p308.json"
+  },
+  {
+   "id": "p309",
+   "title": "Two-node ladder network solved nodally (JEE Main type, Engine B)",
+   "text": "A 24 V battery drives a ladder: 10 ohm from the top rail to node A, 20 ohm from A to\nthe bottom rail, 10 ohm from A to node B, 30 ohm from the top rail to B, and 20 ohm\nfrom B to the bottom rail. What current flows through the rung between A and B?",
+   "source": "Kirchhoff-network problem type (JEE Main current-electricity style); network and values designed for this corpus, not reproduced from any paper.",
+   "tags": [
+    "circuits",
+    "ladder",
+    "system",
+    "engine-b",
+    "jee-main"
+   ],
+   "target": "r3.electric.current",
+   "answer": "0.2233 A",
+   "beats": 39,
+   "paths": 1,
+   "laws": [
+    "kirchhoff_current_law",
+    "ohms_law"
+   ],
+   "components": [
+    "battery",
+    "circuit_node",
+    "environment",
+    "resistor"
+   ],
+   "spec": "specs/p309.json"
+  },
+  {
+   "id": "p310",
+   "title": "Current through one branch of a parallel pair (book type)",
+   "text": "A 6.0 ohm resistor and a 3.0 ohm resistor are connected in parallel across a 12 V\nbattery. What current flows through the 3.0 ohm resistor alone?",
+   "source": "Current-division problem type in the style of HC Verma, Concepts of Physics Vol. 2, ch. Current Electricity; statement rewritten and values chosen for this corpus, not reproduced.",
+   "tags": [
+    "circuits",
+    "parallel",
+    "sharing",
+    "book"
+   ],
+   "target": "r2.electric.current",
+   "answer": "4 A",
+   "beats": 17,
+   "paths": 1,
+   "laws": [
+    "kirchhoff_voltage_law",
+    "ohms_law"
+   ],
+   "components": [
+    "battery",
+    "circuit_loop",
+    "environment",
+    "parallel_pair",
+    "resistor"
+   ],
+   "spec": "specs/p310.json"
+  },
+  {
+   "id": "p311",
+   "title": "Cyclotron period of an electron (JEE Main type)",
+   "text": "An electron moves at 1.0e6 m/s perpendicular to a uniform magnetic field of\n0.010 T. What is the period of its circular motion -- and why does the answer not\ndepend on the speed?",
+   "source": "Cyclotron problem type (JEE Main magnetism style; cf. OpenStax University Physics 2, 11.3, CC BY); statement rewritten and values chosen for this corpus, not reproduced.",
+   "tags": [
+    "magnetism",
+    "circular-motion",
+    "jee-main",
+    "cyclotron"
+   ],
+   "target": "e1.em.cyclotron_period",
+   "answer": "3.572e-9 s",
+   "beats": 11,
+   "paths": 1,
+   "laws": [
+    "circular_motion_magnetic",
+    "definition_magnitude"
+   ],
+   "components": [
+    "electron",
+    "environment",
+    "uniform_magnetic_field_region"
+   ],
+   "spec": "specs/p311.json"
   }
  ]
 }

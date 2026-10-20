@@ -13,20 +13,28 @@
     "typecheck": "tsc --noEmit",
     "build": "vite build",
     "preview": "vite preview",
-    "physics:export": "cd .. && .venv/Scripts/python -m kernel.cli export",
+    "physics:export": "cd .. && .venv/bin/python -m kernel.cli export",
     "verify:kernel": "node --experimental-strip-types scripts/verify-kernel.mts",
-    "prebuild": "npm run typecheck && npm run verify:kernel"
+    "prebuild": "npm run check",
+    "check": "npm run typecheck && npm run verify:kernel && npm run check:experience && npm run check:models && npm run check:capture",
+    "check:experience": "esbuild scripts/check-experience.mts --bundle --platform=node --format=esm --outfile=node_modules/.cache/ff-check.mjs --log-level=error && node node_modules/.cache/ff-check.mjs",
+    "check:models": "esbuild scripts/check-models.mts --bundle --platform=node --format=esm --outfile=node_modules/.cache/ff-models.mjs --log-level=error && node node_modules/.cache/ff-models.mjs",
+    "spike:rapier": "esbuild scripts/spike-rapier.mts --bundle --platform=node --format=esm --outfile=node_modules/.cache/ff-rapier.mjs --log-level=error && node node_modules/.cache/ff-rapier.mjs",
+    "check:capture": "esbuild scripts/check-capture.mts --bundle --platform=node --format=esm --outfile=node_modules/.cache/ff-capture.mjs --log-level=error && node node_modules/.cache/ff-capture.mjs",
+    "check:ocr": "node scripts/check-ocr.mjs"
   },
   "dependencies": {
+    "@dimforge/rapier3d-compat": "^0.12.0",
     "@iwsdk/core": "1.0.1",
     "@pmndrs/uikit": "^1.0.74",
     "@pmndrs/uikit-horizon": "^1.0.74",
     "@pmndrs/uikit-lucide": "^1.0.74",
+    "tesseract.js": "^7.0.0",
     "three": "npm:super-three@0.181.0"
   },
   "devDependencies": {
-    "@iwsdk/reference": "1.0.1",
     "@iwsdk/cli": "1.0.1",
+    "@iwsdk/reference": "1.0.1",
     "@iwsdk/vite-plugin-dev": "1.0.1",
     "@meta-quest/metavr": "^1.8.1",
     "@types/three": "^0.181.0",

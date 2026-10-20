@@ -1,0 +1,29 @@
+id: p310
+title: Current through one branch of a parallel pair (book type)
+source: "Current-division problem type in the style of HC Verma, Concepts of Physics Vol. 2, ch. Current Electricity; statement rewritten and values chosen for this corpus, not reproduced."
+tags: [circuits, parallel, sharing, book]
+text: |
+  A 6.0 ohm resistor and a 3.0 ohm resistor are connected in parallel across a 12 V
+  battery. What current flows through the 3.0 ohm resistor alone?
+scene:
+  instances:
+    - {id: bat, kind: battery, set: {electric.emf: "12 V"}}
+    - {id: r1, kind: resistor, set: {electric.resistance: "6.0 ohm"}}
+    - {id: r2, kind: resistor, set: {electric.resistance: "3.0 ohm"}}
+    - {id: pp, kind: parallel_pair}
+    - {id: loop, kind: circuit_loop}
+  relations:
+    - {kind: parallel_a, from: pp, to: r1}
+    - {kind: parallel_b, from: pp, to: r2}
+    - {kind: driven_by, from: loop, to: bat}
+    - {kind: loads, from: loop, to: pp}
+target: {instance: r2, prop: electric.current}
+expect:
+  value: 4.0
+  unit: A
+  tol: 0.001
+  note: >
+    Both branches see the full 12 V, so the 3.0 ohm branch carries 12/3 = 4.0 A (twice
+    the 6.0 ohm branch's 2.0 A): the battery's 6.0 A divides in inverse proportion to
+    resistance. The answer travels down the reduction tree -- loop voltage shared into
+    the pair, shared into the member, then Ohm's law on the member.
