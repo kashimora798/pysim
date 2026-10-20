@@ -1,0 +1,40 @@
+{
+  "comment": "Registry of real CAD models imported into the bench. Sources are the official KiCad libraries (CC BY-SA 4.0 with the KiCad library exception). Run tools/import_cad.py against local KiCad checkouts to regenerate web/public/gltf/models/. Component Search Engine / SamacSys models are NOT listed here: their downloads are account-gated with no public API and terms that do not clearly permit redistribution in a web app -- see docs/3d-asset-pipeline-plan.md.",
+  "library": {
+    "name": "KiCad official libraries",
+    "packages3d_repo": "https://github.com/KiCad/kicad-packages3D",
+    "footprints_repo": "https://github.com/KiCad/kicad-footprints",
+    "license": "CC BY-SA 4.0 with the KiCad libraries exception",
+    "license_url": "https://www.kicad.org/libraries/license/"
+  },
+  "models": [
+    {
+      "kind": "resistor",
+      "step": "Resistor_THT.3dshapes/R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal.step",
+      "footprint": "Resistor_THT.pretty/R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal.kicad_mod",
+      "part": "Axial resistor DIN0207, 10.16 mm pitch",
+      "terminals": {"1": "terminal_a", "2": "terminal_b"}
+    },
+    {
+      "kind": "capacitor",
+      "step": "Capacitor_THT.3dshapes/CP_Radial_D8.0mm_P3.50mm.step",
+      "footprint": "Capacitor_THT.pretty/CP_Radial_D8.0mm_P3.50mm.kicad_mod",
+      "part": "Radial electrolytic capacitor, 8.0 mm diameter, 3.5 mm pitch",
+      "terminals": {"1": "terminal_a", "2": "terminal_b"}
+    },
+    {
+      "kind": "lamp",
+      "step": "LED_THT.3dshapes/LED_D5.0mm-3.step",
+      "footprint": "LED_THT.pretty/LED_D5.0mm-3.kicad_mod",
+      "part": "5 mm LED (the bench lamp is a light-emitting load)",
+      "terminals": {"1": "terminal_a", "2": "terminal_b"}
+    },
+    {
+      "kind": "battery",
+      "step": "Battery.3dshapes/BatteryHolder_Keystone_2462_2xAA.step",
+      "footprint": "Battery.pretty/BatteryHolder_Keystone_2462_2xAA.kicad_mod",
+      "part": "Keystone 2462 2xAA battery holder",
+      "terminals": {"1": "positive_terminal", "2": "negative_terminal"}
+    }
+  ]
+}

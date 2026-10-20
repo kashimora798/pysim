@@ -75,3 +75,23 @@ Live web search was unavailable while this project was set up, so no licence cla
 a web page. Every row above came from the metadata of the package actually installed in `.venv`.
 The *excluded* table is from knowledge and should be re-confirmed from each project's `LICENSE`
 file before any of those tools is adopted.
+
+## 3D model licensing (added with the CAD pipeline)
+
+Real component models enter the bench only through `tools/import_cad.py`, and only from
+libraries whose terms clearly permit what we do with them (serve the converted GLB from a
+public web app). The registry is `tools/cad_sources.json`; every imported model carries its
+licence and attribution in `web/public/gltf/models/manifest.json`, and `npm run check:models`
+fails the build if either goes missing.
+
+| Library | Licence / terms | Verdict |
+|---|---|---|
+| **KiCad official libraries** (kicad-packages3D, kicad-footprints) | CC BY-SA 4.0 with the KiCad libraries exception (designs made with the data are unrestricted; redistributing the library data itself keeps BY-SA + attribution) | **Used.** Converted GLBs are redistributed library data in modified form, so they stay CC BY-SA 4.0 with attribution — recorded per model in the manifest |
+| **Component Search Engine / SamacSys** | Free account downloads; no public API for asset files; terms do not clearly grant redistribution of models inside a third-party web app | Not imported. Manual-download-only parts may be added later, one by one, after a terms check — never scraped, never hot-linked |
+| **SnapEDA / SnapMagic** | CC BY-SA 4.0 with Design Exception 1.0 for files from SnapMagic Search | Candidate second source; same share-alike handling as KiCad would apply |
+| **GrabCAD** | Community cross-licence is non-commercial, internal use only | **Excluded** — incompatible with keeping every option open |
+| **Ultra Librarian / TraceParts / 3D ContentCentral / PARTcommunity** | Paid API or portal terms without redistribution rights | Excluded unless a licence is negotiated |
+
+Physics engines are covered in `docs/3d-asset-pipeline-plan.md`; the audited position is
+that `@dimforge/rapier3d-compat` (Apache-2.0) may be used for interaction queries only,
+and no game-physics engine may ever integrate a trajectory the kernel has verified.
