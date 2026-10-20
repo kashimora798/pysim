@@ -5,7 +5,8 @@ uploads a photo. Regenerate after upgrading tesseract.js:
 
 - `worker.min.js` — from the `tesseract.js` npm package (`dist/`)
 - `tesseract-core-*.wasm(.js)` — from the `tesseract.js-core` npm package
-  (SIMD-LSTM preferred, LSTM fallback)
+  (relaxed-SIMD-LSTM preferred — that is the file tesseract.js v7 requests first —
+  then SIMD-LSTM, then plain LSTM fallback)
 - `eng.traineddata.gz` — English language data from
   https://github.com/tesseract-ocr/tessdata_fast (Apache-2.0)
 

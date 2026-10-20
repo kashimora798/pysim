@@ -1183,10 +1183,3 @@ export function highlightPalette(kinds: readonly string[] | null): void {
     activeInventory.highlightWanted(kinds);
   }
 }
-
-// --- TEMP TYPE PROBE 2: prove getSystem(GrabSystem) is not 'any' ---
-type IsAny<T> = 0 extends 1 & T ? true : false;
-declare const _g: GrabSystem | undefined;
-type _HandT = ReturnType<GrabSystem['getHolderHand']>;
-const _h1: IsAny<_HandT> extends true ? never : _HandT = null;
-void _g; void _h1;

@@ -192,6 +192,7 @@ export class ExperienceSystem extends createSystem({
     if (this.playing && this.mode === 'auto' && now >= this.nextAt) this.advance(false);
     if (this.resumeAt && now >= this.resumeAt) { this.resumeAt = 0; this.advance(false); }
     if (this.waitingTask) this.checkTask();
+    if (this.waitingGuide) this.checkGuide();
     if (this.mode === 'free' && now - this.lastFreeAt > 600) { this.lastFreeAt = now; this.solveFree(); }
     if (this.probeEnabled && this.sources.length > 0 && now - this.lastProbe > 140) {
       this.lastProbe = now;
@@ -579,7 +580,7 @@ export class ExperienceSystem extends createSystem({
     } else if (this.spec) {
       this.resetStage();
       if (mode === 'auto') this.playing = true;
-      else this.setTask(`🖐 Guided: ${this.spec.problem.title} — press Next, then build each step with your hands.`);
+      else this.startGuide(); // arms the step list + panel; without this Next "completes" an empty guide
     }
   }
 
