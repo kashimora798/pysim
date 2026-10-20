@@ -49,6 +49,9 @@ import { extractScene } from '../physics/extract.js';
 import { aiConfig } from './ai-config.js';
 import { Bench as BenchComp, ExperienceButton, Part, Terminal, Wire } from './components.js';
 import { buildCircuitScene, benchDefaults, type BenchPart, type BenchWire } from './topology.js';
+import { buildGuideSteps, wireMatchesStep, wirePairKey, type GuideStep } from './guide.js';
+import { highlightPalette } from './inventory.js';
+import { clearHighlights, setHighlight } from './terminals.js';
 import { arrowLength, fieldAt, type FieldSource } from './field.js';
 
 type Mode = 'auto' | 'guided' | 'free';
@@ -71,6 +74,7 @@ export class ExperienceSystem extends createSystem({
   benches: { required: [BenchComp] },
   parts: { required: [Part] },
   wires: { required: [Wire] },
+  terms: { required: [Terminal] },
   buttons: { required: [ExperienceButton, Pressed] },
 }) {
   private physics?: Physics;
@@ -86,6 +90,16 @@ export class ExperienceSystem extends createSystem({
   private nextAt = 0;
   private waitingTask: Beat | null = null;
   private baseline = { kinds: new Map<string, number>(), wires: 0 };
+
+  // ------------------------------------------------------------ guided build
+  private guideSteps: GuideStep[] = [];
+  private guideIndex = -1;
+  private waitingGuide: GuideStep | null = null;
+  private guideBaseline = { snapped: new Map<string, number>(), wirePairs: new Map<string, number>() };
+  private guideBasePos = new Map<string, Vector3>();
+  private guideCanvas?: HTMLCanvasElement;
+  private guideTexture?: CanvasTexture;
+  private wasPresenting = false;
 
   private readonly proxies = new Map<string, Mesh>();
   private readonly pulses = new Map<Mesh, number>();
@@ -188,6 +202,22 @@ export class ExperienceSystem extends createSystem({
     card.position.set(0, 0.30, -0.27);
     card.rotation.x = -0.42;
     root.add(card);
+
+    // Guide panel: the step instructor that floats in front of the learner in the
+    // glasses. Bigger and higher than the trust card — this is the panel a student
+    // actually reads while their hands are busy. Same canvas-texture technique.
+    this.guideCanvas = document.createElement('canvas');
+    this.guideCanvas.width = 1024; this.guideCanvas.height = 512;
+    this.guideTexture = new CanvasTexture(this.guideCanvas);
+    const guide = new Mesh(
+      new BoxGeometry(0.68, 0.34, 0.004),
+      new MeshBasicMaterial({ map: this.guideTexture }),
+    );
+    guide.name = 'GuidePanel';
+    guide.position.set(0, 0.62, -0.24);
+    guide.rotation.x = -0.30;
+    root.add(guide);
+    this.drawGuide('FieldForge Guide', ['Pick a problem, then build it with your hands.', 'Palm up: palette · pinch: grab & wire · open hand: drop'], 'idle');
     this.drawTrust('FieldForge', ['Your verified physics bench is ready.', 'Pick a problem — or grab parts and wire your own.']);
 
     // Field arrows: one instanced draw call for the whole grid.
@@ -517,6 +547,13 @@ export class ExperienceSystem extends createSystem({
 
   private advance(manual: boolean): void {
     this.ensureAudio();
+    if (this.mode === 'guided' && this.spec) {
+      // The bench NEXT button / desktop companion: accept the current build step
+      // (verified by hand where our checks can see it), or move the guide on.
+      if (this.waitingGuide) this.completeGuideStep(true);
+      else this.advanceGuide();
+      return;
+    }
     if (!this.spec || this.mode === 'free') { if (manual) this.setMode('auto'); if (!this.spec) return; }
     if (this.waitingTask && !manual) return;
     this.waitingTask = null;
@@ -608,6 +645,7 @@ export class ExperienceSystem extends createSystem({
 
   /** Accept the current Guided task (hand-verified by the bridge, or the desktop companion button). */
   private completeTask(): void {
+    if (this.waitingGuide) { this.completeGuideStep(true); return; }
     const beat = this.waitingTask;
     if (!beat) return;
     this.waitingTask = null;
@@ -617,6 +655,253 @@ export class ExperienceSystem extends createSystem({
     if (beat.kind === 'relate' && beat.from && beat.to) this.drawRelation(beat.from, beat.to);
     this.setTask('✓ Verified against the solution topology — that step is lawful. Continuing…');
     this.resumeAt = performance.now() + 700;
+  }
+
+  // ================================================================ guided build
+  //
+  // The hands-first lesson. Steps come from guide.ts (pure, tested); this class owns
+  // the presentation (guide panel in the glasses + HUD mirror), the highlighting
+  // (palette slots, terminals) and the verification. A step completes when the
+  // learner's hands actually did it — a part settled, a wire landed between the
+  // right kinds, two parts brought together — never merely when time passed.
+
+  private startGuide(): void {
+    if (!this.spec || !this.kb) return;
+    const labels = new Map(Object.entries(this.kb.components).map(([k, v]) => [k, v.label]));
+    const placeable = new Set(
+      Object.entries(this.kb.components).filter(([, v]) => v.model3d != null).map(([k]) => k),
+    );
+    this.guideSteps = buildGuideSteps(this.spec, { labels, placeable });
+    this.guideIndex = -1;
+    this.waitingGuide = null;
+    this.drawGuide(this.spec.problem.title, [
+      `Build it with your hands — ${this.guideSteps.length} steps.`,
+      'The palette has every part you need. Follow the panel in front of you.',
+    ], 'idle');
+    this.setTask(`🖐 Guided: ${this.spec.problem.title} — ${this.guideSteps.length} steps. Read the panel in front of you, then use your hands.`);
+    this.resumeAt = performance.now() + 900;
+  }
+
+  private advanceGuide(): void {
+    if (this.mode !== 'guided' || !this.spec) return;
+    this.resumeAt = 0;
+    this.guideIndex += 1;
+    const step = this.guideSteps[this.guideIndex];
+    if (!step) {
+      this.waitingGuide = null;
+      highlightPalette(null); clearHighlights();
+      this.drawGuide('✅ You built it', [
+        `${this.spec.problem.title}`,
+        `Verified answer: ${this.spec.answer.display}`,
+        'Every step was placed and wired by your hands — and checked.',
+        'Try Free bench to explore, or pick another problem.',
+      ], 'done');
+      this.setTask('✅ Guided build complete — every step verified by your hands.');
+      this.sound('answer');
+      return;
+    }
+    this.applyGuideStep(step);
+  }
+
+  private applyGuideStep(step: GuideStep): void {
+    if (!this.spec) return;
+    const beat = step.beat;
+    // Keep the staged visualisation and trust card in step with the build: givens,
+    // resolutions and the answer appear as they are earned.
+    const lines = [
+      beat.narrate,
+      beat.display ? `Value: ${beat.display}` : '',
+      beat.because.formula ? `Formula: ${beat.because.formula}   ${beat.because.expression ?? ''}` : beat.because.detail ?? '',
+      beat.because.law_label ? `Law: ${beat.because.law_label}` : '',
+      beat.because.cite ? `Source: ${beat.because.cite}` : '',
+    ].filter(Boolean);
+    this.drawTrust(step.final ? `Answer: ${beat.display ?? ''}` : step.title, lines);
+    if (this.hud.trust) this.hud.trust.textContent = lines.join('\n');
+    if (beat.instance && step.action === 'observe') {
+      const mesh = this.spawnProxy(beat.instance, this.kindOf(beat.instance));
+      if (mesh) this.pulses.set(mesh, performance.now() + 1100);
+      if (beat.channel?.includes('field') || beat.property?.includes('electric_field')) this.showFieldArrows();
+    }
+
+    if (step.action === 'observe') {
+      this.waitingGuide = null;
+      highlightPalette(null); clearHighlights();
+      this.drawGuide(`Step ${step.index} / ${step.total} — ${step.title}`, [step.instruction, beat.display ? `→ ${beat.display}` : ''], 'observe');
+      this.setTask(`👀 ${step.instruction}${beat.display ? `  →  ${beat.display}` : ''}`);
+      this.sound(step.final ? 'answer' : 'resolve');
+      this.resumeAt = performance.now() + (step.final ? 2600 : 1500);
+      // The final answer ends the guided sequence.
+      if (step.final) { this.guideIndex = this.guideSteps.length; this.resumeAt = performance.now() + 1200; }
+      return;
+    }
+
+    // A build step: snapshot the bench, light the way, and wait for hands.
+    this.guideBaseline = { snapped: this.settledCounts(), wirePairs: this.wirePairCounts() };
+    this.guideBasePos.clear();
+    this.queries.parts.entities.forEach((e) => {
+      if (e.object3D) {
+        this.guideBasePos.set(String(e.getValue(Part, 'instanceId') ?? ''), e.object3D.getWorldPosition(new Vector3()));
+      }
+    });
+    this.waitingGuide = step;
+    if (step.action === 'place') {
+      highlightPalette([step.component ?? '']);
+      clearHighlights();
+    } else {
+      highlightPalette(null);
+      this.highlightStepTerminals(step);
+    }
+    this.drawGuide(`Step ${step.index} / ${step.total} — ${step.title}`, [step.instruction], 'task');
+    this.setTask(`🖐 Step ${step.index}/${step.total}: ${step.instruction}`);
+    if (this.hud['task-do']) this.hud['task-do'].style.display = 'block';
+    this.sound('place');
+  }
+
+  /** Terminals of the parts this step connects, lit so the hands know where to go. */
+  private highlightStepTerminals(step: GuideStep): void {
+    clearHighlights();
+    if (step.action !== 'wire') return;
+    const kinds = new Set([step.fromKind, step.toKind]);
+    const owners = new Set<Entity>();
+    this.queries.parts.entities.forEach((e) => {
+      if (kinds.has(String(e.getValue(Part, 'kind') ?? ''))) owners.add(e);
+    });
+    this.queries.terms.entities.forEach((t) => {
+      const owner = t.getValue(Terminal, 'owner') as Entity | null;
+      if (owner && owners.has(owner)) setHighlight(t, true);
+    });
+  }
+
+  private settledCounts(): Map<string, number> {
+    const counts = new Map<string, number>();
+    this.queries.parts.entities.forEach((e) => {
+      if (!e.getValue(Part, 'snapped')) return;
+      const kind = String(e.getValue(Part, 'kind') ?? '');
+      counts.set(kind, (counts.get(kind) ?? 0) + 1);
+    });
+    return counts;
+  }
+
+  private wirePairCounts(): Map<string, number> {
+    const { parts, wires } = this.collectFree();
+    const kindOf = new Map(parts.map((p) => [p.id, p.kind]));
+    const counts = new Map<string, number>();
+    for (const w of wires) {
+      const a = kindOf.get(w.aId); const b = kindOf.get(w.bId);
+      if (!a || !b) continue;
+      const key = wirePairKey(a, b);
+      counts.set(key, (counts.get(key) ?? 0) + 1);
+    }
+    return counts;
+  }
+
+  private checkGuide(): void {
+    const step = this.waitingGuide;
+    if (!step) return;
+    let done = false;
+    if (step.action === 'place' && step.component) {
+      // Done when one more of this kind has *settled* than when the step began:
+      // pulled from the palette is not enough — it must have been dropped flat.
+      done = (this.settledCounts().get(step.component) ?? 0) > (this.guideBaseline.snapped.get(step.component) ?? 0);
+    } else if (step.action === 'wire' && step.fromKind && step.toKind) {
+      // Done when the wire graph gains a wire between the two kinds this step
+      // joins (wireMatchesStep is exactly that pair test). Baseline-relative, so
+      // the second lead of a loop must really be a second wire.
+      const { parts, wires } = this.collectFree();
+      const kindOf = new Map(parts.map((p) => [p.id, p.kind]));
+      let now = 0;
+      for (const w of wires) {
+        const a = kindOf.get(w.aId); const b = kindOf.get(w.bId);
+        if (a && b && wireMatchesStep(step, a, b)) now += 1;
+      }
+      done = now > (this.guideBaseline.wirePairs.get(wirePairKey(step.fromKind, step.toKind)) ?? 0);
+    } else if (step.action === 'position' && step.fromKind && step.toKind) {
+      done = this.guideProximityMoved(step.fromKind, step.toKind);
+    }
+    if (done) this.completeGuideStep(false);
+  }
+
+  /**
+   * Position step: some part of one kind was actually carried (it moved from where
+   * the step found it) and the two kinds now sit within interaction distance.
+   * The movement clause stops parts staged side-by-side from passing untouched.
+   */
+  private guideProximityMoved(fromKind: string, toKind: string): boolean {
+    const a: Vector3[] = []; const b: Vector3[] = [];
+    let moved = false;
+    this.queries.parts.entities.forEach((e) => {
+      const obj = e.object3D;
+      if (!obj) return;
+      const kind = String(e.getValue(Part, 'kind') ?? '');
+      if (kind !== fromKind && kind !== toKind) return;
+      const p = obj.getWorldPosition(new Vector3());
+      const id = String(e.getValue(Part, 'instanceId') ?? '');
+      const before = this.guideBasePos.get(id);
+      if (before && before.distanceTo(p) > 0.03) moved = true;
+      if (kind === fromKind) a.push(p);
+      if (kind === toKind) b.push(p);
+    });
+    return moved && a.some((p) => b.some((q) => p.distanceTo(q) < 0.15));
+  }
+
+  /** A build step is done: stamp it, catch the stage visuals up, move on. */
+  private completeGuideStep(_manual: boolean): void {
+    const step = this.waitingGuide;
+    if (!step) return;
+    this.waitingGuide = null;
+    if (this.hud['task-do']) this.hud['task-do'].style.display = 'none';
+    highlightPalette(null); clearHighlights();
+    this.sound('resolve');
+    if (step.action === 'place' && step.beat.instance) this.spawnProxy(step.beat.instance, step.component ?? '');
+    if (step.action === 'wire' && step.beat.from && step.beat.to) this.drawRelation(step.beat.from, step.beat.to);
+    this.drawGuide(`✓ Step ${step.index} / ${step.total}`, [step.title, 'Verified — that is exactly what the solution needs.'], 'done');
+    this.setTask(`✓ Step ${step.index}/${step.total} verified: ${step.title}. Continuing…`);
+    this.resumeAt = performance.now() + 800;
+  }
+
+  /** Render the in-glasses guide panel (canvas texture; the HUD mirrors it). */
+  private drawGuide(title: string, lines: string[], state: 'idle' | 'task' | 'observe' | 'done'): void {
+    const canvas = this.guideCanvas; const tex = this.guideTexture;
+    if (!canvas || !tex) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    const W = canvas.width; const H = canvas.height;
+    ctx.fillStyle = state === 'done' ? '#06281c' : state === 'task' ? '#0b2436' : '#071018';
+    ctx.fillRect(0, 0, W, H);
+    ctx.strokeStyle = state === 'done' ? '#34d399' : '#2dd4bf'; ctx.lineWidth = 6;
+    ctx.strokeRect(6, 6, W - 12, H - 12);
+    ctx.fillStyle = '#5eead4'; ctx.font = '700 34px system-ui, sans-serif'; ctx.textAlign = 'left';
+    ctx.fillText('🖐 FIELDFORGE GUIDE', 36, 58);
+    // step pips
+    if (this.guideSteps.length > 0) {
+      this.guideSteps.forEach((s, i) => {
+        ctx.beginPath();
+        ctx.arc(W - 40 - (this.guideSteps.length - 1 - i) * 30, 46, 10, 0, Math.PI * 2);
+        ctx.fillStyle = i < this.guideIndex ? '#34d399' : i === this.guideIndex ? '#fbbf24' : '#1f3a34';
+        ctx.fill();
+      });
+    }
+    ctx.fillStyle = '#f0fdf9'; ctx.font = '700 54px system-ui, sans-serif';
+    let y = this.wrapFrom(ctx, title, 36, 128, W - 72, 62, 2);
+    ctx.font = '38px system-ui, sans-serif'; ctx.fillStyle = '#c9f5ec';
+    for (const line of lines) { y = this.wrapFrom(ctx, line, 36, y + 14, W - 72, 48, 5); if (y > H - 56) break; }
+    ctx.font = '30px system-ui, sans-serif'; ctx.fillStyle = '#7dd3c8';
+    ctx.fillText(state === 'task' ? 'Do it with your hands — I am watching the bench.' : ' ', 36, H - 28);
+    tex.needsUpdate = true;
+  }
+
+  /** Word-wrap returning the y below the last line drawn. */
+  private wrapFrom(ctx: CanvasRenderingContext2D, text: string, x: number, y: number, maxW: number, lh: number, maxLines: number): number {
+    const words = text.split(/\s+/); let line = ''; let drawn = 0;
+    for (const word of words) {
+      const cand = line ? `${line} ${word}` : word;
+      if (ctx.measureText(cand).width > maxW && line) {
+        ctx.fillText(line, x, y); y += lh; drawn++; line = word;
+        if (drawn >= maxLines) return y;
+      } else line = cand;
+    }
+    if (line) { ctx.fillText(line, x, y); y += lh; }
+    return y;
   }
 
   // ---------------------------------------------------------------- free-bench solver bridge

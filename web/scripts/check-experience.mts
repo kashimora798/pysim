@@ -15,6 +15,7 @@ import { join } from 'node:path';
 import { buildCircuitScene } from '../src/ff/topology.ts';
 import { fieldAt } from '../src/ff/field.ts';
 import { Resolver, buildScene } from '../src/physics/resolve.ts';
+import { buildGuideSteps, wireMatchesStep } from '../src/ff/guide.ts';
 
 const kb = JSON.parse(readFileSync(join(process.cwd(), 'public', 'physics', 'kb.json'), 'utf8'));
 
@@ -60,6 +61,41 @@ check('p002 field magnitude (2µC @ 30cm)', f?.magnitude ?? NaN, 199723.37, 1e-4
 check('p002 potential (2µC @ 30cm)', f?.potential ?? NaN, 59917.01, 1e-4);
 const neg = fieldAt(kb, [{ id: 'q1', charge: -2e-6, position: [0, 0, 0] }], [0.3, 0, 0]);
 check('negative charge points inward (Ex < 0)', Math.sign(neg?.e[0] ?? 0), -1, 0);
+
+// ---------------------------------------------------------------- guided build
+//
+// The guide must turn a verified spec into hand-sized steps: real parts only (no
+// circuit_loop/environment placements), wire steps between the physical kinds the
+// topology joins, and an answer at the end. Tested on exported golden specs.
+const checkGuide = (label: string, ok: boolean, detail: string) => {
+  console.log(`${ok ? '✓' : '✗ FAIL'} ${label}: ${detail}`);
+  if (!ok) failures++;
+};
+{
+  const labels = new Map(Object.entries(kb.components).map(([k, v]: [string, never]) => [k, (v as { label: string }).label]));
+  const placeable = new Set(Object.entries(kb.components).filter(([, v]: [string, never]) => (v as { model3d: unknown }).model3d != null).map(([k]) => k));
+  for (const id of ['p101', 'p002', 'p303']) {
+    const spec = JSON.parse(readFileSync(join(process.cwd(), 'public', 'physics', 'specs', `${id}.json`), 'utf8'));
+    const steps = buildGuideSteps(spec, { labels, placeable });
+    const places = steps.filter((s) => s.action === 'place');
+    const wires = steps.filter((s) => s.action === 'wire');
+    const abstract = places.filter((s) => !placeable.has(s.component ?? ''));
+    checkGuide(`${id} guide places only physical parts`, abstract.length === 0 && places.length > 0,
+      `${places.length} place steps (${steps.map((s) => s.action).join(' > ')})`);
+    checkGuide(`${id} guide ends at the answer`, steps[steps.length - 1]?.final === true,
+      `last step: ${steps[steps.length - 1]?.title}`);
+    if (id === 'p101') {
+      checkGuide('p101 guide wires battery<->resistor twice (two leads close the loop)',
+        wires.length === 2 && wires.every((s) => wireMatchesStep(s, 'resistor', 'battery')),
+        wires.map((s) => `${s.fromKind}->${s.toKind}`).join(', '));
+    }
+    if (id === 'p002') {
+      checkGuide('p002 guide: field relation is a positioning step, not a wire',
+        steps.some((s) => s.action === 'position') && wires.length === 0,
+        steps.map((s) => s.action).join(' > '));
+    }
+  }
+}
 
 if (failures > 0) { console.error(`\n${failures} experience check(s) FAILED`); process.exit(1); }
 console.log('\nbench engines reproduce the golden answers; refusals are honest');

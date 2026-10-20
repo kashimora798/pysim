@@ -235,6 +235,8 @@ export class InventorySystem extends createSystem({
 
   private grabSystem?: GrabSystem;
   private carriedPart: Entity | null = null;
+  /** Parts in a hand as of last frame; the diff against this frame is a drop. */
+  private heldParts = new Set<Entity>();
   /** Generation of `carriedPart` when we took it, so a recycled entity index cannot fool us. */
   private carriedGeneration = -1;
   private carriedSlot: Entity | null = null;
@@ -258,6 +260,7 @@ export class InventorySystem extends createSystem({
   // ================================================================ lifecycle
 
   init(): void {
+    activeInventory = this;
     this.buildResources();
 
     // `loadPhysics()` fetches JSON, so it cannot gate init(). The palette is built by whichever of
@@ -283,6 +286,9 @@ export class InventorySystem extends createSystem({
     this.cleanupFuncs.push(
       () => {
         this.stopped = true;
+        if (activeInventory === this) {
+          activeInventory = null;
+        }
       },
       this.queries.benches.subscribe(
         'qualify',
@@ -321,6 +327,45 @@ export class InventorySystem extends createSystem({
     }
 
     this.carry();
+
+    // Settle-on-drop: a part that was in a hand last frame and is not now has been
+    // let go. It lands flat on the bench (resting height, yaw kept, tilt discarded)
+    // and is stamped `snapped`, which is what the guided build verifies against —
+    // a step is done when the part has *settled*, not when it was pulled out.
+    const stillHeld = new Set<Entity>();
+    this.queries.grabbed.entities.forEach((entity) => {
+      if (this.slots.has(entity)) {
+        return; // a palette slot, not a part
+      }
+      stillHeld.add(entity);
+      if (!this.heldParts.has(entity)) {
+        entity.setValue(Part, 'snapped', false); // picked up again: unsettled
+      }
+    });
+    for (const entity of this.heldParts) {
+      if (!stillHeld.has(entity) && entity.active) {
+        this.settle(entity);
+      }
+    }
+    this.heldParts = stillHeld;
+  }
+
+  /**
+   * Rest a let-go part on the bench: resting height, upright with its yaw kept.
+   * Bench-local, like `stage()` — the bench is the parent, so local flat is flat.
+   */
+  private settle(entity: Entity): void {
+    const object = entity.object3D;
+    if (object == null) {
+      return;
+    }
+    const yaw = Math.atan2(
+      2 * (object.quaternion.w * object.quaternion.y + object.quaternion.x * object.quaternion.z),
+      1 - 2 * (object.quaternion.y * object.quaternion.y + object.quaternion.x * object.quaternion.x),
+    );
+    object.quaternion.setFromAxisAngle(UP, yaw);
+    object.position.y = this.reachMin.y;
+    entity.setValue(Part, 'snapped', true);
   }
 
   // ================================================================ public API
@@ -960,6 +1005,10 @@ export class InventorySystem extends createSystem({
   }
 
   private releaseCarry(): void {
+    // A hand-carried part is left wherever the fist opened: settle it there.
+    if (this.carriedPart?.active) {
+      this.settle(this.carriedPart);
+    }
     this.carriedPart = null;
     this.carriedGeneration = -1;
     this.carriedSlot = null;
@@ -1112,6 +1161,28 @@ export class InventorySystem extends createSystem({
 }
 
 const clamp = (v: number, lo: number, hi: number): number => Math.min(hi, Math.max(lo, v));
+
+const UP = new Vector3(0, 1, 0);
+
+// --------------------------------------------------------------------------- module-level API
+//
+// The experience system holds no reference to this system, so the guide's palette
+// highlighting is exported as a plain function delegating to the live instance (the
+// same pattern terminals.ts uses). Safe no-ops before start / after teardown.
+
+let activeInventory: InventorySystem | null = null;
+
+/** Light the palette slots for `kinds` (the guide's current need); null clears. */
+export function highlightPalette(kinds: readonly string[] | null): void {
+  if (activeInventory === null) {
+    return;
+  }
+  if (kinds === null) {
+    activeInventory.clearWanted();
+  } else {
+    activeInventory.highlightWanted(kinds);
+  }
+}
 
 // --- TEMP TYPE PROBE 2: prove getSystem(GrabSystem) is not 'any' ---
 type IsAny<T> = 0 extends 1 & T ? true : false;

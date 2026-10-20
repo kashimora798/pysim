@@ -31,9 +31,21 @@ Python side (only when the knowledge base changes): `ff audit && ff export` (or
 3. **Auto** — the precompiled derivation replays on the bench: parts appear in derivation
    order, relations draw, each quantity resolves with its formula, substituted values, law,
    assumptions and citation on the **trust card** (spatial panel + HUD mirror).
-4. **Guided** — each `place`/`relate` beat becomes a hand task: *"Place a Resistor"*, *"pinch-wire
-   r1 → r2"*. The system verifies the student's real build (palette spawns / live wires)
-   against the solution topology before the step resolves. Wrong build = no wrong number.
+4. **Guided** — the Quest way to learn (and the mode the bench switches to the moment an
+   XR session starts: in the glasses nothing is auto-built). The verified spec becomes
+   hand-sized steps (`src/ff/guide.ts`, pure and unit-checked): **place** — *"Palm up for
+   the palette, pinch the Resistor, turn it in your hand, open your hand over the bench"*;
+   **wire** — *"Pinch the glowing terminal… stretch the wire… let go"*; **position** for
+   field relations; **observe** for givens/resolutions. The instructions live on a
+   **guide panel floating in front of the learner** (canvas panel at the back of the
+   bench, HUD mirrors it) with step pips. Verification is strict and physical: a place
+   step completes only when the right part has **settled** flat after a drop
+   (`Part.snapped`, stamped by inventory's new settle-on-drop: resting height, tilt
+   discarded, yaw kept); a wire step completes only when the live wire graph gains a
+   wire between the two component *kinds* the solution joins (two leads to close a
+   loop = two real wires, counted against a per-step baseline); the palette lights the
+   needed part and the target terminals glow. Abstract instances (circuit loops,
+   environments) never become hand tasks. Wrong build = no wrong number.
 5. **Free bench** — grab any battery/resistor/lamp, pinch-wire a loop. The wire graph is
    translated into a series/parallel reduction tree (`src/ff/topology.ts`), solved live by the
    TypeScript port of the kernel, and the current flows in the wires (lamp glow follows resolved
