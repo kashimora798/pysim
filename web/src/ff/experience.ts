@@ -45,11 +45,13 @@ import {
   type SimSpec,
 } from '../physics/kernel.js';
 import { Resolver, buildScene, formatRef } from '../physics/resolve.js';
-import { extractScene } from '../physics/extract.js';
+import { extractScene, type SceneSpec as CapturedSceneSpec, type TargetRef } from '../physics/extract.js';
 import { aiConfig } from './ai-config.js';
 import { Bench as BenchComp, ExperienceButton, Part, Terminal, Wire } from './components.js';
 import { buildCircuitScene, benchDefaults, type BenchPart, type BenchWire } from './topology.js';
 import { buildGuideSteps, wireMatchesStep, wirePairKey, type GuideStep } from './guide.js';
+import { matchCorpus, splitQuestions, type CapturedQuestion, type CorpusCandidate } from './capture.js';
+import { readPhoto } from './ocr.js';
 import { highlightPalette } from './inventory.js';
 import { clearHighlights, setHighlight } from './terminals.js';
 import { arrowLength, fieldAt, type FieldSource } from './field.js';
@@ -101,6 +103,18 @@ export class ExperienceSystem extends createSystem({
   private guideTexture?: CanvasTexture;
   private wasPresenting = false;
 
+  // ------------------------------------------------------------ question capture
+  private captured: CapturedQuestion[] = [];
+  private pickedText: string | null = null;
+  private corpusCache: Promise<CorpusCandidate[]> | null = null;
+  private cameraStream: MediaStream | null = null;
+  /** In-glasses question picker (bench buttons drive it; see onCaptureButton). */
+  private picker: {
+    stage: 'list' | 'confirm';
+    index: number;
+    items: Array<{ label: string; run: () => void | Promise<void> }>;
+  } | null = null;
+
   private readonly proxies = new Map<string, Mesh>();
   private readonly pulses = new Map<Mesh, number>();
   private lines?: Group;
@@ -135,7 +149,14 @@ export class ExperienceSystem extends createSystem({
       this.queries.benches.subscribe('qualify', (e) => this.attachToBench(e), true),
       this.queries.buttons.subscribe('qualify', (e) => {
         const action = e.getValue(ExperienceButton, 'action');
-        if (action === 'play') this.togglePlay();
+        if (action === 'capture') this.onCaptureButton();
+        else if (this.picker) {
+          // The question picker owns the two transport buttons while it is up:
+          // NEXT cycles (or backs out of a confirm), PLAY picks / confirms.
+          if (action === 'play') this.pickerPlay();
+          else this.pickerNext();
+        }
+        else if (action === 'play') this.togglePlay();
         else this.advance(true);
       }),
     );
@@ -231,6 +252,7 @@ export class ExperienceSystem extends createSystem({
     // Spatial transport buttons (hands-first: pressable in XR, clickable via ray).
     this.makeButton('next', new Vector3(0.33, 0.018, 0.22), TEAL, 'NEXT ▸');
     this.makeButton('play', new Vector3(-0.33, 0.018, 0.22), AMBER, '▶ ❚❚');
+    this.makeButton('capture', new Vector3(0, 0.018, 0.24), 0xf97316, '📷 ASK');
 
     // If a lesson started before the bench arrived, replay its beats onto the new stage.
     if (this.spec && this.beatIndex >= 0) {
@@ -452,6 +474,16 @@ export class ExperienceSystem extends createSystem({
         <div class="dim">Defaults are stated, never hidden: battery 12 V · resistor/lamp 10 Ω. Wiring is translated to a reduction tree and solved by the kernel — watch the wires flow.</div>
       </div>
       <div class="dim" data-k="probe-read"></div>
+      <details><summary>📷 Capture a question (book / laptop screen)</summary>
+        <div class="row"><button data-k="cap-photo">🖼 Photo</button><button data-k="cap-cam">🎥 Camera</button><button data-k="cap-snap" style="display:none">📸 Snap</button><button data-k="cap-xr">🥽 Pick in glasses</button></div>
+        <input data-k="cap-file" type="file" accept="image/*" style="display:none">
+        <video data-k="cap-video" style="display:none;width:100%;border-radius:6px" autoplay playsinline muted></video>
+        <div class="dim" data-k="cap-status">Snap your textbook page or laptop screen (on the companion). In the Quest, use passthrough to line the page up, take a screenshot, and share it here — WebXR cannot hand web apps the raw passthrough camera, so capture is companion-side and everything after it (picking, confirming, building) happens in the glasses.</div>
+        <textarea data-k="cap-text" rows="4" placeholder="OCR text lands here — or paste the question yourself. Always editable; the kernel still validates."></textarea>
+        <div data-k="cap-list" class="row" style="flex-wrap:wrap"></div>
+        <div class="row" data-k="cap-confirm-row" style="display:none"><span data-k="cap-picked" class="dim" style="flex:1"></span><button data-k="cap-solve">✓ Solve this</button><button data-k="cap-cancel">Pick another</button></div>
+        <pre class="trust" data-k="cap-out">A captured question is only ever a proposal: a corpus match loads a kernel-verified problem; anything new goes through the AI boundary, and the kernel validator accepts or rejects it.</pre>
+      </details>
       <details><summary>🤖 Paste a problem (AI at the boundary — optional)</summary>
         <textarea data-k="ai-text" rows="3" placeholder="A 12 V battery drives a 4 ohm resistor. What current flows?"></textarea>
         <button data-k="ai-go">Extract &amp; validate scene</button>
@@ -473,6 +505,20 @@ export class ExperienceSystem extends createSystem({
     this.hud.probe!.onchange = () => { this.probeEnabled = (this.hud.probe as HTMLInputElement).checked; };
     this.hud.cycle!.onclick = () => this.cycleFreeValue();
     this.hud['ai-go']!.onclick = () => void this.runExtraction();
+    this.hud['cap-photo']!.onclick = () => (this.hud['cap-file'] as HTMLInputElement).click();
+    (this.hud['cap-file'] as HTMLInputElement).onchange = () => {
+      const file = (this.hud['cap-file'] as HTMLInputElement).files?.[0];
+      if (file) void this.ocrIntoBox(file);
+    };
+    this.hud['cap-cam']!.onclick = () => void this.toggleCamera();
+    this.hud['cap-snap']!.onclick = () => void this.snapPhoto();
+    this.hud['cap-xr']!.onclick = () => this.onCaptureButton();
+    this.hud['cap-solve']!.onclick = () => { if (this.pickedText) void this.solveCaptured(this.pickedText); };
+    this.hud['cap-cancel']!.onclick = () => this.pickQuestion(null);
+    (this.hud['cap-text'] as HTMLTextAreaElement).oninput = () => {
+      this.captured = splitQuestions((this.hud['cap-text'] as HTMLTextAreaElement).value);
+      this.renderCaptureList();
+    };
   }
 
   private setStatus(text: string): void { if (this.hud.status) this.hud.status.textContent = text; }
@@ -1122,6 +1168,297 @@ export class ExperienceSystem extends createSystem({
     out.textContent = result.ok
       ? `✓ Kernel VALIDATED this scene:\n${JSON.stringify(result.sceneSpec, null, 1)}\nTarget: ${result.target ? formatRef({ instance: result.target.instance, prop: result.target.prop, state: result.target.state ?? null }) : '—'}\nNow build it in Free bench — the solver will do the physics.`
       : `✗ Kernel REJECTED it (this is the system working):\n${result.errors.join('\n')}\nPartial scene kept for editing:\n${JSON.stringify(result.sceneSpec, null, 1)}`;
+  }
+
+  // ================================================================ question capture
+  //
+  // See ff/capture.ts for the honest shape of this: OCR proposes text, the learner
+  // picks one question and confirms ("Solve this?"), then either the golden corpus
+  // answers from its kernel-verified stock or the AI boundary proposes a Scene for
+  // the kernel to judge. Nothing captured ever computes physics directly.
+
+  private async ocrIntoBox(image: Blob): Promise<void> {
+    const status = this.hud['cap-status']!;
+    status.textContent = 'Reading the photo (OCR runs locally — nothing is uploaded)…';
+    const text = await readPhoto(image);
+    if (text === null) {
+      status.textContent = 'OCR could not read that photo. Try better light, hold it square — or paste the question below.';
+      this.sound('error');
+      return;
+    }
+    (this.hud['cap-text'] as HTMLTextAreaElement).value = text;
+    this.captured = splitQuestions(text);
+    this.renderCaptureList();
+    status.textContent = this.captured.length > 1
+      ? `I found ${this.captured.length} questions on that page. Pick the one you want below — or press 📷 ASK on the bench and pick it in the glasses.`
+      : 'I read one question. Check the text, then choose “Solve this”.';
+    this.sound('resolve');
+  }
+
+  private async toggleCamera(): Promise<void> {
+    const video = this.hud['cap-video'] as HTMLVideoElement;
+    if (this.cameraStream) {
+      this.cameraStream.getTracks().forEach((t) => t.stop());
+      this.cameraStream = null;
+      video.style.display = 'none';
+      this.hud['cap-snap']!.style.display = 'none';
+      return;
+    }
+    try {
+      this.cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+      video.srcObject = this.cameraStream;
+      video.style.display = 'block';
+      this.hud['cap-snap']!.style.display = 'inline-block';
+      this.hud['cap-status']!.textContent = 'Line the book page or laptop screen up, then Snap.';
+    } catch {
+      this.hud['cap-status']!.textContent = 'No camera available here — use Photo (upload) or paste the question.';
+      this.sound('error');
+    }
+  }
+
+  private async snapPhoto(): Promise<void> {
+    const video = this.hud['cap-video'] as HTMLVideoElement;
+    if (!this.cameraStream || video.videoWidth === 0) return;
+    const canvas = document.createElement('canvas');
+    canvas.width = video.videoWidth; canvas.height = video.videoHeight;
+    canvas.getContext('2d')?.drawImage(video, 0, 0);
+    const blob = await new Promise<Blob | null>((res) => canvas.toBlob(res, 'image/jpeg', 0.92));
+    if (blob) await this.ocrIntoBox(blob);
+  }
+
+  private renderCaptureList(): void {
+    const list = this.hud['cap-list']!;
+    list.innerHTML = '';
+    this.pickQuestion(null);
+    for (const q of this.captured) {
+      const chip = document.createElement('button');
+      chip.textContent = `${q.marker}: ${q.text.replace(/\s+/g, ' ').slice(0, 44)}…`;
+      chip.title = q.text;
+      chip.onclick = () => this.pickQuestion(q.text);
+      list.appendChild(chip);
+    }
+  }
+
+  /** The ask: a question is *proposed* to the learner, never solved uninvited. */
+  private pickQuestion(text: string | null): void {
+    this.pickedText = text;
+    const row = this.hud['cap-confirm-row']!;
+    if (text === null) {
+      row.style.display = 'none';
+      return;
+    }
+    row.style.display = 'flex';
+    this.hud['cap-picked']!.textContent = `Solve this question? “${text.replace(/\s+/g, ' ').slice(0, 90)}…”`;
+  }
+
+  private corpusCandidates(): Promise<CorpusCandidate[]> {
+    this.corpusCache ??= (async () => {
+      if (!this.physics) return [];
+      const out: CorpusCandidate[] = [];
+      for (const p of this.physics.index.problems) {
+        const s = await this.physics.spec(p.id).catch(() => null);
+        if (s) out.push({ id: p.id, haystack: `${s.problem.title}\n${s.problem.text}` });
+      }
+      return out;
+    })();
+    return this.corpusCache;
+  }
+
+  private async solveCaptured(text: string): Promise<void> {
+    const out = this.hud['cap-out']!;
+    if (!this.kb || !this.physics) return;
+    out.textContent = 'Matching against the verified corpus first — a match needs no AI and no trust…';
+    const match = matchCorpus(text, await this.corpusCandidates());
+    if (match) {
+      out.textContent =
+        `📖 This is corpus problem ${match.id} (match ${(match.score * 100).toFixed(0)}%). ` +
+        `Loading its kernel-verified version as a guided build — same physics, guaranteed answer.`;
+      this.setTask(`📷 Captured question matched verified problem ${match.id}. Build it guided.`);
+      await this.loadProblem(match.id);
+      this.setMode('guided');
+      this.sound('answer');
+      return;
+    }
+    const cfg = aiConfig();
+    if (!cfg) {
+      out.textContent =
+        'No corpus match, and AI is off (no proxy / personal key), so I cannot interpret a new ' +
+        'question — that is the take-it-away test working. The bench still solves anything you ' +
+        'build in Free bench. Configure AI in the 🤖 section to interpret captures.';
+      this.sound('error');
+      return;
+    }
+    out.textContent = 'No corpus match. Asking the model to fill the Scene schema — the kernel validator decides…';
+    const result = await extractScene(text, { kb: this.kb, config: cfg.config });
+    if (!result.ok || !result.target) {
+      out.textContent =
+        `✗ Kernel REJECTED that reading (this is the system working):\n${result.errors.join('\n')}\n` +
+        'Edit the text above and try again, or build it in Free bench.';
+      this.sound('error');
+      return;
+    }
+    out.textContent = '✓ Kernel validated the scene. Building your guided lesson from it…';
+    this.startCapturedGuide(result.sceneSpec, result.target, text);
+  }
+
+  /**
+   * A captured, kernel-validated scene becomes a guided build. There is no exported
+   * SimSpec for it (those are Python-compiled), so a spec-shaped lesson is assembled
+   * here: place a part per instance, wire per relation, then the kernel's own
+   * resolution as the closing answer. The answer comes from the TS Resolver against
+   * the validated scene — computed by the kernel, never by the model.
+   */
+  private startCapturedGuide(sceneSpec: CapturedSceneSpec, target: TargetRef, sourceText: string): void {
+    if (!this.kb) return;
+    let display = '';
+    try {
+      const scene = buildScene(sceneSpec, this.kb, { where: 'captured-question' });
+      const paths = new Resolver(this.kb, scene).resolve(target);
+      const steps = paths[0]?.steps;
+      const q = steps?.[steps.length - 1]?.quantity;
+      display = q ? `${formatRef(target)} = ${typeof q.value === 'number' ? q.value.toPrecision(5) : JSON.stringify(q.value)}` : '';
+    } catch { /* the guide still teaches the build; the answer beat says so honestly */ }
+
+    const labelOf = (kind: string): string => this.kb!.components[kind]?.label ?? kind;
+    const beats: Beat[] = [];
+    for (const inst of sceneSpec.instances) beats.push({
+      beat: beats.length + 1, kind: 'place', instance: inst.id, component: inst.kind,
+      narrate: `Place the ${labelOf(inst.kind)} (${inst.id})`,
+      because: { kind: 'scene', detail: 'From your captured question' },
+    });
+    for (const rel of sceneSpec.relations) beats.push({
+      beat: beats.length + 1, kind: 'relate', relation: rel.kind, from: rel.from, to: rel.to,
+      narrate: `Connect ${rel.from} → ${rel.to} (${rel.kind})`,
+      because: { kind: 'scene', detail: 'From your captured question' },
+    });
+    beats.push({
+      beat: beats.length + 1, kind: 'answer',
+      narrate: display ? 'The kernel resolves your build' : 'Build it, then check with the Free-bench solver',
+      display: display || undefined,
+      because: { kind: 'summary', detail: 'Resolved by the kernel (TS Resolver, same rules as the corpus)' },
+    });
+
+    this.spec = {
+      fieldforge: 'captured',
+      problem: { id: 'captured', title: '📷 Captured question', text: sourceText, source: 'Captured by the learner; kernel-validated', tags: ['captured'] },
+      target: formatRef(target),
+      answer: { value: 0, unit: '', rank: 'scalar', display: display || '—' },
+      scene: {
+        instances: sceneSpec.instances.map((inst) => ({
+          id: inst.id, kind: inst.kind, label: labelOf(inst.kind),
+          model3d: this.kb!.components[inst.kind]?.model3d ?? null, tags: [], given: {},
+        })),
+        relations: sceneSpec.relations.map((rel) => ({ kind: rel.kind, from: rel.from, to: rel.to, given: {} })),
+      },
+      timeline: beats,
+      checks: { paths_found: 1, paths_agree: true },
+    } as unknown as SimSpec;
+
+    this.layout.clear();
+    let i = 0;
+    for (const inst of this.spec.scene.instances) {
+      if (inst.kind === 'environment') continue;
+      this.layout.set(inst.id, this.stagePosition(i++));
+    }
+    this.mode = 'guided'; this.playing = false;
+    for (const m of ['auto', 'guided', 'free'] as Mode[])
+      this.hud[`m-${m}`]?.classList.toggle('on', m === 'guided');
+    if (this.hud.free) this.hud.free.style.display = 'none';
+    this.resetStage();
+    this.startGuide();
+    this.drawGuide('📷 Captured question', [
+      'The kernel validated this one. Build it with your hands, step by step.',
+      display ? `You are aiming at: ${display}` : '',
+    ], 'idle');
+    this.setTask('📷 Captured question validated by the kernel — build it guided, with your hands.');
+    this.sound('answer');
+  }
+
+  // ---------------------------------------------------------- in-glasses picker
+  //
+  // The orange 📷 ASK button on the bench. Inside the headset there is no mouse, so
+  // picking a question is a two-button dance on the physical bench buttons:
+  // NEXT steps through the list (shown on the guide panel), PLAY asks "Solve this
+  // question?", PLAY again confirms and the guided build starts. Sources, in
+  // order: questions captured on the companion this session, else the book list
+  // (the golden corpus), which is always there.
+
+  private onCaptureButton(): void {
+    if (this.picker) {
+      this.picker = null;
+      this.drawGuide('Picker closed', ['Back to your lesson. Press 📷 ASK anytime to pick a question.'], 'idle');
+      return;
+    }
+    const items: Array<{ label: string; run: () => void | Promise<void> }> = [];
+    if (this.captured.length > 0) {
+      for (const q of this.captured) {
+        items.push({
+          label: `${q.marker}: ${q.text.replace(/\s+/g, ' ').slice(0, 64)}`,
+          run: () => this.solveCaptured(q.text),
+        });
+      }
+    } else if (this.physics) {
+      for (const p of this.physics.index.problems) {
+        items.push({
+          label: `${p.id} · ${p.title}`,
+          run: async () => { await this.loadProblem(p.id); this.setMode('guided'); },
+        });
+      }
+    }
+    if (items.length === 0) {
+      this.drawGuide('📷 No questions yet', [
+        'Capture a page on the companion (📷 Capture a question),',
+        'or wait for the problem list to load.',
+      ], 'idle');
+      return;
+    }
+    this.picker = { stage: 'list', index: 0, items };
+    this.drawPicker();
+    this.sound('place');
+  }
+
+  private drawPicker(): void {
+    const picker = this.picker;
+    if (!picker) return;
+    if (picker.stage === 'confirm') {
+      this.drawGuide('Solve this question?', [
+        picker.items[picker.index]!.label,
+        '▶ press PLAY again = yes, build it guided',
+        '▸ press NEXT = back to the list',
+      ], 'task');
+      return;
+    }
+    const n = picker.items.length;
+    const start = Math.min(Math.max(0, picker.index - 2), Math.max(0, n - 5));
+    const lines = picker.items.slice(start, start + 5).map((item, i) =>
+      `${start + i === picker.index ? '►' : ' '} ${item.label}`);
+    lines.push(`Question ${picker.index + 1} of ${n} · NEXT = move · PLAY = choose`);
+    this.drawGuide(this.captured.length > 0 ? '📖 From your book — which question?' : '📖 Book list — which question?', lines, 'task');
+  }
+
+  private pickerNext(): void {
+    if (!this.picker) return;
+    if (this.picker.stage === 'confirm') {
+      this.picker.stage = 'list';
+    } else {
+      this.picker.index = (this.picker.index + 1) % this.picker.items.length;
+    }
+    this.drawPicker();
+    this.sound('place');
+  }
+
+  private pickerPlay(): void {
+    if (!this.picker) return;
+    if (this.picker.stage === 'list') {
+      this.picker.stage = 'confirm';
+      this.drawPicker();
+      this.sound('resolve');
+      return;
+    }
+    const item = this.picker.items[this.picker.index]!;
+    this.picker = null;
+    this.drawGuide('✓ Let’s solve it', [item.label, 'Building your guided lesson…'], 'done');
+    void item.run();
   }
 
   // ---------------------------------------------------------------- sound (synthesised, no assets)

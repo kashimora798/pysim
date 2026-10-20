@@ -109,3 +109,24 @@ with AI unplugged — the take-it-away test), renderer never computes a number t
   need Engine B, time evolution needs Engine C (both specified in
   `docs/implementation-plan.md`).
 - Anchor persistence across sessions is session-local until verified on hardware.
+
+## 📷 Capture a question (book / screen → guided build)
+
+The cool-feeling one, built honestly. Flow: on the companion (laptop/phone), open
+**📷 Capture a question**, photograph the textbook page or laptop screen (Photo upload
+or live Camera → Snap), and Tesseract OCR — running **entirely locally**, assets in
+`web/public/ocr/`, no upload, no CDN — reads it into an editable box. Numbered pages
+split into separate questions (`ff/capture.ts`); the learner picks one and is asked
+**"Solve this question?"** — nothing is ever solved uninvited. Solving is two-stage:
+first a token match against the golden corpus (a textbook 12 V / 4 Ω loop question is
+recognised as p101 and loaded kernel-verified, no AI involved); otherwise the AI
+boundary extracts a Scene and the kernel validator accepts it (then a guided build is
+synthesised from the validated scene, answered by the TS Resolver) or rejects it
+honestly. **In the glasses**, the orange **📷 ASK** bench button opens the same picker
+on the guide panel: NEXT cycles the questions — captured ones if any, else the book
+list — PLAY asks "Solve this question?", PLAY again starts the guided build.
+
+The one hard limit, stated in the UI rather than faked: WebXR does not expose the
+Quest passthrough camera to web apps, so the photo itself is taken companion-side
+(passthrough → headset screenshot → share to companion). Picking, confirming and
+building all happen in-headset.

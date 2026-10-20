@@ -95,3 +95,14 @@ fails the build if either goes missing.
 Physics engines are covered in `docs/3d-asset-pipeline-plan.md`; the audited position is
 that `@dimforge/rapier3d-compat` (Apache-2.0) may be used for interaction queries only,
 and no game-physics engine may ever integrate a trajectory the kernel has verified.
+
+## OCR assets (question capture)
+
+| Asset | Licence | Notes |
+|---|---|---|
+| `tesseract.js`, `tesseract.js-core` (WASM) | Apache-2.0 | Runtime dependency, dynamically imported only when a capture is read; assets copied to `web/public/ocr/` |
+| `eng.traineddata` (tessdata_fast) | Apache-2.0 | English OCR data, gzipped, served locally; no photo ever leaves the device |
+
+Capture respects the AI boundary: OCR output is *text*, the extractor may only turn
+text into a schema-shaped Scene, and the kernel validator accepts or rejects it.
+A corpus match (the common textbook case) uses no AI at all.
