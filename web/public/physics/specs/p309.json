@@ -1,0 +1,2270 @@
+{
+  "fieldforge": "0.1",
+  "problem": {
+    "id": "p309",
+    "title": "Two-node ladder network solved nodally (JEE Main type, Engine B)",
+    "text": "A 24 V battery drives a ladder: 10 ohm from the top rail to node A, 20 ohm from A to\nthe bottom rail, 10 ohm from A to node B, 30 ohm from the top rail to B, and 20 ohm\nfrom B to the bottom rail. What current flows through the rung between A and B?",
+    "source": "Kirchhoff-network problem type (JEE Main current-electricity style); network and values designed for this corpus, not reproduced from any paper.",
+    "tags": [
+      "circuits",
+      "ladder",
+      "system",
+      "engine-b",
+      "jee-main"
+    ]
+  },
+  "target": "r3.electric.current",
+  "answer": {
+    "value": 0.22325581395348823,
+    "unit": "A",
+    "dimension": {
+      "A": "1"
+    },
+    "rank": "scalar",
+    "display": "0.2233 A"
+  },
+  "scene": {
+    "instances": [
+      {
+        "id": "bat",
+        "kind": "battery",
+        "label": "Battery",
+        "model3d": "battery.glb",
+        "tags": [
+          "source",
+          "circuit",
+          "emf"
+        ],
+        "given": {
+          "bat.electric.emf": {
+            "value": 24.0,
+            "unit": "V",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-1"
+            },
+            "rank": "scalar",
+            "display": "24 V"
+          }
+        }
+      },
+      {
+        "id": "r1",
+        "kind": "resistor",
+        "label": "Resistor",
+        "model3d": "resistor.glb",
+        "tags": [
+          "passive",
+          "circuit",
+          "resistive"
+        ],
+        "given": {
+          "r1.electric.resistance": {
+            "value": 10.0,
+            "unit": "Ω",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-2"
+            },
+            "rank": "scalar",
+            "display": "10 Ω"
+          }
+        }
+      },
+      {
+        "id": "r2",
+        "kind": "resistor",
+        "label": "Resistor",
+        "model3d": "resistor.glb",
+        "tags": [
+          "passive",
+          "circuit",
+          "resistive"
+        ],
+        "given": {
+          "r2.electric.resistance": {
+            "value": 20.0,
+            "unit": "Ω",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-2"
+            },
+            "rank": "scalar",
+            "display": "20 Ω"
+          }
+        }
+      },
+      {
+        "id": "r3",
+        "kind": "resistor",
+        "label": "Resistor",
+        "model3d": "resistor.glb",
+        "tags": [
+          "passive",
+          "circuit",
+          "resistive"
+        ],
+        "given": {
+          "r3.electric.resistance": {
+            "value": 10.0,
+            "unit": "Ω",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-2"
+            },
+            "rank": "scalar",
+            "display": "10 Ω"
+          }
+        }
+      },
+      {
+        "id": "r4",
+        "kind": "resistor",
+        "label": "Resistor",
+        "model3d": "resistor.glb",
+        "tags": [
+          "passive",
+          "circuit",
+          "resistive"
+        ],
+        "given": {
+          "r4.electric.resistance": {
+            "value": 30.0,
+            "unit": "Ω",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-2"
+            },
+            "rank": "scalar",
+            "display": "30 Ω"
+          }
+        }
+      },
+      {
+        "id": "r5",
+        "kind": "resistor",
+        "label": "Resistor",
+        "model3d": "resistor.glb",
+        "tags": [
+          "passive",
+          "circuit",
+          "resistive"
+        ],
+        "given": {
+          "r5.electric.resistance": {
+            "value": 20.0,
+            "unit": "Ω",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-2"
+            },
+            "rank": "scalar",
+            "display": "20 Ω"
+          }
+        }
+      },
+      {
+        "id": "top",
+        "kind": "circuit_node",
+        "label": "Circuit node",
+        "model3d": null,
+        "tags": [
+          "circuit",
+          "topology",
+          "node"
+        ],
+        "given": {}
+      },
+      {
+        "id": "gnd",
+        "kind": "circuit_node",
+        "label": "Circuit node",
+        "model3d": null,
+        "tags": [
+          "circuit",
+          "topology",
+          "node"
+        ],
+        "given": {}
+      },
+      {
+        "id": "node_a",
+        "kind": "circuit_node",
+        "label": "Circuit node",
+        "model3d": null,
+        "tags": [
+          "circuit",
+          "topology",
+          "node"
+        ],
+        "given": {}
+      },
+      {
+        "id": "node_b",
+        "kind": "circuit_node",
+        "label": "Circuit node",
+        "model3d": null,
+        "tags": [
+          "circuit",
+          "topology",
+          "node"
+        ],
+        "given": {}
+      },
+      {
+        "id": "env",
+        "kind": "environment",
+        "label": "Environment",
+        "model3d": null,
+        "tags": [
+          "environment",
+          "scene",
+          "settings"
+        ],
+        "given": {
+          "env.env.air_density": {
+            "value": 0.0,
+            "unit": "kg·m⁻³",
+            "dimension": {
+              "kg": "1",
+              "m": "-3"
+            },
+            "rank": "scalar",
+            "display": "0 kg·m⁻³"
+          },
+          "env.env.gravity": {
+            "value": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "unit": "m/s²",
+            "dimension": {
+              "m": "1",
+              "s": "-2"
+            },
+            "rank": "vector",
+            "display": "[0, 0, 0] m/s²"
+          },
+          "env.env.relative_permittivity": {
+            "value": 1.0,
+            "unit": "",
+            "dimension": {},
+            "rank": "scalar",
+            "display": "1"
+          },
+          "env.env.temperature": {
+            "value": 293.15,
+            "unit": "K",
+            "dimension": {
+              "K": "1"
+            },
+            "rank": "scalar",
+            "display": "293.1 K"
+          },
+          "env.env.wind_velocity": {
+            "value": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "unit": "m/s",
+            "dimension": {
+              "m": "1",
+              "s": "-1"
+            },
+            "rank": "vector",
+            "display": "[0, 0, 0] m/s"
+          }
+        }
+      }
+    ],
+    "relations": [
+      {
+        "kind": "positive_terminal",
+        "from": "bat",
+        "to": "top",
+        "given": {}
+      },
+      {
+        "kind": "negative_terminal",
+        "from": "bat",
+        "to": "gnd",
+        "given": {}
+      },
+      {
+        "kind": "terminal_a",
+        "from": "r1",
+        "to": "top",
+        "given": {}
+      },
+      {
+        "kind": "terminal_b",
+        "from": "r1",
+        "to": "node_a",
+        "given": {}
+      },
+      {
+        "kind": "terminal_a",
+        "from": "r2",
+        "to": "node_a",
+        "given": {}
+      },
+      {
+        "kind": "terminal_b",
+        "from": "r2",
+        "to": "gnd",
+        "given": {}
+      },
+      {
+        "kind": "terminal_a",
+        "from": "r3",
+        "to": "node_a",
+        "given": {}
+      },
+      {
+        "kind": "terminal_b",
+        "from": "r3",
+        "to": "node_b",
+        "given": {}
+      },
+      {
+        "kind": "terminal_a",
+        "from": "r4",
+        "to": "top",
+        "given": {}
+      },
+      {
+        "kind": "terminal_b",
+        "from": "r4",
+        "to": "node_b",
+        "given": {}
+      },
+      {
+        "kind": "terminal_a",
+        "from": "r5",
+        "to": "node_b",
+        "given": {}
+      },
+      {
+        "kind": "terminal_b",
+        "from": "r5",
+        "to": "gnd",
+        "given": {}
+      }
+    ]
+  },
+  "assumptions": [
+    "ideal_wires",
+    "steady_state"
+  ],
+  "citations": [
+    "OpenStax College Physics 2e, 21.2-21.3 (CC BY)"
+  ],
+  "trajectory": null,
+  "checks": {
+    "dimensions": "pass",
+    "engines": [
+      "system"
+    ],
+    "paths_found": 1,
+    "paths_agree": true,
+    "path_spread": 0.0
+  },
+  "timeline": [
+    {
+      "beat": 1,
+      "kind": "place",
+      "instance": "bat",
+      "component": "battery",
+      "model3d": "battery.glb",
+      "narrate": "Place Battery.",
+      "because": {
+        "kind": "scene",
+        "detail": "An ideal source of constant emf. Two terminals; current leaves the positive one. Ideal here means zero internal resistance, which the assumption list on every formula states plainly.",
+        "laws": [
+          "ohms_law",
+          "kirchhoff_voltage_law"
+        ]
+      }
+    },
+    {
+      "beat": 2,
+      "kind": "place",
+      "instance": "gnd",
+      "component": "circuit_node",
+      "model3d": null,
+      "narrate": "Place Circuit node.",
+      "because": {
+        "kind": "scene",
+        "detail": "A point of one potential in a circuit — a junction where branches meet. Engine B (nodal assembly) solves for its potential with Kirchhoff's current law; branches declare `terminal_a`/`terminal_b` relations to the nodes they join, and a battery declares `positive_terminal`/`negative_terminal`. Created by wiring, like the pairs.",
+        "laws": [
+          "kirchhoff_current_law",
+          "kirchhoff_voltage_law"
+        ]
+      }
+    },
+    {
+      "beat": 3,
+      "kind": "place",
+      "instance": "node_a",
+      "component": "circuit_node",
+      "model3d": null,
+      "narrate": "Place Circuit node.",
+      "because": {
+        "kind": "scene",
+        "detail": "A point of one potential in a circuit — a junction where branches meet. Engine B (nodal assembly) solves for its potential with Kirchhoff's current law; branches declare `terminal_a`/`terminal_b` relations to the nodes they join, and a battery declares `positive_terminal`/`negative_terminal`. Created by wiring, like the pairs.",
+        "laws": [
+          "kirchhoff_current_law",
+          "kirchhoff_voltage_law"
+        ]
+      }
+    },
+    {
+      "beat": 4,
+      "kind": "place",
+      "instance": "node_b",
+      "component": "circuit_node",
+      "model3d": null,
+      "narrate": "Place Circuit node.",
+      "because": {
+        "kind": "scene",
+        "detail": "A point of one potential in a circuit — a junction where branches meet. Engine B (nodal assembly) solves for its potential with Kirchhoff's current law; branches declare `terminal_a`/`terminal_b` relations to the nodes they join, and a battery declares `positive_terminal`/`negative_terminal`. Created by wiring, like the pairs.",
+        "laws": [
+          "kirchhoff_current_law",
+          "kirchhoff_voltage_law"
+        ]
+      }
+    },
+    {
+      "beat": 5,
+      "kind": "place",
+      "instance": "r1",
+      "component": "resistor",
+      "model3d": "resistor.glb",
+      "narrate": "Place Resistor.",
+      "because": {
+        "kind": "scene",
+        "detail": "An ohmic element: the voltage across it is proportional to the current through it. The workhorse of the chapter and the first thing a student picks up off the shelf.",
+        "laws": [
+          "ohms_law",
+          "joule_heating"
+        ]
+      }
+    },
+    {
+      "beat": 6,
+      "kind": "place",
+      "instance": "r2",
+      "component": "resistor",
+      "model3d": "resistor.glb",
+      "narrate": "Place Resistor.",
+      "because": {
+        "kind": "scene",
+        "detail": "An ohmic element: the voltage across it is proportional to the current through it. The workhorse of the chapter and the first thing a student picks up off the shelf.",
+        "laws": [
+          "ohms_law",
+          "joule_heating"
+        ]
+      }
+    },
+    {
+      "beat": 7,
+      "kind": "place",
+      "instance": "r3",
+      "component": "resistor",
+      "model3d": "resistor.glb",
+      "narrate": "Place Resistor.",
+      "because": {
+        "kind": "scene",
+        "detail": "An ohmic element: the voltage across it is proportional to the current through it. The workhorse of the chapter and the first thing a student picks up off the shelf.",
+        "laws": [
+          "ohms_law",
+          "joule_heating"
+        ]
+      }
+    },
+    {
+      "beat": 8,
+      "kind": "place",
+      "instance": "r4",
+      "component": "resistor",
+      "model3d": "resistor.glb",
+      "narrate": "Place Resistor.",
+      "because": {
+        "kind": "scene",
+        "detail": "An ohmic element: the voltage across it is proportional to the current through it. The workhorse of the chapter and the first thing a student picks up off the shelf.",
+        "laws": [
+          "ohms_law",
+          "joule_heating"
+        ]
+      }
+    },
+    {
+      "beat": 9,
+      "kind": "place",
+      "instance": "r5",
+      "component": "resistor",
+      "model3d": "resistor.glb",
+      "narrate": "Place Resistor.",
+      "because": {
+        "kind": "scene",
+        "detail": "An ohmic element: the voltage across it is proportional to the current through it. The workhorse of the chapter and the first thing a student picks up off the shelf.",
+        "laws": [
+          "ohms_law",
+          "joule_heating"
+        ]
+      }
+    },
+    {
+      "beat": 10,
+      "kind": "place",
+      "instance": "top",
+      "component": "circuit_node",
+      "model3d": null,
+      "narrate": "Place Circuit node.",
+      "because": {
+        "kind": "scene",
+        "detail": "A point of one potential in a circuit — a junction where branches meet. Engine B (nodal assembly) solves for its potential with Kirchhoff's current law; branches declare `terminal_a`/`terminal_b` relations to the nodes they join, and a battery declares `positive_terminal`/`negative_terminal`. Created by wiring, like the pairs.",
+        "laws": [
+          "kirchhoff_current_law",
+          "kirchhoff_voltage_law"
+        ]
+      }
+    },
+    {
+      "beat": 11,
+      "kind": "place",
+      "instance": "env",
+      "component": "environment",
+      "model3d": null,
+      "narrate": "Place Environment.",
+      "because": {
+        "kind": "scene",
+        "detail": "The surrounding medium and fields. Defaults are an idealised vacuum with no gravity, which is what textbook electrostatics problems assume -- stated here as an editable value instead of a footnote.",
+        "laws": [
+          "newton_gravitation_uniform",
+          "superposition_of_forces",
+          "medium_permittivity"
+        ]
+      }
+    },
+    {
+      "beat": 12,
+      "kind": "relate",
+      "relation": "positive_terminal",
+      "from": "bat",
+      "to": "top",
+      "narrate": "bat is positive terminal top.",
+      "because": {
+        "kind": "scene",
+        "detail": "stated by the problem's geometry"
+      }
+    },
+    {
+      "beat": 13,
+      "kind": "relate",
+      "relation": "negative_terminal",
+      "from": "bat",
+      "to": "gnd",
+      "narrate": "bat is negative terminal gnd.",
+      "because": {
+        "kind": "scene",
+        "detail": "stated by the problem's geometry"
+      }
+    },
+    {
+      "beat": 14,
+      "kind": "relate",
+      "relation": "terminal_a",
+      "from": "r1",
+      "to": "top",
+      "narrate": "r1 is terminal a top.",
+      "because": {
+        "kind": "scene",
+        "detail": "stated by the problem's geometry"
+      }
+    },
+    {
+      "beat": 15,
+      "kind": "relate",
+      "relation": "terminal_b",
+      "from": "r1",
+      "to": "node_a",
+      "narrate": "r1 is terminal b node_a.",
+      "because": {
+        "kind": "scene",
+        "detail": "stated by the problem's geometry"
+      }
+    },
+    {
+      "beat": 16,
+      "kind": "relate",
+      "relation": "terminal_a",
+      "from": "r2",
+      "to": "node_a",
+      "narrate": "r2 is terminal a node_a.",
+      "because": {
+        "kind": "scene",
+        "detail": "stated by the problem's geometry"
+      }
+    },
+    {
+      "beat": 17,
+      "kind": "relate",
+      "relation": "terminal_b",
+      "from": "r2",
+      "to": "gnd",
+      "narrate": "r2 is terminal b gnd.",
+      "because": {
+        "kind": "scene",
+        "detail": "stated by the problem's geometry"
+      }
+    },
+    {
+      "beat": 18,
+      "kind": "relate",
+      "relation": "terminal_a",
+      "from": "r3",
+      "to": "node_a",
+      "narrate": "r3 is terminal a node_a.",
+      "because": {
+        "kind": "scene",
+        "detail": "stated by the problem's geometry"
+      }
+    },
+    {
+      "beat": 19,
+      "kind": "relate",
+      "relation": "terminal_b",
+      "from": "r3",
+      "to": "node_b",
+      "narrate": "r3 is terminal b node_b.",
+      "because": {
+        "kind": "scene",
+        "detail": "stated by the problem's geometry"
+      }
+    },
+    {
+      "beat": 20,
+      "kind": "relate",
+      "relation": "terminal_a",
+      "from": "r4",
+      "to": "top",
+      "narrate": "r4 is terminal a top.",
+      "because": {
+        "kind": "scene",
+        "detail": "stated by the problem's geometry"
+      }
+    },
+    {
+      "beat": 21,
+      "kind": "relate",
+      "relation": "terminal_b",
+      "from": "r4",
+      "to": "node_b",
+      "narrate": "r4 is terminal b node_b.",
+      "because": {
+        "kind": "scene",
+        "detail": "stated by the problem's geometry"
+      }
+    },
+    {
+      "beat": 22,
+      "kind": "relate",
+      "relation": "terminal_a",
+      "from": "r5",
+      "to": "node_b",
+      "narrate": "r5 is terminal a node_b.",
+      "because": {
+        "kind": "scene",
+        "detail": "stated by the problem's geometry"
+      }
+    },
+    {
+      "beat": 23,
+      "kind": "relate",
+      "relation": "terminal_b",
+      "from": "r5",
+      "to": "gnd",
+      "narrate": "r5 is terminal b gnd.",
+      "because": {
+        "kind": "scene",
+        "detail": "stated by the problem's geometry"
+      }
+    },
+    {
+      "beat": 24,
+      "kind": "given",
+      "instance": "bat",
+      "ref": "bat.electric.emf",
+      "property": "electric.emf",
+      "channel": null,
+      "value": 24.0,
+      "unit": "V",
+      "dimension": {
+        "kg": "1",
+        "m": "2",
+        "s": "-3",
+        "A": "-1"
+      },
+      "rank": "scalar",
+      "display": "24 V",
+      "narrate": "bat: emf is 24 V, as stated.",
+      "because": {
+        "kind": "given",
+        "detail": "supplied by the problem statement"
+      }
+    },
+    {
+      "beat": 25,
+      "kind": "resolve",
+      "instance": "gnd",
+      "ref": "gnd.em.electric_potential",
+      "property": "em.electric_potential",
+      "channel": "potential_shading",
+      "value": 0.0,
+      "unit": "V",
+      "dimension": {
+        "kg": "1",
+        "m": "2",
+        "s": "-3",
+        "A": "-1"
+      },
+      "rank": "scalar",
+      "display": "0 V",
+      "narrate": "gnd: electric potential resolves to 0 V.",
+      "because": {
+        "kind": "derived",
+        "formula": "system.kcl_node_voltage",
+        "expression": "sum((V_node - V_other) / R_branch) = 0",
+        "substituted": "sum((V_node - V_other) / R_branch) = 0",
+        "law": "kirchhoff_current_law",
+        "law_label": "Kirchhoff's current law",
+        "law_statement": "The algebraic sum of currents entering any node is zero: charge does not accumulate at a junction. This is what makes currents add in a parallel combination.",
+        "assumes": [
+          "ideal_wires",
+          "steady_state"
+        ],
+        "cite": "OpenStax College Physics 2e, 21.2-21.3 (CC BY)",
+        "inputs": [
+          {
+            "symbol": "R_r2",
+            "from": "r2.electric.resistance",
+            "value": 20.0,
+            "unit": "Ω",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-2"
+            },
+            "rank": "scalar",
+            "display": "20 Ω"
+          },
+          {
+            "symbol": "R_r5",
+            "from": "r5.electric.resistance",
+            "value": 20.0,
+            "unit": "Ω",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-2"
+            },
+            "rank": "scalar",
+            "display": "20 Ω"
+          }
+        ]
+      }
+    },
+    {
+      "beat": 26,
+      "kind": "resolve",
+      "instance": "node_a",
+      "ref": "node_a.em.electric_potential",
+      "property": "em.electric_potential",
+      "channel": "potential_shading",
+      "value": 14.511627906976743,
+      "unit": "V",
+      "dimension": {
+        "kg": "1",
+        "m": "2",
+        "s": "-3",
+        "A": "-1"
+      },
+      "rank": "scalar",
+      "display": "14.51 V",
+      "narrate": "node_a: electric potential resolves to 14.51 V.",
+      "because": {
+        "kind": "derived",
+        "formula": "system.kcl_node_voltage",
+        "expression": "sum((V_node - V_other) / R_branch) = 0",
+        "substituted": "sum((V_node - V_other) / R_branch) = 0",
+        "law": "kirchhoff_current_law",
+        "law_label": "Kirchhoff's current law",
+        "law_statement": "The algebraic sum of currents entering any node is zero: charge does not accumulate at a junction. This is what makes currents add in a parallel combination.",
+        "assumes": [
+          "ideal_wires",
+          "steady_state"
+        ],
+        "cite": "OpenStax College Physics 2e, 21.2-21.3 (CC BY)",
+        "inputs": [
+          {
+            "symbol": "R_r1",
+            "from": "r1.electric.resistance",
+            "value": 10.0,
+            "unit": "Ω",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-2"
+            },
+            "rank": "scalar",
+            "display": "10 Ω"
+          },
+          {
+            "symbol": "R_r2",
+            "from": "r2.electric.resistance",
+            "value": 20.0,
+            "unit": "Ω",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-2"
+            },
+            "rank": "scalar",
+            "display": "20 Ω"
+          },
+          {
+            "symbol": "R_r3",
+            "from": "r3.electric.resistance",
+            "value": 10.0,
+            "unit": "Ω",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-2"
+            },
+            "rank": "scalar",
+            "display": "10 Ω"
+          }
+        ]
+      }
+    },
+    {
+      "beat": 27,
+      "kind": "resolve",
+      "instance": "node_b",
+      "ref": "node_b.em.electric_potential",
+      "property": "em.electric_potential",
+      "channel": "potential_shading",
+      "value": 12.279069767441861,
+      "unit": "V",
+      "dimension": {
+        "kg": "1",
+        "m": "2",
+        "s": "-3",
+        "A": "-1"
+      },
+      "rank": "scalar",
+      "display": "12.28 V",
+      "narrate": "node_b: electric potential resolves to 12.28 V.",
+      "because": {
+        "kind": "derived",
+        "formula": "system.kcl_node_voltage",
+        "expression": "sum((V_node - V_other) / R_branch) = 0",
+        "substituted": "sum((V_node - V_other) / R_branch) = 0",
+        "law": "kirchhoff_current_law",
+        "law_label": "Kirchhoff's current law",
+        "law_statement": "The algebraic sum of currents entering any node is zero: charge does not accumulate at a junction. This is what makes currents add in a parallel combination.",
+        "assumes": [
+          "ideal_wires",
+          "steady_state"
+        ],
+        "cite": "OpenStax College Physics 2e, 21.2-21.3 (CC BY)",
+        "inputs": [
+          {
+            "symbol": "R_r3",
+            "from": "r3.electric.resistance",
+            "value": 10.0,
+            "unit": "Ω",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-2"
+            },
+            "rank": "scalar",
+            "display": "10 Ω"
+          },
+          {
+            "symbol": "R_r4",
+            "from": "r4.electric.resistance",
+            "value": 30.0,
+            "unit": "Ω",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-2"
+            },
+            "rank": "scalar",
+            "display": "30 Ω"
+          },
+          {
+            "symbol": "R_r5",
+            "from": "r5.electric.resistance",
+            "value": 20.0,
+            "unit": "Ω",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-2"
+            },
+            "rank": "scalar",
+            "display": "20 Ω"
+          }
+        ]
+      }
+    },
+    {
+      "beat": 28,
+      "kind": "resolve",
+      "instance": "r1",
+      "ref": "r1.electric.current",
+      "property": "electric.current",
+      "channel": null,
+      "value": 0.9488372093023256,
+      "unit": "A",
+      "dimension": {
+        "A": "1"
+      },
+      "rank": "scalar",
+      "display": "0.9488 A",
+      "narrate": "r1: current resolves to 0.9488 A.",
+      "because": {
+        "kind": "derived",
+        "formula": "system.ohm_branch_current",
+        "expression": "(V_a - V_b) / R",
+        "substituted": "(V_a - V_b) / R",
+        "law": "ohms_law",
+        "law_label": "Ohm's law",
+        "law_statement": "For an ohmic conductor the current through it is proportional to the potential difference across it, with the resistance as the constant of proportionality: V = I*R.",
+        "assumes": [
+          "ideal_wires",
+          "steady_state"
+        ],
+        "cite": "OpenStax College Physics 2e, 21.2-21.3 (CC BY)",
+        "inputs": [
+          {
+            "symbol": "V_a",
+            "from": "top.em.electric_potential",
+            "value": 24.0,
+            "unit": "V",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-1"
+            },
+            "rank": "scalar",
+            "display": "24 V"
+          },
+          {
+            "symbol": "V_b",
+            "from": "node_a.em.electric_potential",
+            "value": 14.511627906976743,
+            "unit": "V",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-1"
+            },
+            "rank": "scalar",
+            "display": "14.51 V"
+          },
+          {
+            "symbol": "R",
+            "from": "r1.electric.resistance",
+            "value": 10.0,
+            "unit": "Ω",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-2"
+            },
+            "rank": "scalar",
+            "display": "10 Ω"
+          }
+        ]
+      }
+    },
+    {
+      "beat": 29,
+      "kind": "given",
+      "instance": "r1",
+      "ref": "r1.electric.resistance",
+      "property": "electric.resistance",
+      "channel": null,
+      "value": 10.0,
+      "unit": "Ω",
+      "dimension": {
+        "kg": "1",
+        "m": "2",
+        "s": "-3",
+        "A": "-2"
+      },
+      "rank": "scalar",
+      "display": "10 Ω",
+      "narrate": "r1: resistance is 10 Ω, as stated.",
+      "because": {
+        "kind": "given",
+        "detail": "supplied by the problem statement"
+      }
+    },
+    {
+      "beat": 30,
+      "kind": "resolve",
+      "instance": "r2",
+      "ref": "r2.electric.current",
+      "property": "electric.current",
+      "channel": null,
+      "value": 0.7255813953488371,
+      "unit": "A",
+      "dimension": {
+        "A": "1"
+      },
+      "rank": "scalar",
+      "display": "0.7256 A",
+      "narrate": "r2: current resolves to 0.7256 A.",
+      "because": {
+        "kind": "derived",
+        "formula": "system.ohm_branch_current",
+        "expression": "(V_a - V_b) / R",
+        "substituted": "(V_a - V_b) / R",
+        "law": "ohms_law",
+        "law_label": "Ohm's law",
+        "law_statement": "For an ohmic conductor the current through it is proportional to the potential difference across it, with the resistance as the constant of proportionality: V = I*R.",
+        "assumes": [
+          "ideal_wires",
+          "steady_state"
+        ],
+        "cite": "OpenStax College Physics 2e, 21.2-21.3 (CC BY)",
+        "inputs": [
+          {
+            "symbol": "V_a",
+            "from": "node_a.em.electric_potential",
+            "value": 14.511627906976743,
+            "unit": "V",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-1"
+            },
+            "rank": "scalar",
+            "display": "14.51 V"
+          },
+          {
+            "symbol": "V_b",
+            "from": "gnd.em.electric_potential",
+            "value": 0.0,
+            "unit": "V",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-1"
+            },
+            "rank": "scalar",
+            "display": "0 V"
+          },
+          {
+            "symbol": "R",
+            "from": "r2.electric.resistance",
+            "value": 20.0,
+            "unit": "Ω",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-2"
+            },
+            "rank": "scalar",
+            "display": "20 Ω"
+          }
+        ]
+      }
+    },
+    {
+      "beat": 31,
+      "kind": "given",
+      "instance": "r2",
+      "ref": "r2.electric.resistance",
+      "property": "electric.resistance",
+      "channel": null,
+      "value": 20.0,
+      "unit": "Ω",
+      "dimension": {
+        "kg": "1",
+        "m": "2",
+        "s": "-3",
+        "A": "-2"
+      },
+      "rank": "scalar",
+      "display": "20 Ω",
+      "narrate": "r2: resistance is 20 Ω, as stated.",
+      "because": {
+        "kind": "given",
+        "detail": "supplied by the problem statement"
+      }
+    },
+    {
+      "beat": 32,
+      "kind": "given",
+      "instance": "r3",
+      "ref": "r3.electric.resistance",
+      "property": "electric.resistance",
+      "channel": null,
+      "value": 10.0,
+      "unit": "Ω",
+      "dimension": {
+        "kg": "1",
+        "m": "2",
+        "s": "-3",
+        "A": "-2"
+      },
+      "rank": "scalar",
+      "display": "10 Ω",
+      "narrate": "r3: resistance is 10 Ω, as stated.",
+      "because": {
+        "kind": "given",
+        "detail": "supplied by the problem statement"
+      }
+    },
+    {
+      "beat": 33,
+      "kind": "resolve",
+      "instance": "r4",
+      "ref": "r4.electric.current",
+      "property": "electric.current",
+      "channel": null,
+      "value": 0.39069767441860465,
+      "unit": "A",
+      "dimension": {
+        "A": "1"
+      },
+      "rank": "scalar",
+      "display": "0.3907 A",
+      "narrate": "r4: current resolves to 0.3907 A.",
+      "because": {
+        "kind": "derived",
+        "formula": "system.ohm_branch_current",
+        "expression": "(V_a - V_b) / R",
+        "substituted": "(V_a - V_b) / R",
+        "law": "ohms_law",
+        "law_label": "Ohm's law",
+        "law_statement": "For an ohmic conductor the current through it is proportional to the potential difference across it, with the resistance as the constant of proportionality: V = I*R.",
+        "assumes": [
+          "ideal_wires",
+          "steady_state"
+        ],
+        "cite": "OpenStax College Physics 2e, 21.2-21.3 (CC BY)",
+        "inputs": [
+          {
+            "symbol": "V_a",
+            "from": "top.em.electric_potential",
+            "value": 24.0,
+            "unit": "V",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-1"
+            },
+            "rank": "scalar",
+            "display": "24 V"
+          },
+          {
+            "symbol": "V_b",
+            "from": "node_b.em.electric_potential",
+            "value": 12.279069767441861,
+            "unit": "V",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-1"
+            },
+            "rank": "scalar",
+            "display": "12.28 V"
+          },
+          {
+            "symbol": "R",
+            "from": "r4.electric.resistance",
+            "value": 30.0,
+            "unit": "Ω",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-2"
+            },
+            "rank": "scalar",
+            "display": "30 Ω"
+          }
+        ]
+      }
+    },
+    {
+      "beat": 34,
+      "kind": "given",
+      "instance": "r4",
+      "ref": "r4.electric.resistance",
+      "property": "electric.resistance",
+      "channel": null,
+      "value": 30.0,
+      "unit": "Ω",
+      "dimension": {
+        "kg": "1",
+        "m": "2",
+        "s": "-3",
+        "A": "-2"
+      },
+      "rank": "scalar",
+      "display": "30 Ω",
+      "narrate": "r4: resistance is 30 Ω, as stated.",
+      "because": {
+        "kind": "given",
+        "detail": "supplied by the problem statement"
+      }
+    },
+    {
+      "beat": 35,
+      "kind": "resolve",
+      "instance": "r5",
+      "ref": "r5.electric.current",
+      "property": "electric.current",
+      "channel": null,
+      "value": 0.6139534883720931,
+      "unit": "A",
+      "dimension": {
+        "A": "1"
+      },
+      "rank": "scalar",
+      "display": "0.614 A",
+      "narrate": "r5: current resolves to 0.614 A.",
+      "because": {
+        "kind": "derived",
+        "formula": "system.ohm_branch_current",
+        "expression": "(V_a - V_b) / R",
+        "substituted": "(V_a - V_b) / R",
+        "law": "ohms_law",
+        "law_label": "Ohm's law",
+        "law_statement": "For an ohmic conductor the current through it is proportional to the potential difference across it, with the resistance as the constant of proportionality: V = I*R.",
+        "assumes": [
+          "ideal_wires",
+          "steady_state"
+        ],
+        "cite": "OpenStax College Physics 2e, 21.2-21.3 (CC BY)",
+        "inputs": [
+          {
+            "symbol": "V_a",
+            "from": "node_b.em.electric_potential",
+            "value": 12.279069767441861,
+            "unit": "V",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-1"
+            },
+            "rank": "scalar",
+            "display": "12.28 V"
+          },
+          {
+            "symbol": "V_b",
+            "from": "gnd.em.electric_potential",
+            "value": 0.0,
+            "unit": "V",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-1"
+            },
+            "rank": "scalar",
+            "display": "0 V"
+          },
+          {
+            "symbol": "R",
+            "from": "r5.electric.resistance",
+            "value": 20.0,
+            "unit": "Ω",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-2"
+            },
+            "rank": "scalar",
+            "display": "20 Ω"
+          }
+        ]
+      }
+    },
+    {
+      "beat": 36,
+      "kind": "given",
+      "instance": "r5",
+      "ref": "r5.electric.resistance",
+      "property": "electric.resistance",
+      "channel": null,
+      "value": 20.0,
+      "unit": "Ω",
+      "dimension": {
+        "kg": "1",
+        "m": "2",
+        "s": "-3",
+        "A": "-2"
+      },
+      "rank": "scalar",
+      "display": "20 Ω",
+      "narrate": "r5: resistance is 20 Ω, as stated.",
+      "because": {
+        "kind": "given",
+        "detail": "supplied by the problem statement"
+      }
+    },
+    {
+      "beat": 37,
+      "kind": "resolve",
+      "instance": "top",
+      "ref": "top.em.electric_potential",
+      "property": "em.electric_potential",
+      "channel": "potential_shading",
+      "value": 24.0,
+      "unit": "V",
+      "dimension": {
+        "kg": "1",
+        "m": "2",
+        "s": "-3",
+        "A": "-1"
+      },
+      "rank": "scalar",
+      "display": "24 V",
+      "narrate": "top: electric potential resolves to 24 V.",
+      "because": {
+        "kind": "derived",
+        "formula": "system.kcl_node_voltage",
+        "expression": "sum((V_node - V_other) / R_branch) = 0",
+        "substituted": "sum((V_node - V_other) / R_branch) = 0",
+        "law": "kirchhoff_current_law",
+        "law_label": "Kirchhoff's current law",
+        "law_statement": "The algebraic sum of currents entering any node is zero: charge does not accumulate at a junction. This is what makes currents add in a parallel combination.",
+        "assumes": [
+          "ideal_wires",
+          "steady_state"
+        ],
+        "cite": "OpenStax College Physics 2e, 21.2-21.3 (CC BY)",
+        "inputs": [
+          {
+            "symbol": "R_r1",
+            "from": "r1.electric.resistance",
+            "value": 10.0,
+            "unit": "Ω",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-2"
+            },
+            "rank": "scalar",
+            "display": "10 Ω"
+          },
+          {
+            "symbol": "R_r4",
+            "from": "r4.electric.resistance",
+            "value": 30.0,
+            "unit": "Ω",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-2"
+            },
+            "rank": "scalar",
+            "display": "30 Ω"
+          }
+        ]
+      }
+    },
+    {
+      "beat": 38,
+      "kind": "resolve",
+      "instance": "r3",
+      "ref": "r3.electric.current",
+      "property": "electric.current",
+      "channel": null,
+      "value": 0.22325581395348823,
+      "unit": "A",
+      "dimension": {
+        "A": "1"
+      },
+      "rank": "scalar",
+      "display": "0.2233 A",
+      "narrate": "r3: current resolves to 0.2233 A.",
+      "because": {
+        "kind": "derived",
+        "formula": "system.ohm_branch_current",
+        "expression": "(V_a - V_b) / R",
+        "substituted": "(V_a - V_b) / R",
+        "law": "ohms_law",
+        "law_label": "Ohm's law",
+        "law_statement": "For an ohmic conductor the current through it is proportional to the potential difference across it, with the resistance as the constant of proportionality: V = I*R.",
+        "assumes": [
+          "ideal_wires",
+          "steady_state"
+        ],
+        "cite": "OpenStax College Physics 2e, 21.2-21.3 (CC BY)",
+        "inputs": [
+          {
+            "symbol": "V_a",
+            "from": "node_a.em.electric_potential",
+            "value": 14.511627906976743,
+            "unit": "V",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-1"
+            },
+            "rank": "scalar",
+            "display": "14.51 V"
+          },
+          {
+            "symbol": "V_b",
+            "from": "node_b.em.electric_potential",
+            "value": 12.279069767441861,
+            "unit": "V",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-1"
+            },
+            "rank": "scalar",
+            "display": "12.28 V"
+          },
+          {
+            "symbol": "R",
+            "from": "r3.electric.resistance",
+            "value": 10.0,
+            "unit": "Ω",
+            "dimension": {
+              "kg": "1",
+              "m": "2",
+              "s": "-3",
+              "A": "-2"
+            },
+            "rank": "scalar",
+            "display": "10 Ω"
+          }
+        ]
+      }
+    },
+    {
+      "beat": 39,
+      "kind": "answer",
+      "ref": "r3.electric.current",
+      "property": "electric.current",
+      "value": 0.22325581395348823,
+      "unit": "A",
+      "dimension": {
+        "A": "1"
+      },
+      "rank": "scalar",
+      "display": "0.2233 A",
+      "narrate": "Answer: 0.2233 A.",
+      "because": {
+        "kind": "summary",
+        "laws": [
+          "kirchhoff_current_law",
+          "ohms_law"
+        ],
+        "paths_found": 1
+      }
+    }
+  ],
+  "paths": [
+    {
+      "cost": 9,
+      "laws": [
+        "kirchhoff_current_law",
+        "ohms_law"
+      ],
+      "formulas": [
+        "system.kcl_node_voltage",
+        "system.kcl_node_voltage",
+        "system.kcl_node_voltage",
+        "system.ohm_branch_current",
+        "system.ohm_branch_current",
+        "system.ohm_branch_current",
+        "system.ohm_branch_current",
+        "system.kcl_node_voltage",
+        "system.ohm_branch_current"
+      ],
+      "value": {
+        "value": 0.22325581395348823,
+        "unit": "A",
+        "dimension": {
+          "A": "1"
+        },
+        "rank": "scalar",
+        "display": "0.2233 A"
+      },
+      "assumptions": [
+        "ideal_wires",
+        "steady_state"
+      ],
+      "citations": [
+        "OpenStax College Physics 2e, 21.2-21.3 (CC BY)"
+      ],
+      "steps": [
+        {
+          "ref": "bat.electric.emf",
+          "property": "electric.emf",
+          "value": 24.0,
+          "unit": "V",
+          "dimension": {
+            "kg": "1",
+            "m": "2",
+            "s": "-3",
+            "A": "-1"
+          },
+          "rank": "scalar",
+          "display": "24 V",
+          "because": {
+            "kind": "given",
+            "detail": "supplied by the problem statement"
+          }
+        },
+        {
+          "ref": "gnd.em.electric_potential",
+          "property": "em.electric_potential",
+          "value": 0.0,
+          "unit": "V",
+          "dimension": {
+            "kg": "1",
+            "m": "2",
+            "s": "-3",
+            "A": "-1"
+          },
+          "rank": "scalar",
+          "display": "0 V",
+          "because": {
+            "kind": "derived",
+            "formula": "system.kcl_node_voltage",
+            "expression": "sum((V_node - V_other) / R_branch) = 0",
+            "substituted": "sum((V_node - V_other) / R_branch) = 0",
+            "law": "kirchhoff_current_law",
+            "law_label": "Kirchhoff's current law",
+            "law_statement": "The algebraic sum of currents entering any node is zero: charge does not accumulate at a junction. This is what makes currents add in a parallel combination.",
+            "assumes": [
+              "ideal_wires",
+              "steady_state"
+            ],
+            "cite": "OpenStax College Physics 2e, 21.2-21.3 (CC BY)",
+            "inputs": [
+              {
+                "symbol": "R_r2",
+                "from": "r2.electric.resistance",
+                "value": 20.0,
+                "unit": "Ω",
+                "dimension": {
+                  "kg": "1",
+                  "m": "2",
+                  "s": "-3",
+                  "A": "-2"
+                },
+                "rank": "scalar",
+                "display": "20 Ω"
+              },
+              {
+                "symbol": "R_r5",
+                "from": "r5.electric.resistance",
+                "value": 20.0,
+                "unit": "Ω",
+                "dimension": {
+                  "kg": "1",
+                  "m": "2",
+                  "s": "-3",
+                  "A": "-2"
+                },
+                "rank": "scalar",
+                "display": "20 Ω"
+              }
+            ]
+          }
+        },
+        {
+          "ref": "node_a.em.electric_potential",
+          "property": "em.electric_potential",
+          "value": 14.511627906976743,
+          "unit": "V",
+          "dimension": {
+            "kg": "1",
+            "m": "2",
+            "s": "-3",
+            "A": "-1"
+          },
+          "rank": "scalar",
+          "display": "14.51 V",
+          "because": {
+            "kind": "derived",
+            "formula": "system.kcl_node_voltage",
+            "expression": "sum((V_node - V_other) / R_branch) = 0",
+            "substituted": "sum((V_node - V_other) / R_branch) = 0",
+            "law": "kirchhoff_current_law",
+            "law_label": "Kirchhoff's current law",
+            "law_statement": "The algebraic sum of currents entering any node is zero: charge does not accumulate at a junction. This is what makes currents add in a parallel combination.",
+            "assumes": [
+              "ideal_wires",
+              "steady_state"
+            ],
+            "cite": "OpenStax College Physics 2e, 21.2-21.3 (CC BY)",
+            "inputs": [
+              {
+                "symbol": "R_r1",
+                "from": "r1.electric.resistance",
+                "value": 10.0,
+                "unit": "Ω",
+                "dimension": {
+                  "kg": "1",
+                  "m": "2",
+                  "s": "-3",
+                  "A": "-2"
+                },
+                "rank": "scalar",
+                "display": "10 Ω"
+              },
+              {
+                "symbol": "R_r2",
+                "from": "r2.electric.resistance",
+                "value": 20.0,
+                "unit": "Ω",
+                "dimension": {
+                  "kg": "1",
+                  "m": "2",
+                  "s": "-3",
+                  "A": "-2"
+                },
+                "rank": "scalar",
+                "display": "20 Ω"
+              },
+              {
+                "symbol": "R_r3",
+                "from": "r3.electric.resistance",
+                "value": 10.0,
+                "unit": "Ω",
+                "dimension": {
+                  "kg": "1",
+                  "m": "2",
+                  "s": "-3",
+                  "A": "-2"
+                },
+                "rank": "scalar",
+                "display": "10 Ω"
+              }
+            ]
+          }
+        },
+        {
+          "ref": "node_b.em.electric_potential",
+          "property": "em.electric_potential",
+          "value": 12.279069767441861,
+          "unit": "V",
+          "dimension": {
+            "kg": "1",
+            "m": "2",
+            "s": "-3",
+            "A": "-1"
+          },
+          "rank": "scalar",
+          "display": "12.28 V",
+          "because": {
+            "kind": "derived",
+            "formula": "system.kcl_node_voltage",
+            "expression": "sum((V_node - V_other) / R_branch) = 0",
+            "substituted": "sum((V_node - V_other) / R_branch) = 0",
+            "law": "kirchhoff_current_law",
+            "law_label": "Kirchhoff's current law",
+            "law_statement": "The algebraic sum of currents entering any node is zero: charge does not accumulate at a junction. This is what makes currents add in a parallel combination.",
+            "assumes": [
+              "ideal_wires",
+              "steady_state"
+            ],
+            "cite": "OpenStax College Physics 2e, 21.2-21.3 (CC BY)",
+            "inputs": [
+              {
+                "symbol": "R_r3",
+                "from": "r3.electric.resistance",
+                "value": 10.0,
+                "unit": "Ω",
+                "dimension": {
+                  "kg": "1",
+                  "m": "2",
+                  "s": "-3",
+                  "A": "-2"
+                },
+                "rank": "scalar",
+                "display": "10 Ω"
+              },
+              {
+                "symbol": "R_r4",
+                "from": "r4.electric.resistance",
+                "value": 30.0,
+                "unit": "Ω",
+                "dimension": {
+                  "kg": "1",
+                  "m": "2",
+                  "s": "-3",
+                  "A": "-2"
+                },
+                "rank": "scalar",
+                "display": "30 Ω"
+              },
+              {
+                "symbol": "R_r5",
+                "from": "r5.electric.resistance",
+                "value": 20.0,
+                "unit": "Ω",
+                "dimension": {
+                  "kg": "1",
+                  "m": "2",
+                  "s": "-3",
+                  "A": "-2"
+                },
+                "rank": "scalar",
+                "display": "20 Ω"
+              }
+            ]
+          }
+        },
+        {
+          "ref": "r1.electric.current",
+          "property": "electric.current",
+          "value": 0.9488372093023256,
+          "unit": "A",
+          "dimension": {
+            "A": "1"
+          },
+          "rank": "scalar",
+          "display": "0.9488 A",
+          "because": {
+            "kind": "derived",
+            "formula": "system.ohm_branch_current",
+            "expression": "(V_a - V_b) / R",
+            "substituted": "(V_a - V_b) / R",
+            "law": "ohms_law",
+            "law_label": "Ohm's law",
+            "law_statement": "For an ohmic conductor the current through it is proportional to the potential difference across it, with the resistance as the constant of proportionality: V = I*R.",
+            "assumes": [
+              "ideal_wires",
+              "steady_state"
+            ],
+            "cite": "OpenStax College Physics 2e, 21.2-21.3 (CC BY)",
+            "inputs": [
+              {
+                "symbol": "V_a",
+                "from": "top.em.electric_potential",
+                "value": 24.0,
+                "unit": "V",
+                "dimension": {
+                  "kg": "1",
+                  "m": "2",
+                  "s": "-3",
+                  "A": "-1"
+                },
+                "rank": "scalar",
+                "display": "24 V"
+              },
+              {
+                "symbol": "V_b",
+                "from": "node_a.em.electric_potential",
+                "value": 14.511627906976743,
+                "unit": "V",
+                "dimension": {
+                  "kg": "1",
+                  "m": "2",
+                  "s": "-3",
+                  "A": "-1"
+                },
+                "rank": "scalar",
+                "display": "14.51 V"
+              },
+              {
+                "symbol": "R",
+                "from": "r1.electric.resistance",
+                "value": 10.0,
+                "unit": "Ω",
+                "dimension": {
+                  "kg": "1",
+                  "m": "2",
+                  "s": "-3",
+                  "A": "-2"
+                },
+                "rank": "scalar",
+                "display": "10 Ω"
+              }
+            ]
+          }
+        },
+        {
+          "ref": "r1.electric.resistance",
+          "property": "electric.resistance",
+          "value": 10.0,
+          "unit": "Ω",
+          "dimension": {
+            "kg": "1",
+            "m": "2",
+            "s": "-3",
+            "A": "-2"
+          },
+          "rank": "scalar",
+          "display": "10 Ω",
+          "because": {
+            "kind": "given",
+            "detail": "supplied by the problem statement"
+          }
+        },
+        {
+          "ref": "r2.electric.current",
+          "property": "electric.current",
+          "value": 0.7255813953488371,
+          "unit": "A",
+          "dimension": {
+            "A": "1"
+          },
+          "rank": "scalar",
+          "display": "0.7256 A",
+          "because": {
+            "kind": "derived",
+            "formula": "system.ohm_branch_current",
+            "expression": "(V_a - V_b) / R",
+            "substituted": "(V_a - V_b) / R",
+            "law": "ohms_law",
+            "law_label": "Ohm's law",
+            "law_statement": "For an ohmic conductor the current through it is proportional to the potential difference across it, with the resistance as the constant of proportionality: V = I*R.",
+            "assumes": [
+              "ideal_wires",
+              "steady_state"
+            ],
+            "cite": "OpenStax College Physics 2e, 21.2-21.3 (CC BY)",
+            "inputs": [
+              {
+                "symbol": "V_a",
+                "from": "node_a.em.electric_potential",
+                "value": 14.511627906976743,
+                "unit": "V",
+                "dimension": {
+                  "kg": "1",
+                  "m": "2",
+                  "s": "-3",
+                  "A": "-1"
+                },
+                "rank": "scalar",
+                "display": "14.51 V"
+              },
+              {
+                "symbol": "V_b",
+                "from": "gnd.em.electric_potential",
+                "value": 0.0,
+                "unit": "V",
+                "dimension": {
+                  "kg": "1",
+                  "m": "2",
+                  "s": "-3",
+                  "A": "-1"
+                },
+                "rank": "scalar",
+                "display": "0 V"
+              },
+              {
+                "symbol": "R",
+                "from": "r2.electric.resistance",
+                "value": 20.0,
+                "unit": "Ω",
+                "dimension": {
+                  "kg": "1",
+                  "m": "2",
+                  "s": "-3",
+                  "A": "-2"
+                },
+                "rank": "scalar",
+                "display": "20 Ω"
+              }
+            ]
+          }
+        },
+        {
+          "ref": "r2.electric.resistance",
+          "property": "electric.resistance",
+          "value": 20.0,
+          "unit": "Ω",
+          "dimension": {
+            "kg": "1",
+            "m": "2",
+            "s": "-3",
+            "A": "-2"
+          },
+          "rank": "scalar",
+          "display": "20 Ω",
+          "because": {
+            "kind": "given",
+            "detail": "supplied by the problem statement"
+          }
+        },
+        {
+          "ref": "r3.electric.resistance",
+          "property": "electric.resistance",
+          "value": 10.0,
+          "unit": "Ω",
+          "dimension": {
+            "kg": "1",
+            "m": "2",
+            "s": "-3",
+            "A": "-2"
+          },
+          "rank": "scalar",
+          "display": "10 Ω",
+          "because": {
+            "kind": "given",
+            "detail": "supplied by the problem statement"
+          }
+        },
+        {
+          "ref": "r4.electric.current",
+          "property": "electric.current",
+          "value": 0.39069767441860465,
+          "unit": "A",
+          "dimension": {
+            "A": "1"
+          },
+          "rank": "scalar",
+          "display": "0.3907 A",
+          "because": {
+            "kind": "derived",
+            "formula": "system.ohm_branch_current",
+            "expression": "(V_a - V_b) / R",
+            "substituted": "(V_a - V_b) / R",
+            "law": "ohms_law",
+            "law_label": "Ohm's law",
+            "law_statement": "For an ohmic conductor the current through it is proportional to the potential difference across it, with the resistance as the constant of proportionality: V = I*R.",
+            "assumes": [
+              "ideal_wires",
+              "steady_state"
+            ],
+            "cite": "OpenStax College Physics 2e, 21.2-21.3 (CC BY)",
+            "inputs": [
+              {
+                "symbol": "V_a",
+                "from": "top.em.electric_potential",
+                "value": 24.0,
+                "unit": "V",
+                "dimension": {
+                  "kg": "1",
+                  "m": "2",
+                  "s": "-3",
+                  "A": "-1"
+                },
+                "rank": "scalar",
+                "display": "24 V"
+              },
+              {
+                "symbol": "V_b",
+                "from": "node_b.em.electric_potential",
+                "value": 12.279069767441861,
+                "unit": "V",
+                "dimension": {
+                  "kg": "1",
+                  "m": "2",
+                  "s": "-3",
+                  "A": "-1"
+                },
+                "rank": "scalar",
+                "display": "12.28 V"
+              },
+              {
+                "symbol": "R",
+                "from": "r4.electric.resistance",
+                "value": 30.0,
+                "unit": "Ω",
+                "dimension": {
+                  "kg": "1",
+                  "m": "2",
+                  "s": "-3",
+                  "A": "-2"
+                },
+                "rank": "scalar",
+                "display": "30 Ω"
+              }
+            ]
+          }
+        },
+        {
+          "ref": "r4.electric.resistance",
+          "property": "electric.resistance",
+          "value": 30.0,
+          "unit": "Ω",
+          "dimension": {
+            "kg": "1",
+            "m": "2",
+            "s": "-3",
+            "A": "-2"
+          },
+          "rank": "scalar",
+          "display": "30 Ω",
+          "because": {
+            "kind": "given",
+            "detail": "supplied by the problem statement"
+          }
+        },
+        {
+          "ref": "r5.electric.current",
+          "property": "electric.current",
+          "value": 0.6139534883720931,
+          "unit": "A",
+          "dimension": {
+            "A": "1"
+          },
+          "rank": "scalar",
+          "display": "0.614 A",
+          "because": {
+            "kind": "derived",
+            "formula": "system.ohm_branch_current",
+            "expression": "(V_a - V_b) / R",
+            "substituted": "(V_a - V_b) / R",
+            "law": "ohms_law",
+            "law_label": "Ohm's law",
+            "law_statement": "For an ohmic conductor the current through it is proportional to the potential difference across it, with the resistance as the constant of proportionality: V = I*R.",
+            "assumes": [
+              "ideal_wires",
+              "steady_state"
+            ],
+            "cite": "OpenStax College Physics 2e, 21.2-21.3 (CC BY)",
+            "inputs": [
+              {
+                "symbol": "V_a",
+                "from": "node_b.em.electric_potential",
+                "value": 12.279069767441861,
+                "unit": "V",
+                "dimension": {
+                  "kg": "1",
+                  "m": "2",
+                  "s": "-3",
+                  "A": "-1"
+                },
+                "rank": "scalar",
+                "display": "12.28 V"
+              },
+              {
+                "symbol": "V_b",
+                "from": "gnd.em.electric_potential",
+                "value": 0.0,
+                "unit": "V",
+                "dimension": {
+                  "kg": "1",
+                  "m": "2",
+                  "s": "-3",
+                  "A": "-1"
+                },
+                "rank": "scalar",
+                "display": "0 V"
+              },
+              {
+                "symbol": "R",
+                "from": "r5.electric.resistance",
+                "value": 20.0,
+                "unit": "Ω",
+                "dimension": {
+                  "kg": "1",
+                  "m": "2",
+                  "s": "-3",
+                  "A": "-2"
+                },
+                "rank": "scalar",
+                "display": "20 Ω"
+              }
+            ]
+          }
+        },
+        {
+          "ref": "r5.electric.resistance",
+          "property": "electric.resistance",
+          "value": 20.0,
+          "unit": "Ω",
+          "dimension": {
+            "kg": "1",
+            "m": "2",
+            "s": "-3",
+            "A": "-2"
+          },
+          "rank": "scalar",
+          "display": "20 Ω",
+          "because": {
+            "kind": "given",
+            "detail": "supplied by the problem statement"
+          }
+        },
+        {
+          "ref": "top.em.electric_potential",
+          "property": "em.electric_potential",
+          "value": 24.0,
+          "unit": "V",
+          "dimension": {
+            "kg": "1",
+            "m": "2",
+            "s": "-3",
+            "A": "-1"
+          },
+          "rank": "scalar",
+          "display": "24 V",
+          "because": {
+            "kind": "derived",
+            "formula": "system.kcl_node_voltage",
+            "expression": "sum((V_node - V_other) / R_branch) = 0",
+            "substituted": "sum((V_node - V_other) / R_branch) = 0",
+            "law": "kirchhoff_current_law",
+            "law_label": "Kirchhoff's current law",
+            "law_statement": "The algebraic sum of currents entering any node is zero: charge does not accumulate at a junction. This is what makes currents add in a parallel combination.",
+            "assumes": [
+              "ideal_wires",
+              "steady_state"
+            ],
+            "cite": "OpenStax College Physics 2e, 21.2-21.3 (CC BY)",
+            "inputs": [
+              {
+                "symbol": "R_r1",
+                "from": "r1.electric.resistance",
+                "value": 10.0,
+                "unit": "Ω",
+                "dimension": {
+                  "kg": "1",
+                  "m": "2",
+                  "s": "-3",
+                  "A": "-2"
+                },
+                "rank": "scalar",
+                "display": "10 Ω"
+              },
+              {
+                "symbol": "R_r4",
+                "from": "r4.electric.resistance",
+                "value": 30.0,
+                "unit": "Ω",
+                "dimension": {
+                  "kg": "1",
+                  "m": "2",
+                  "s": "-3",
+                  "A": "-2"
+                },
+                "rank": "scalar",
+                "display": "30 Ω"
+              }
+            ]
+          }
+        },
+        {
+          "ref": "r3.electric.current",
+          "property": "electric.current",
+          "value": 0.22325581395348823,
+          "unit": "A",
+          "dimension": {
+            "A": "1"
+          },
+          "rank": "scalar",
+          "display": "0.2233 A",
+          "because": {
+            "kind": "derived",
+            "formula": "system.ohm_branch_current",
+            "expression": "(V_a - V_b) / R",
+            "substituted": "(V_a - V_b) / R",
+            "law": "ohms_law",
+            "law_label": "Ohm's law",
+            "law_statement": "For an ohmic conductor the current through it is proportional to the potential difference across it, with the resistance as the constant of proportionality: V = I*R.",
+            "assumes": [
+              "ideal_wires",
+              "steady_state"
+            ],
+            "cite": "OpenStax College Physics 2e, 21.2-21.3 (CC BY)",
+            "inputs": [
+              {
+                "symbol": "V_a",
+                "from": "node_a.em.electric_potential",
+                "value": 14.511627906976743,
+                "unit": "V",
+                "dimension": {
+                  "kg": "1",
+                  "m": "2",
+                  "s": "-3",
+                  "A": "-1"
+                },
+                "rank": "scalar",
+                "display": "14.51 V"
+              },
+              {
+                "symbol": "V_b",
+                "from": "node_b.em.electric_potential",
+                "value": 12.279069767441861,
+                "unit": "V",
+                "dimension": {
+                  "kg": "1",
+                  "m": "2",
+                  "s": "-3",
+                  "A": "-1"
+                },
+                "rank": "scalar",
+                "display": "12.28 V"
+              },
+              {
+                "symbol": "R",
+                "from": "r3.electric.resistance",
+                "value": 10.0,
+                "unit": "Ω",
+                "dimension": {
+                  "kg": "1",
+                  "m": "2",
+                  "s": "-3",
+                  "A": "-2"
+                },
+                "rank": "scalar",
+                "display": "10 Ω"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -311,16 +311,22 @@ def check_coverage(
         report.add("coverage", "warning", str(corpus_dir), "no corpus directory found")
         return rows
 
+    from .solve import cross_check, resolve_problem
+
     problems = load_corpus(corpus_dir, kb)
     for problem in problems:
         at = f"corpus:{problem.id}"
         resolver = Resolver(kb, problem.scene)
-        derivations = resolver.resolve(problem.target)
+        derivations, engine = resolve_problem(kb, problem)
 
         if not derivations:
             report.add("coverage", "error", at, str(resolver.failure(problem.target)))
             rows.append(CoverageRow(problem=problem, resolved=False, paths=0))
             continue
+
+        disagreement = cross_check(kb, problem)
+        if disagreement:
+            report.add("coverage", "error", at, disagreement)
 
         best = derivations[0]
         row = CoverageRow(

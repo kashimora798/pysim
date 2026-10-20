@@ -593,7 +593,7 @@ export interface Step {
 export const isGiven = (step: Step): boolean => step.formula === null;
 export const stepLaw = (step: Step): string | null => step.formula?.law ?? null;
 export const stepCite = (step: Step): string =>
-  step.formula ? step.formula.cite || step.formula.key : 'stated in the problem';
+  step.formula ? step.formula.cite || formulaKeyOf(step.formula) : 'stated in the problem';
 
 /** A complete, ordered justification for one target value. */
 export interface Derivation {
@@ -614,7 +614,7 @@ export const derivationLaws = (d: Derivation): Set<string> => {
 };
 
 export const derivationFormulas = (d: Derivation): string[] =>
-  d.steps.filter((s) => s.formula).map((s) => s.formula!.key);
+  d.steps.filter((s) => s.formula).map((s) => formulaKeyOf(s.formula!));
 
 export const derivationAssumptions = (d: Derivation): string[] => {
   const seen = new Set<string>();
@@ -635,6 +635,17 @@ export const derivationCitations = (d: Derivation): string[] => {
  * taking a magnitude before dividing by mass rather than after is the same physics twice. Two
  * derivations are genuinely different only when they appeal to different laws.
  */
+const FORMULA_KEYS = new WeakMap<FormulaDef, string>();
+
+/** Register every formula's table key (called by the Resolver) so steps can name their formula. */
+export function registerFormulaKeys(kb: KnowledgeBase): void {
+  for (const [key, f] of Object.entries(kb.formulas)) FORMULA_KEYS.set(f, key);
+}
+
+export function formulaKeyOf(f: FormulaDef): string {
+  return FORMULA_KEYS.get(f) ?? f.solvesFor;
+}
+
 export const signature = (d: Derivation): string =>
   [...derivationLaws(d)].sort().join('\u0000');
 
@@ -682,6 +693,8 @@ const mulDim = (a: Dim, b: Dim): Dim => a.map((x, i) => x + (b[i] ?? 0));
  * dimensionally homogeneous, which is exactly what `_assemble` must reject.
  */
 function evalTyped(node: Ast, env: Record<string, Quantity>): TypedValue {
+  const valEnv: Record<string, number | Vec3> = {};
+  for (const [k, q] of Object.entries(env)) valEnv[k] = q.value;
   const child = (a: Ast) => evalTyped(a, env);
 
   switch (node.k) {
@@ -691,7 +704,7 @@ function evalTyped(node: Ast, env: Record<string, Quantity>): TypedValue {
     case 'sym': {
       const q = env[node.n];
       if (!q) throw new Error(`unbound symbol "${node.n}"`);
-      return { value: evalAst(node, env) as number | Vec3, dim: q.dim, rank: q.rank };
+      return { value: evalAst(node, valEnv) as number | Vec3, dim: q.dim, rank: q.rank };
     }
 
     case 'add': {
@@ -708,7 +721,7 @@ function evalTyped(node: Ast, env: Record<string, Quantity>): TypedValue {
           throw new Error(`cannot add a ${first.rank} to a ${t.rank}`);
         }
       }
-      return { value: evalAst(node, env) as number | Vec3, dim: first.dim, rank: first.rank };
+      return { value: evalAst(node, valEnv) as number | Vec3, dim: first.dim, rank: first.rank };
     }
 
     case 'mul': {
@@ -724,7 +737,7 @@ function evalTyped(node: Ast, env: Record<string, Quantity>): TypedValue {
           rank = VECTOR;
         }
       }
-      return { value: evalAst(node, env) as number | Vec3, dim, rank };
+      return { value: evalAst(node, valEnv) as number | Vec3, dim, rank };
     }
 
     case 'pow': {
@@ -732,13 +745,13 @@ function evalTyped(node: Ast, env: Record<string, Quantity>): TypedValue {
       if (base.rank === VECTOR) {
         throw new Error('cannot raise a vector to a power; use mag() first');
       }
-      const value = evalAst(node, env) as number;
+      const value = evalAst(node, valEnv) as number;
       return { value, dim: scaleDim(base.dim, node.e), rank: SCALAR };
     }
 
     case 'fn': {
       const args = node.a.map(child);
-      const value = evalAst(node, env);
+      const value = evalAst(node, valEnv);
       switch (node.f) {
         case 'mag':
           return { value, dim: args[0]!.dim, rank: SCALAR };
@@ -867,6 +880,7 @@ export class Resolver {
 
   constructor(kb: KnowledgeBase, scene: Scene, options: ResolverOptions = {}) {
     this.kb = kb;
+    registerFormulaKeys(kb);
     this.scene = scene;
     this.maxPaths = options.maxPaths ?? MAX_PATHS;
     // The exported `FormulaDef` types `roles` as `{via: string}`, but a scene-scoped role serialises

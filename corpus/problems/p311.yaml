@@ -1,0 +1,30 @@
+id: p311
+title: Cyclotron period of an electron (JEE Main type)
+source: "Cyclotron problem type (JEE Main magnetism style; cf. OpenStax University Physics 2, 11.3, CC BY); statement rewritten and values chosen for this corpus, not reproduced."
+tags: [magnetism, circular-motion, jee-main, cyclotron]
+text: |
+  An electron moves at 1.0e6 m/s perpendicular to a uniform magnetic field of
+  0.010 T. What is the period of its circular motion -- and why does the answer not
+  depend on the speed?
+scene:
+  instances:
+    - id: region
+      kind: uniform_magnetic_field_region
+      set:
+        em.magnetic_field: "[0, 0, 0.010] T"
+    - id: e1
+      kind: electron
+      set:
+        kinematics.velocity: "[1.0e6, 0, 0] m/s"
+  relations:
+    - {kind: inside, from: e1, to: region}
+simulate: {instance: e1, duration: 3.5724e-9, samples: 160}
+target: {instance: e1, prop: em.cyclotron_period}
+expect:
+  value: 3.57239e-9
+  unit: s
+  tol: 0.005
+  note: >
+    T = 2*pi*m/(qB): the radius grows with speed exactly as fast as the circumference
+    does, so the period is speed-independent -- the fact the cyclotron is built on.
+    Engine C animates one full turn; the orbit must close on itself.

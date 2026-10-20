@@ -181,6 +181,9 @@ def build_simspec(
     problem: Problem,
     derivations: list[Derivation],
     kb: KnowledgeBase,
+    *,
+    engine: str = "chain",
+    trajectory=None,
 ) -> SimSpec:
     """Compile a resolved problem into a renderable, self-justifying spec."""
     if not derivations:
@@ -276,9 +279,10 @@ def build_simspec(
             "scene": _scene_json(problem.scene, kb),
             "assumptions": list(best.assumptions),
             "citations": list(best.citations),
+            "trajectory": trajectory.to_json() if trajectory is not None else None,
             "checks": {
                 "dimensions": "pass",
-                "engines": ["chain"],
+                "engines": [engine],
                 "paths_found": len(derivations),
                 "paths_agree": spread <= 1e-6,
                 "path_spread": spread,

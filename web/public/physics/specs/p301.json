@@ -1,0 +1,604 @@
+{
+  "fieldforge": "0.1",
+  "problem": {
+    "id": "p301",
+    "title": "Electric field inside a cavity carved from a charged sphere (JEE Advanced type)",
+    "text": "A solid insulating sphere of radius 12 cm carries a uniform volume charge density of\n2.0e-5 C/m^3. A spherical cavity is hollowed out inside it; the cavity's centre lies\n4.0 cm from the sphere's centre. Show that the field inside the cavity is uniform, and\nfind its magnitude.",
+    "source": "Problem type after the JEE Advanced 2015 cavity question (dataset: JEEBench, dair-iitd/jeebench); statement rewritten and values transposed, not reproduced.",
+    "tags": [
+      "electrostatics",
+      "superposition",
+      "cavity",
+      "jee-advanced",
+      "gauss"
+    ]
+  },
+  "target": "cav.em.electric_field_magnitude",
+  "answer": {
+    "value": 30117.575129947178,
+    "unit": "V/m",
+    "dimension": {
+      "kg": "1",
+      "m": "1",
+      "s": "-3",
+      "A": "-1"
+    },
+    "rank": "scalar",
+    "display": "30118 V/m"
+  },
+  "scene": {
+    "instances": [
+      {
+        "id": "cav",
+        "kind": "spherical_cavity_in_charged_sphere",
+        "label": "Spherical cavity in a uniformly charged sphere",
+        "model3d": "cavity_sphere.glb",
+        "tags": [
+          "charge_source",
+          "electrostatic",
+          "source",
+          "uniform_field",
+          "cavity"
+        ],
+        "given": {
+          "cav.em.charge_density_volume": {
+            "value": 2e-05,
+            "unit": "C/m³",
+            "dimension": {
+              "m": "-3",
+              "s": "1",
+              "A": "1"
+            },
+            "rank": "scalar",
+            "display": "2.000e-5 C/m³"
+          },
+          "cav.geometry.offset": {
+            "value": [
+              0.04,
+              0.0,
+              0.0
+            ],
+            "unit": "m",
+            "dimension": {
+              "m": "1"
+            },
+            "rank": "vector",
+            "display": "[0.04, 0, 0] m"
+          },
+          "cav.geometry.radius": {
+            "value": 0.12,
+            "unit": "m",
+            "dimension": {
+              "m": "1"
+            },
+            "rank": "scalar",
+            "display": "0.12 m"
+          }
+        }
+      },
+      {
+        "id": "env",
+        "kind": "environment",
+        "label": "Environment",
+        "model3d": null,
+        "tags": [
+          "environment",
+          "scene",
+          "settings"
+        ],
+        "given": {
+          "env.env.air_density": {
+            "value": 0.0,
+            "unit": "kg·m⁻³",
+            "dimension": {
+              "kg": "1",
+              "m": "-3"
+            },
+            "rank": "scalar",
+            "display": "0 kg·m⁻³"
+          },
+          "env.env.gravity": {
+            "value": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "unit": "m/s²",
+            "dimension": {
+              "m": "1",
+              "s": "-2"
+            },
+            "rank": "vector",
+            "display": "[0, 0, 0] m/s²"
+          },
+          "env.env.relative_permittivity": {
+            "value": 1.0,
+            "unit": "",
+            "dimension": {},
+            "rank": "scalar",
+            "display": "1"
+          },
+          "env.env.temperature": {
+            "value": 293.15,
+            "unit": "K",
+            "dimension": {
+              "K": "1"
+            },
+            "rank": "scalar",
+            "display": "293.1 K"
+          },
+          "env.env.wind_velocity": {
+            "value": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "unit": "m/s",
+            "dimension": {
+              "m": "1",
+              "s": "-1"
+            },
+            "rank": "vector",
+            "display": "[0, 0, 0] m/s"
+          }
+        }
+      }
+    ],
+    "relations": []
+  },
+  "assumptions": [
+    "uniform_density",
+    "spherical_cavity",
+    "cavity_entirely_inside",
+    "vacuum"
+  ],
+  "citations": [
+    "OpenStax University Physics 2, 6.4 + superposition (CC BY)",
+    "definitional"
+  ],
+  "trajectory": null,
+  "checks": {
+    "dimensions": "pass",
+    "engines": [
+      "chain"
+    ],
+    "paths_found": 1,
+    "paths_agree": true,
+    "path_spread": 0.0
+  },
+  "timeline": [
+    {
+      "beat": 1,
+      "kind": "place",
+      "instance": "cav",
+      "component": "spherical_cavity_in_charged_sphere",
+      "model3d": "cavity_sphere.glb",
+      "narrate": "Place Spherical cavity in a uniformly charged sphere.",
+      "because": {
+        "kind": "scene",
+        "detail": "A spherical hole carved out of a uniformly charged insulating sphere. By superposition the field everywhere inside the cavity is uniform, equal to rho*a/(3*eps0) along the offset vector a from the sphere's centre to the cavity's. This is the flagship case: no simulation library contains it, and a charge released inside undergoes exact constant-acceleration projectile motion.",
+        "laws": [
+          "superposition_electric",
+          "gauss_law_electric"
+        ]
+      }
+    },
+    {
+      "beat": 2,
+      "kind": "place",
+      "instance": "env",
+      "component": "environment",
+      "model3d": null,
+      "narrate": "Place Environment.",
+      "because": {
+        "kind": "scene",
+        "detail": "The surrounding medium and fields. Defaults are an idealised vacuum with no gravity, which is what textbook electrostatics problems assume -- stated here as an editable value instead of a footnote.",
+        "laws": [
+          "newton_gravitation_uniform",
+          "superposition_of_forces",
+          "medium_permittivity"
+        ]
+      }
+    },
+    {
+      "beat": 3,
+      "kind": "given",
+      "instance": "cav",
+      "ref": "cav.em.charge_density_volume",
+      "property": "em.charge_density_volume",
+      "channel": "density_shading",
+      "value": 2e-05,
+      "unit": "C/m³",
+      "dimension": {
+        "m": "-3",
+        "s": "1",
+        "A": "1"
+      },
+      "rank": "scalar",
+      "display": "2.000e-5 C/m³",
+      "narrate": "cav: charge density volume is 2.000e-5 C/m³, as stated.",
+      "because": {
+        "kind": "given",
+        "detail": "supplied by the problem statement"
+      }
+    },
+    {
+      "beat": 4,
+      "kind": "given",
+      "instance": "cav",
+      "ref": "cav.geometry.offset",
+      "property": "geometry.offset",
+      "channel": "offset_vector",
+      "value": [
+        0.04,
+        0.0,
+        0.0
+      ],
+      "unit": "m",
+      "dimension": {
+        "m": "1"
+      },
+      "rank": "vector",
+      "display": "[0.04, 0, 0] m",
+      "narrate": "cav: offset is [0.04, 0, 0] m, as stated.",
+      "because": {
+        "kind": "given",
+        "detail": "supplied by the problem statement"
+      }
+    },
+    {
+      "beat": 5,
+      "kind": "resolve",
+      "instance": "cav",
+      "ref": "cav.em.electric_field",
+      "property": "em.electric_field",
+      "channel": "field_arrows",
+      "value": [
+        30117.575129947178,
+        0.0,
+        0.0
+      ],
+      "unit": "V/m",
+      "dimension": {
+        "kg": "1",
+        "m": "1",
+        "s": "-3",
+        "A": "-1"
+      },
+      "rank": "vector",
+      "display": "[30118, 0, 0] V/m",
+      "narrate": "cav: electric field resolves to [30118, 0, 0] V/m.",
+      "because": {
+        "kind": "derived",
+        "formula": "cavity.E_vec_uniform",
+        "expression": "rho * a / (3 * epsilon_0)",
+        "substituted": "([0.04, 0, 0] m)*(2.000e-5 C/m³)/(3*(8.854e-12 kg⁻¹·m⁻³·s⁴·A²))",
+        "law": "superposition_electric",
+        "law_label": "Superposition of electric fields",
+        "law_statement": "The field of a composite distribution is the vector sum of the fields of its parts. This is what makes the cavity construction legitimate: a sphere with a cavity is a full sphere plus a negative sphere filling the cavity.",
+        "assumes": [
+          "uniform_density",
+          "spherical_cavity",
+          "cavity_entirely_inside",
+          "vacuum"
+        ],
+        "cite": "OpenStax University Physics 2, 6.4 + superposition (CC BY)",
+        "inputs": [
+          {
+            "symbol": "rho",
+            "from": "cav.em.charge_density_volume",
+            "value": 2e-05,
+            "unit": "C/m³",
+            "dimension": {
+              "m": "-3",
+              "s": "1",
+              "A": "1"
+            },
+            "rank": "scalar",
+            "display": "2.000e-5 C/m³"
+          },
+          {
+            "symbol": "a",
+            "from": "cav.geometry.offset",
+            "value": [
+              0.04,
+              0.0,
+              0.0
+            ],
+            "unit": "m",
+            "dimension": {
+              "m": "1"
+            },
+            "rank": "vector",
+            "display": "[0.04, 0, 0] m"
+          },
+          {
+            "symbol": "epsilon_0",
+            "from": "epsilon_0",
+            "value": 8.8541878128e-12,
+            "unit": "kg⁻¹·m⁻³·s⁴·A²",
+            "dimension": {
+              "kg": "-1",
+              "m": "-3",
+              "s": "4",
+              "A": "2"
+            },
+            "rank": "scalar",
+            "display": "8.854e-12 kg⁻¹·m⁻³·s⁴·A²"
+          }
+        ]
+      }
+    },
+    {
+      "beat": 6,
+      "kind": "resolve",
+      "instance": "cav",
+      "ref": "cav.em.electric_field_magnitude",
+      "property": "em.electric_field_magnitude",
+      "channel": "field_intensity",
+      "value": 30117.575129947178,
+      "unit": "V/m",
+      "dimension": {
+        "kg": "1",
+        "m": "1",
+        "s": "-3",
+        "A": "-1"
+      },
+      "rank": "scalar",
+      "display": "30118 V/m",
+      "narrate": "cav: electric field magnitude resolves to 30118 V/m.",
+      "because": {
+        "kind": "derived",
+        "formula": "field.E_mag_from_vector",
+        "expression": "mag(E)",
+        "substituted": "mag(([30118, 0, 0] V/m))",
+        "law": "definition_magnitude",
+        "law_label": "Magnitude of a vector quantity",
+        "law_statement": "A scalar magnitude property is the Euclidean norm of its vector counterpart. Bookkeeping, not physics, but it must be cited like anything else so no trace step is unexplained.",
+        "assumes": [],
+        "cite": "definitional",
+        "inputs": [
+          {
+            "symbol": "E",
+            "from": "cav.em.electric_field",
+            "value": [
+              30117.575129947178,
+              0.0,
+              0.0
+            ],
+            "unit": "V/m",
+            "dimension": {
+              "kg": "1",
+              "m": "1",
+              "s": "-3",
+              "A": "-1"
+            },
+            "rank": "vector",
+            "display": "[30118, 0, 0] V/m"
+          }
+        ]
+      }
+    },
+    {
+      "beat": 7,
+      "kind": "answer",
+      "ref": "cav.em.electric_field_magnitude",
+      "property": "em.electric_field_magnitude",
+      "value": 30117.575129947178,
+      "unit": "V/m",
+      "dimension": {
+        "kg": "1",
+        "m": "1",
+        "s": "-3",
+        "A": "-1"
+      },
+      "rank": "scalar",
+      "display": "30118 V/m",
+      "narrate": "Answer: 30118 V/m.",
+      "because": {
+        "kind": "summary",
+        "laws": [
+          "definition_magnitude",
+          "superposition_electric"
+        ],
+        "paths_found": 1
+      }
+    }
+  ],
+  "paths": [
+    {
+      "cost": 2,
+      "laws": [
+        "definition_magnitude",
+        "superposition_electric"
+      ],
+      "formulas": [
+        "cavity.E_vec_uniform",
+        "field.E_mag_from_vector"
+      ],
+      "value": {
+        "value": 30117.575129947178,
+        "unit": "V/m",
+        "dimension": {
+          "kg": "1",
+          "m": "1",
+          "s": "-3",
+          "A": "-1"
+        },
+        "rank": "scalar",
+        "display": "30118 V/m"
+      },
+      "assumptions": [
+        "uniform_density",
+        "spherical_cavity",
+        "cavity_entirely_inside",
+        "vacuum"
+      ],
+      "citations": [
+        "OpenStax University Physics 2, 6.4 + superposition (CC BY)",
+        "definitional"
+      ],
+      "steps": [
+        {
+          "ref": "cav.em.charge_density_volume",
+          "property": "em.charge_density_volume",
+          "value": 2e-05,
+          "unit": "C/m³",
+          "dimension": {
+            "m": "-3",
+            "s": "1",
+            "A": "1"
+          },
+          "rank": "scalar",
+          "display": "2.000e-5 C/m³",
+          "because": {
+            "kind": "given",
+            "detail": "supplied by the problem statement"
+          }
+        },
+        {
+          "ref": "cav.geometry.offset",
+          "property": "geometry.offset",
+          "value": [
+            0.04,
+            0.0,
+            0.0
+          ],
+          "unit": "m",
+          "dimension": {
+            "m": "1"
+          },
+          "rank": "vector",
+          "display": "[0.04, 0, 0] m",
+          "because": {
+            "kind": "given",
+            "detail": "supplied by the problem statement"
+          }
+        },
+        {
+          "ref": "cav.em.electric_field",
+          "property": "em.electric_field",
+          "value": [
+            30117.575129947178,
+            0.0,
+            0.0
+          ],
+          "unit": "V/m",
+          "dimension": {
+            "kg": "1",
+            "m": "1",
+            "s": "-3",
+            "A": "-1"
+          },
+          "rank": "vector",
+          "display": "[30118, 0, 0] V/m",
+          "because": {
+            "kind": "derived",
+            "formula": "cavity.E_vec_uniform",
+            "expression": "rho * a / (3 * epsilon_0)",
+            "substituted": "([0.04, 0, 0] m)*(2.000e-5 C/m³)/(3*(8.854e-12 kg⁻¹·m⁻³·s⁴·A²))",
+            "law": "superposition_electric",
+            "law_label": "Superposition of electric fields",
+            "law_statement": "The field of a composite distribution is the vector sum of the fields of its parts. This is what makes the cavity construction legitimate: a sphere with a cavity is a full sphere plus a negative sphere filling the cavity.",
+            "assumes": [
+              "uniform_density",
+              "spherical_cavity",
+              "cavity_entirely_inside",
+              "vacuum"
+            ],
+            "cite": "OpenStax University Physics 2, 6.4 + superposition (CC BY)",
+            "inputs": [
+              {
+                "symbol": "rho",
+                "from": "cav.em.charge_density_volume",
+                "value": 2e-05,
+                "unit": "C/m³",
+                "dimension": {
+                  "m": "-3",
+                  "s": "1",
+                  "A": "1"
+                },
+                "rank": "scalar",
+                "display": "2.000e-5 C/m³"
+              },
+              {
+                "symbol": "a",
+                "from": "cav.geometry.offset",
+                "value": [
+                  0.04,
+                  0.0,
+                  0.0
+                ],
+                "unit": "m",
+                "dimension": {
+                  "m": "1"
+                },
+                "rank": "vector",
+                "display": "[0.04, 0, 0] m"
+              },
+              {
+                "symbol": "epsilon_0",
+                "from": "epsilon_0",
+                "value": 8.8541878128e-12,
+                "unit": "kg⁻¹·m⁻³·s⁴·A²",
+                "dimension": {
+                  "kg": "-1",
+                  "m": "-3",
+                  "s": "4",
+                  "A": "2"
+                },
+                "rank": "scalar",
+                "display": "8.854e-12 kg⁻¹·m⁻³·s⁴·A²"
+              }
+            ]
+          }
+        },
+        {
+          "ref": "cav.em.electric_field_magnitude",
+          "property": "em.electric_field_magnitude",
+          "value": 30117.575129947178,
+          "unit": "V/m",
+          "dimension": {
+            "kg": "1",
+            "m": "1",
+            "s": "-3",
+            "A": "-1"
+          },
+          "rank": "scalar",
+          "display": "30118 V/m",
+          "because": {
+            "kind": "derived",
+            "formula": "field.E_mag_from_vector",
+            "expression": "mag(E)",
+            "substituted": "mag(([30118, 0, 0] V/m))",
+            "law": "definition_magnitude",
+            "law_label": "Magnitude of a vector quantity",
+            "law_statement": "A scalar magnitude property is the Euclidean norm of its vector counterpart. Bookkeeping, not physics, but it must be cited like anything else so no trace step is unexplained.",
+            "assumes": [],
+            "cite": "definitional",
+            "inputs": [
+              {
+                "symbol": "E",
+                "from": "cav.em.electric_field",
+                "value": [
+                  30117.575129947178,
+                  0.0,
+                  0.0
+                ],
+                "unit": "V/m",
+                "dimension": {
+                  "kg": "1",
+                  "m": "1",
+                  "s": "-3",
+                  "A": "-1"
+                },
+                "rank": "vector",
+                "display": "[30118, 0, 0] V/m"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

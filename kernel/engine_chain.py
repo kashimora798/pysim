@@ -81,6 +81,10 @@ class Step:
     def substituted(self) -> str:
         if self.formula is None:
             return format_quantity(self.quantity)
+        # Engine B steps carry an assembled equation, not a substitutable expression:
+        # show the equation form rather than the placeholder zero it is stored with.
+        if self.formula.key.startswith("system."):
+            return self.formula.expr_text
         env = {i.symbol: i.quantity for i in self.inputs}
         return exprs.substituted_text(self.formula.expr, env)
 

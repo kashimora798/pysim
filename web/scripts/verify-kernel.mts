@@ -70,6 +70,10 @@ for (const file of readdirSync(join(PHYSICS, 'specs')).sort()) {
     if (beat.kind !== 'resolve' || beat.because.kind !== 'derived') continue;
 
     const key = beat.because.formula!;
+    // Engine B (system assembly) steps are solved as a simultaneous system, not evaluated
+    // from an AST — there is nothing to replay. They are verified Python-side against the
+    // golden answers and the chain cross-check; count them separately, never silently.
+    if (key.startsWith('system.')) { skipped += 1; continue; }
     const formula = kb.formulas[key];
     if (!formula) {
       failures.push(`${spec.problem.id} beat ${beat.beat}: kb.json has no formula "${key}"`);

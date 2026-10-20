@@ -7,7 +7,7 @@
  * code does is arithmetic, which is why the browser needs ~200 lines instead of a CAS.
  *
  * The one hard rule: this file must agree with the Python evaluator on every value, to the last
- * float. `npm run verify:kernel` replays all 21 precompiled traces through this evaluator and
+ * float. `npm run verify:kernel` replays every precompiled trace (24 specs) through this evaluator and
  * fails if any beat disagrees. Treat a disagreement as a kernel bug, never as a rounding quirk.
  */
 
@@ -322,6 +322,17 @@ export interface SimSpec {
   };
   assumptions: string[];
   citations: string[];
+  /** Engine C sampled motion (RK4), when the problem declares `simulate:`. */
+  trajectory: {
+    instance: string;
+    mode: string;
+    laws: string[];
+    integrator: string;
+    t: number[];
+    position: number[][];
+    velocity: number[][];
+    speed: number[];
+  } | null;
   checks: {
     dimensions: string;
     engines: string[];

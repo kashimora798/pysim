@@ -19,6 +19,7 @@ scene:
         kinematics.speed@initial: "0 m/s"
   relations:
     - {kind: inside, from: e1, to: cap}
+simulate: {instance: e1, duration: 5.0e-9, samples: 120}
 target: {instance: e1, prop: kinematics.speed, state: final}
 expect:
   value: 5.9309e6

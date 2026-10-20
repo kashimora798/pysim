@@ -1,0 +1,36 @@
+id: p201
+title: Wheatstone bridge (Engine B flagship)
+source: "After OpenStax College Physics 2e, 21.3 (CC BY)"
+tags: [circuits, bridge, system, engine-b, flagship]
+text: |
+  A 10 V battery drives a bridge: 10 ohm and 20 ohm in the left arm, 20 ohm and 10 ohm
+  in the right arm, and a 10 ohm bridge wire between the two midpoints. No formula
+  isolates the bridge current -- it takes the assembled Kirchhoff system. What flows
+  through the bridge resistor?
+scene:
+  instances:
+    - {id: bat, kind: battery, set: {electric.emf: "10 V"}}
+    - {id: r1, kind: resistor, set: {electric.resistance: "10 ohm"}}
+    - {id: r2, kind: resistor, set: {electric.resistance: "20 ohm"}}
+    - {id: r3, kind: resistor, set: {electric.resistance: "20 ohm"}}
+    - {id: r4, kind: resistor, set: {electric.resistance: "10 ohm"}}
+    - {id: r5, kind: resistor, set: {electric.resistance: "10 ohm"}}
+    - {id: top, kind: circuit_node}
+    - {id: gnd, kind: circuit_node}
+    - {id: mid_a, kind: circuit_node}
+    - {id: mid_b, kind: circuit_node}
+  relations:
+    - {kind: positive_terminal, from: bat, to: top}
+    - {kind: negative_terminal, from: bat, to: gnd}
+    - {kind: terminal_a, from: r1, to: top}
+    - {kind: terminal_b, from: r1, to: mid_a}
+    - {kind: terminal_a, from: r2, to: mid_a}
+    - {kind: terminal_b, from: r2, to: gnd}
+    - {kind: terminal_a, from: r3, to: top}
+    - {kind: terminal_b, from: r3, to: mid_b}
+    - {kind: terminal_a, from: r4, to: mid_b}
+    - {kind: terminal_b, from: r4, to: gnd}
+    - {kind: terminal_a, from: r5, to: mid_a}
+    - {kind: terminal_b, from: r5, to: mid_b}
+target: {instance: r5, prop: electric.current}
+expect: {value: 0.142857, unit: A, tol: 0.001, note: "VA=5.714 V, VB=4.286 V by KCL at both midpoints; bridge current (VA-VB)/10 = 1/7 A. Engine B only."}

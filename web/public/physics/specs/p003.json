@@ -222,6 +222,7 @@
     "definitional",
     "OpenStax College Physics 2e, 4.3 (CC BY)"
   ],
+  "trajectory": null,
   "checks": {
     "dimensions": "pass",
     "engines": [

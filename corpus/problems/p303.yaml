@@ -1,0 +1,34 @@
+id: p303
+title: Electron deflected between parallel plates (JEE Main type)
+source: "Classical charged-particle deflection problem type (JEE Main / HC Verma Concepts of Physics Vol. 2 style); statement rewritten and values chosen for this corpus, not reproduced."
+tags: [electrostatics, projectile, plates, jee-main, book, kinematics]
+text: |
+  An electron enters the region between two parallel plates (10 V across a 2.0 cm gap)
+  moving horizontally at 4.0e6 m/s, midway between the plates. The plates are 4.0 cm
+  long, so the electron spends 1.0e-8 s in the field. How far is it displaced, in total,
+  by the time it leaves the plates -- and what parabolic path does it trace?
+scene:
+  instances:
+    - id: cap
+      kind: parallel_plate_capacitor
+      set:
+        em.potential_difference: "10 V"
+        geometry.separation_plates: "2.0 cm"
+    - id: e1
+      kind: electron
+      set:
+        kinematics.velocity: "[4.0e6, 0, 0] m/s"
+        kinematics.time: "1.0e-8 s"
+  relations:
+    - {kind: inside, from: e1, to: cap}
+simulate: {instance: e1, duration: 1.0e-8, samples: 120}
+target: {instance: e1, prop: kinematics.displacement}
+expect:
+  value: 0.0402410
+  unit: m
+  tol: 0.005
+  note: >
+    Horizontal: 4.0 cm at constant speed. Vertical: E = 500 V/m gives
+    a = eE/m = 8.794e13 m/s^2, so the deflection is (1/2)at^2 = 4.40 mm. Total displacement
+    sqrt(0.040^2 + 0.00440^2) = 0.04024 m. Engine C draws the parabola; the transverse
+    deflection at exit is asserted against (1/2)at^2 in tests/test_jee_corpus.py.

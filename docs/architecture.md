@@ -18,7 +18,9 @@ problem text ──(LLM, boundary)──▶ Scene ──▶ [ VALIDATE ] ──�
                                   (dumb)      (KaTeX)        (agents)
 ```
 
-Engine A is built. B and C are not yet — see *What is missing* below.
+Engine A is built. Engine B (nodal assembly, `kernel/engine_system.py`) and Engine C (RK4 time
+evolution, `kernel/engine_ode.py`) now exist as v1s — single-source resistive networks and
+uniform-field/cyclotron dynamics — cross-checked against Engine A wherever both can reach.
 
 ## The one rule
 
@@ -216,16 +218,22 @@ cross product.
 
 In rough order of value:
 
-1. **Engine B** — acausal assembly: components contribute constitutive equations, topology
-   contributes connection equations, solve the system. Unlocks circuits and anything
-   simultaneous. Should cross-check against Engine A on every problem both can reach.
-2. **Engine C** — ODE/DAE integration for genuine time evolution, so a trajectory is sampled
-   rather than evaluated at one instant.
-3. **The renderer** — a three.js player for SimSpec. The contract is ready; nothing consumes it.
-4. **The LLM boundary** — prose → `Scene`, with the structured scene shown for editing.
-5. **MCP server** — the `§6.2` tool surface over the kernel.
-6. **More corpus.** Eleven problems is a proof, not a product. The moat is a large corpus of
-   machine-checked golden traces, and growing it is the work that compounds.
+1. **Engine B, generalised** — v1 (single-source resistive nodal assembly) is built and solves
+   the Wheatstone bridge (p201); supernodes/multi-source, reactive branches and a TypeScript
+   port for Free bench remain.
+2. **Engine C, generalised** — v1 (constant-acceleration + cyclotron RK4, sampled into SimSpec
+   `trajectory` and animated in XR) is built; position-dependent fields and RC transients remain.
+3. **The renderer** — built: the IWSDK bench replays SimSpecs (Auto/Guided) and solves Free
+   bench live. See `docs/xr-experience.md`. Modelled GLB parts are still outstanding.
+4. **The LLM boundary** — built in TypeScript (`web/src/physics/extract.ts`); the editable
+   scene-editor UI and a deployed proxy remain.
+5. **MCP server** — the `§6.2` tool surface over the kernel. Still outstanding; now unblocked,
+   since Engines B/C make the tool answers materially stronger.
+6. **More corpus.** 37 problems and growing: the p3xx set adds JEE-level and book-level
+   problem types (cavity electrostatics, plate deflection, ion-orbit ratios, unbalanced
+   Kirchhoff networks — see `docs/jee-corpus.md`), each verified analytically, by audit,
+   and by relational tests. Still a proof, not a product: the moat is a large corpus of
+   machine-checked golden traces.
 
 A note on #3: do not let a game physics engine (Rapier, cannon-es) integrate the motion. Those
 are plausible, not lawful. The kernel computes the trajectory; the renderer only applies

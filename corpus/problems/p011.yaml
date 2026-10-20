@@ -23,6 +23,7 @@ scene:
         kinematics.distance: "2.0 cm"
   relations:
     - {kind: inside_cavity_of, from: p, to: cav}
+simulate: {instance: p, duration: 0.08, samples: 120}
 target: {instance: p, prop: kinematics.speed, state: final}
 expect:
   value: 0.54880
