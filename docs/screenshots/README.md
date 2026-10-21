@@ -1,5 +1,17 @@
 # Screenshots — the engine running, end to end
 
+## After the 3D overhaul (Oct 21, 2026) — files 10–15
+
+Same flows, re-shot after Phases 0–1 of the overhaul plan:
+
+- `11/12` — Guided p101 now stages the **real KiCad CAD models** (black Keystone battery holder, tan axial resistor with leads) on a wooden bench with a green anti-static mat, lit by a key/fill/rim rig with shadows; the in-glasses guide panel sits to the right, trust card to the left, and panel text is clean (no emoji tofu boxes).
+- `13` — Auto p101 reaches 3 A with the same real parts; `circuit_loop` and `environment` are floating annotations, not props.
+- `14` — Auto p002: bench-sized field arrows around the glowing charge sphere and probe.
+- `15` — Free bench in the lab.
+- The lab backdrop is the toolkit environment (IBL "room" + a project-generated CC0 lab dome, `web/public/env/lab.jpg`) — on a Quest in passthrough the toolkit hides the dome and your real room shows instead.
+
+What changed to get here: the CAD converter keeps materials + normals (check-models now enforces both), one part-visual factory (`ff/partvisual.ts`) serves palette and lessons, placeholders are gone, and the bench got lights + environment. Details in git history (Oct 21 commits).
+
 Captured 2026-10-20 from the real app (`vite` dev server, headless Chromium with
 SwiftShader WebGL2 — the same code path that ships to the Quest browser; the
 desktop companion HUD mirrors the exact same state). Nothing here is staged:
