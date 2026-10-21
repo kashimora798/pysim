@@ -51,6 +51,18 @@ for (const [kind, entry] of Object.entries(manifest.models)) {
   if (bytes.length > SIZE_BUDGET) fail(`${kind}: ${bytes.length} bytes over budget`);
   if (bytes.toString('ascii', 0, 4) !== 'glTF') fail(`${kind}: not a GLB (bad magic)`);
   if (bytes.readUInt32LE(8) !== bytes.length) fail(`${kind}: GLB length header mismatch`);
+  // The converter must never again merge the scene into a bare shell: every GLB
+  // needs at least one real material (colours) and a NORMAL attribute on every
+  // primitive (smooth shading). A white, faceted model fails here, loudly.
+  const jsonLen = bytes.readUInt32LE(12);
+  const gltf = JSON.parse(bytes.toString('utf8', 20, 20 + jsonLen)) as {
+    materials?: unknown[];
+    meshes?: Array<{ primitives: Array<{ attributes: Record<string, number> }> }>;
+  };
+  if (!gltf.materials || gltf.materials.length === 0) fail(`${kind}: GLB has no materials (converter merged the scene?)`);
+  const prims = (gltf.meshes ?? []).flatMap((m) => m.primitives);
+  if (prims.length === 0) fail(`${kind}: GLB has no mesh primitives`);
+  if (prims.some((p) => !('NORMAL' in p.attributes))) fail(`${kind}: a primitive lacks NORMAL (faceted shell)`);
   const wired = entry.pads.filter((p) => p.terminal !== null);
   if (wired.length < 2) fail(`${kind}: fewer than two mapped footprint terminals`);
   for (const pad of entry.pads) {

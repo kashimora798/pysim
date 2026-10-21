@@ -16,11 +16,11 @@
       "attribution": "3D model from the KiCad official libraries (kicad-packages3D), CC BY-SA 4.0 with the KiCad libraries exception; converted from STEP for web rendering.",
       "size_mm": [
         10.76,
-        2.5,
-        5.49
+        5.49,
+        2.5
       ],
       "triangles": 2076,
-      "bytes": 43648,
+      "bytes": 63536,
       "pads": [
         {
           "pad": "1",
@@ -49,11 +49,11 @@
       "attribution": "3D model from the KiCad official libraries (kicad-packages3D), CC BY-SA 4.0 with the KiCad libraries exception; converted from STEP for web rendering.",
       "size_mm": [
         7.98,
-        7.98,
-        10.0
+        10.0,
+        7.98
       ],
       "triangles": 2468,
-      "bytes": 54640,
+      "bytes": 82636,
       "pads": [
         {
           "pad": "1",
@@ -82,11 +82,11 @@
       "attribution": "3D model from the KiCad official libraries (kicad-packages3D), CC BY-SA 4.0 with the KiCad libraries exception; converted from STEP for web rendering.",
       "size_mm": [
         5.62,
-        5.79,
-        13.6
+        13.6,
+        5.79
       ],
       "triangles": 509,
-      "bytes": 12196,
+      "bytes": 19240,
       "pads": [
         {
           "pad": "1",
@@ -123,11 +123,11 @@
       "attribution": "3D model from the KiCad official libraries (kicad-packages3D), CC BY-SA 4.0 with the KiCad libraries exception; converted from STEP for web rendering.",
       "size_mm": [
         59.51,
-        32.92,
-        20.0
+        20.0,
+        32.92
       ],
       "triangles": 3740,
-      "bytes": 88600,
+      "bytes": 133292,
       "pads": [
         {
           "pad": "1",

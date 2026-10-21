@@ -63,24 +63,33 @@ def convert(step: Path, kind: str) -> dict:
     cascadio.step_to_glb(str(step), str(raw), tol_linear=0.05, tol_angular=0.5)
     scene = trimesh.load(raw)
     raw.unlink()
-    geometry = scene.to_geometry()
-    tris = int(len(geometry.faces))
+    if not isinstance(scene, trimesh.Scene):
+        scene = trimesh.Scene(scene)
 
+    # Keep the scene graph. Merging with scene.to_geometry() (the old code) threw
+    # away every material colour and the smooth normals — the shipped GLBs were
+    # white, faceted shells. Materials and normals survive only if the scene is
+    # transformed and exported as a scene.
+    #
     # cascadio emits metres with the STEP axes preserved (KiCad models are Z-up).
-    size_mm = [round(float(s) * 1000, 2) for s in geometry.extents]
     # Rotate -90 deg about X: (x, y, z) -> (x, z, -y), so STEP's Z becomes three.js Y.
     # The returned transform (rotation, centre, scale) is applied to footprint pads
     # too -- one transform chain, so anchors can never drift from the mesh.
     rot = trimesh.transformations.rotation_matrix(-np.pi / 2, [1, 0, 0])
-    geometry.apply_transform(rot)
-    bounds = geometry.bounds
+    scene.apply_transform(rot)
+    bounds = scene.bounds
+    size_mm = [round(float(s) * 1000, 2) for s in (bounds[1] - bounds[0])]
     center = (bounds[0] + bounds[1]) / 2.0
     scale = 1.0 / float(max(bounds[1] - bounds[0]))
-    geometry.apply_translation([-center[0], -bounds[0][1], -center[2]])
-    geometry.apply_scale(scale)
+    translate = trimesh.transformations.translation_matrix(
+        [-center[0], -bounds[0][1], -center[2]]
+    )
+    scale_m = trimesh.transformations.scale_matrix(scale)
+    scene.apply_transform(scale_m @ translate)
 
     out = OUT_DIR / f"{kind}.glb"
-    trimesh.Scene(geometry).export(out)
+    scene.export(out)
+    tris = int(sum(len(g.faces) for g in scene.geometry.values()))
     return {"size_mm": size_mm, "triangles": tris, "bytes": out.stat().st_size,
             "_pad_transform": {"rot": rot, "center": center, "scale": scale}}
 
