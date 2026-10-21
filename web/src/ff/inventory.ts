@@ -55,7 +55,7 @@ import {
 
 import { loadPhysics, type ComponentDef, type KnowledgeBase } from '../physics/kernel.js';
 import { Bench as BenchComponent, Part } from './components.js';
-import { CadModels } from './models.js';
+import { createPartVisual } from './partvisual.js';
 
 // ------------------------------------------------------------------ seated ergonomics
 
@@ -192,7 +192,6 @@ export class InventorySystem extends createSystem({
 }) {
   // ---------------------------------------------------------------- knowledge base
 
-  private cad = new CadModels();
   private kb?: KnowledgeBase;
   private bench?: Entity;
   private built = false;
@@ -415,22 +414,12 @@ export class InventorySystem extends createSystem({
 
     const group = new Group();
     group.name = `Part:${kind}`;
-    group.add(this.buildProxy(this.shapeFor(def), this.accentFor(kind).clone(), true));
-    group.scale.setScalar(PART_SIZE);
-
-    // Progressive enhancement: if a real CAD model exists for this kind (imported
-    // from the KiCad libraries by tools/import_cad.py), swap the proxy for it when
-    // it arrives. The part is fully usable as a proxy in the meantime, and stays a
-    // proxy forever if the model cannot load. See ff/models.ts.
-    void this.cad.sceneFor(kind).then((model) => {
-      if (model === null || this.stopped || group.parent === null) {
-        return;
-      }
-      for (const child of [...group.children]) {
-        group.remove(child);
-      }
-      group.add(model);
-    });
+    // One part-visual factory with the lesson staging in experience.ts, so a part
+    // looks identical however it reached the bench: the real CAD model when one
+    // exists (imported from the KiCad libraries by tools/import_cad.py), a lit
+    // fallback otherwise, swapped in progressively when the model arrives. The
+    // visual holder carries the part size; the entity group stays unscaled.
+    group.add(createPartVisual(kind, undefined, PART_SIZE));
 
     const entity = this.world.createTransformEntity(group, this.bench);
     entity.addComponent(Part, {

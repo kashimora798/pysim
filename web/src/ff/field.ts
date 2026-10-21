@@ -102,7 +102,7 @@ export function fieldAt(kb: KnowledgeBase, sources: FieldSource[], point: Vec3):
 export function arrowLength(magnitude: number): number {
   if (!(magnitude > 0)) return 0;
   const t = Math.min(1, Math.max(0, (Math.log10(magnitude) - 2) / 6)); // 10^2 .. 10^8 V/m
-  return 0.02 + t * 0.11;
+  return 0.016 + t * 0.07; // log-scaled but bench-sized: arrows inform, they must not hide the scene
 }
 
 /** Charges that can act as field sources, with their scene charge in coulombs. */

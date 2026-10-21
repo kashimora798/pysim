@@ -117,16 +117,28 @@ export class BenchSystem extends createSystem({
     const surface = new Mesh(
       new BoxGeometry(0.9, 0.012, 0.6),
       new MeshStandardMaterial({
-        color: 0x0f1b1a,
-        roughness: 0.85,
-        metalness: 0.05,
+        color: 0x8a6642, // wooden bench top (procedural colour; no texture fetch)
+        roughness: 0.82,
+        metalness: 0.02,
         transparent: true,
-        opacity: 0.55,
+        opacity: 0.94,
       }),
     );
     surface.name = 'BenchSurface';
     surface.position.y = -0.006; // sit the slab just under the working plane
+    surface.receiveShadow = true;
     group.add(surface);
+
+    // The green anti-static mat every electronics bench has: parts sit on it,
+    // and it catches the key light's shadows.
+    const mat = new Mesh(
+      new BoxGeometry(0.78, 0.002, 0.48),
+      new MeshStandardMaterial({ color: 0x14532d, roughness: 0.95, metalness: 0 }),
+    );
+    mat.name = 'BenchMat';
+    mat.position.y = 0.001;
+    mat.receiveShadow = true;
+    group.add(mat);
 
     group.add(this.buildGrid(0.9, 0.6, 0.05));
     group.add(this.buildOriginMarker());

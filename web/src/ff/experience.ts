@@ -18,6 +18,10 @@ import {
   BoxGeometry,
   BufferGeometry,
   CanvasTexture,
+  DirectionalLight,
+  DomeTexture,
+  HemisphereLight,
+  IBLTexture,
   Float32BufferAttribute,
   Line,
   ConeGeometry,
@@ -55,20 +59,26 @@ import { readPhoto } from './ocr.js';
 import { highlightPalette } from './inventory.js';
 import { clearHighlights, setHighlight } from './terminals.js';
 import { arrowLength, fieldAt, type FieldSource } from './field.js';
+import { createPartVisual, ANNOTATION_KINDS } from './partvisual.js';
 
 type Mode = 'auto' | 'guided' | 'free';
 
+/**
+ * 3D panel text is rasterised onto canvas textures, and the panel font has no
+ * emoji: pictographs arrive as empty boxes (visible in every old screenshot).
+ * Strip them for canvas drawing only — the DOM HUD keeps its emoji, browsers
+ * render those fine. (The in-headset uikit panels have @pmndrs/uikit-lucide;
+ * these canvas panels get clean text instead of tofu.)
+ */
+function panelSafe(text: string): string {
+  return text
+    .replace(/[\u2600-\u27BF\u{1F000}-\u{1FAFF}\uFE0F]/gu, (ch) => (ch === '✓' ? ch : ''))
+    .replace(/\s{2,}/g, ' ')
+    .trim();
+}
+
 const TEAL = 0x2dd4bf;
 const AMBER = 0xf5a524;
-const KIND_COLORS: Record<string, number> = {
-  battery: 0xf5a524, resistor: 0x38bdf8, lamp: 0xfde68a, capacitor: 0x2dd4bf,
-  point_charge: 0xfb7185, charged_particle: 0xa78bfa, electron: 0x60a5fa,
-  field_probe: 0xe2e8f0, parallel_plate_capacitor: 0x94a3b8,
-  uniform_charged_sphere: 0xf472b6, conducting_shell: 0x9ca3af,
-  infinite_charged_plane: 0x64748b, spherical_cavity_in_charged_sphere: 0xec4899,
-  uniform_magnetic_field_region: 0x818cf8, circuit_loop: 0x34d399,
-  series_pair: 0x38bdf8, parallel_pair: 0x38bdf8,
-};
 const RESISTANCE_STEPS = [1, 2, 3, 4, 6, 10, 20, 30, 47, 100];
 const EMF_STEPS = [1.5, 3, 6, 9, 12, 24];
 
@@ -115,8 +125,8 @@ export class ExperienceSystem extends createSystem({
     items: Array<{ label: string; run: () => void | Promise<void> }>;
   } | null = null;
 
-  private readonly proxies = new Map<string, Mesh>();
-  private readonly pulses = new Map<Mesh, number>();
+  private readonly proxies = new Map<string, Group>();
+  private readonly pulses = new Map<Group, number>();
   private lines?: Group;
   private arrows?: InstancedMesh;
   private sources: FieldSource[] = [];
@@ -221,8 +231,10 @@ export class ExperienceSystem extends createSystem({
       new MeshBasicMaterial({ map: this.trustTexture }),
     );
     card.name = 'TrustCard';
-    card.position.set(0, 0.30, -0.27);
-    card.rotation.x = -0.42;
+    // Composition: panels flank the bench, angled toward the reader, instead of
+    // stacked over the parts. The bench centre stays clear for hands and models.
+    card.position.set(-0.58, 0.34, -0.30);
+    card.rotation.set(-0.35, 0.38, 0);
     root.add(card);
 
     // Guide panel: the step instructor that floats in front of the learner in the
@@ -232,12 +244,12 @@ export class ExperienceSystem extends createSystem({
     this.guideCanvas.width = 1024; this.guideCanvas.height = 512;
     this.guideTexture = new CanvasTexture(this.guideCanvas);
     const guide = new Mesh(
-      new BoxGeometry(0.68, 0.34, 0.004),
+      new BoxGeometry(0.60, 0.30, 0.004),
       new MeshBasicMaterial({ map: this.guideTexture }),
     );
     guide.name = 'GuidePanel';
-    guide.position.set(0, 0.62, -0.24);
-    guide.rotation.x = -0.30;
+    guide.position.set(0.50, 0.44, -0.30);
+    guide.rotation.set(-0.28, -0.32, 0);
     root.add(guide);
     this.drawGuide('FieldForge Guide', ['Pick a problem, then build it with your hands.', 'Palm up: palette · pinch: grab & wire · open hand: drop'], 'idle');
     this.drawTrust('FieldForge', ['Your verified physics bench is ready.', 'Pick a problem — or grab parts and wire your own.']);
@@ -254,6 +266,9 @@ export class ExperienceSystem extends createSystem({
     this.makeButton('next', new Vector3(0.33, 0.018, 0.22), TEAL, 'NEXT ▸');
     this.makeButton('play', new Vector3(-0.33, 0.018, 0.22), AMBER, '▶ ❚❚');
     this.makeButton('capture', new Vector3(0, 0.018, 0.24), 0xf97316, '📷 ASK');
+
+    this.addLightingAndLab(root);
+    this.addDesktopTurntable();
 
     // If a lesson started before the bench arrived, replay its beats onto the new stage.
     if (this.spec && this.beatIndex >= 0) {
@@ -277,6 +292,79 @@ export class ExperienceSystem extends createSystem({
     this.world.createTransformEntity(arrow, { persistent: true });
   }
 
+  /**
+   * The lab: lights first (nothing shaded without them — the old bench had no
+   * lights at all, so even standard materials read as flat cut-outs), then the
+   * toolkit environment. DomeTexture shows our lab backdrop on desktop and in
+   * non-passthrough headsets; the toolkit hides authored backgrounds in AR
+   * passthrough automatically while keeping the IBL, so parts stay lit by a
+   * plausible room in both. IBL uses the built-in "room" environment — no
+   * external HDRI download at runtime.
+   */
+  private addLightingAndLab(root: Group): void {
+    const key = new DirectionalLight(0xfff1dd, 2.6);
+    key.position.set(0.45, 0.85, 0.35);
+    key.castShadow = true;
+    key.shadow.mapSize.set(1024, 1024);
+    key.shadow.camera.left = -0.6;
+    key.shadow.camera.right = 0.6;
+    key.shadow.camera.top = 0.6;
+    key.shadow.camera.bottom = -0.6;
+    key.shadow.camera.far = 3;
+    key.shadow.bias = -0.0004;
+    root.add(key);
+    root.add(key.target);
+
+    const fill = new HemisphereLight(0xd8ecff, 0x24382c, 0.55);
+    root.add(fill);
+    const rim = new DirectionalLight(0x7dd3c8, 0.8);
+    rim.position.set(-0.4, 0.5, -0.6);
+    root.add(rim);
+
+    try {
+      this.world.renderer.shadowMap.enabled = true;
+    } catch {
+      // No renderer handle in some test worlds: lights still shade, just no shadows.
+    }
+
+    const level = this.world.activeLevel?.value as Entity | undefined;
+    if (level) {
+      const b = (import.meta as { env?: { BASE_URL?: string } }).env?.BASE_URL ?? '/';
+      const base = b.endsWith('/') ? b : `${b}/`;
+      level.addComponent(IBLTexture, { src: 'room', intensity: 1.0 });
+      level.addComponent(DomeTexture, { src: `${base}env/lab.jpg`, intensity: 0.9 });
+    }
+  }
+
+  /**
+   * Desktop orbit: right-drag (or Alt+drag) turntables the bench when it sits on
+   * its guessed fallback spot. In a headset the bench is anchored to a real desk
+   * and this does nothing — you walk around it instead. Left-drag stays free for
+   * grabbing parts.
+   */
+  private addDesktopTurntable(): void {
+    const el = this.world.renderer?.domElement as HTMLCanvasElement | undefined;
+    if (!el) return;
+    let dragging = false;
+    let lastX = 0;
+    el.addEventListener('contextmenu', (e) => e.preventDefault());
+    el.addEventListener('pointerdown', (e) => {
+      if (e.button === 2 || e.altKey) {
+        dragging = true;
+        lastX = e.clientX;
+      }
+    });
+    window.addEventListener('pointerup', () => {
+      dragging = false;
+    });
+    window.addEventListener('pointermove', (e) => {
+      if (!dragging || !this.bench?.object3D) return;
+      if (this.bench.getValue(BenchComp, 'source') !== 'fallback') return;
+      this.bench.object3D.rotation.y += (e.clientX - lastX) * 0.005;
+      lastX = e.clientX;
+    });
+  }
+
   private makeButton(action: string, pos: Vector3, color: number, _label: string): void {
     if (!this.root || !this.bench) return;
     const mesh = new Mesh(
@@ -290,7 +378,7 @@ export class ExperienceSystem extends createSystem({
     entity.addComponent(ExperienceButton, { action });
   }
 
-  private proxyFor(instance: string): Mesh | undefined {
+  private proxyFor(instance: string): Group | undefined {
     return this.proxies.get(instance);
   }
 
@@ -298,34 +386,26 @@ export class ExperienceSystem extends createSystem({
     return new Vector3(-0.33 + (index % 4) * 0.22, 0.035, -0.16 + Math.floor(index / 4) * 0.17);
   }
 
-  private spawnProxy(instance: string, kind: string): Mesh {
+  /**
+   * Stage one part of the lesson. Every visual comes from the shared factory in
+   * partvisual.ts — the same door the palette uses — so a staged resistor is the
+   * real KiCad CAD model (swapped in when it loads), not a private placeholder.
+   * Abstract kinds (circuit_loop, environment) arrive as floating annotations.
+   */
+  private spawnProxy(instance: string, kind: string): Group {
     const existing = this.proxies.get(instance);
-    if (existing || !this.root) return existing as Mesh;
+    if (existing || !this.root) return existing as Group;
     const pos = this.layout.get(instance) ?? this.stagePosition(this.proxies.size);
-    const color = KIND_COLORS[kind] ?? 0x94a3b8;
-    let geo: BoxGeometry | SphereGeometry | CylinderGeometry | TorusGeometry;
-    if (kind.includes('sphere') || kind.includes('particle') || kind === 'electron' || kind === 'point_charge' || kind === 'field_probe' || kind === 'lamp')
-      geo = new SphereGeometry(kind === 'electron' ? 0.014 : 0.026, 20, 14);
-    else if (kind === 'circuit_loop') geo = new TorusGeometry(0.035, 0.006, 8, 28);
-    else if (kind === 'resistor' || kind === 'capacitor') geo = new CylinderGeometry(0.013, 0.013, 0.055, 12);
-    else geo = new BoxGeometry(0.055, 0.035, 0.04);
-    const mat = new MeshStandardMaterial({
-      color, roughness: 0.35, metalness: 0.15,
-      emissive: color, emissiveIntensity: kind === 'lamp' ? 0.7 : 0.12,
-      transparent: kind.includes('sphere') || kind.includes('shell'), opacity: kind.includes('sphere') ? 0.85 : 1,
-    });
-    const mesh = new Mesh(geo, mat);
-    if (geo instanceof CylinderGeometry) mesh.rotation.z = Math.PI / 2;
-    if (geo instanceof TorusGeometry) mesh.rotation.x = Math.PI / 2;
-    mesh.position.copy(pos);
-    mesh.userData.baseScale = 1;
-    this.root.add(mesh);
-    this.proxies.set(instance, mesh);
-    this.addLabel(mesh, `${instance} · ${this.kb?.components[kind]?.label ?? kind}`);
-    return mesh;
+    const label = `${instance} · ${this.kb?.components[kind]?.label ?? kind}`;
+    const holder = createPartVisual(kind, label);
+    holder.position.copy(pos);
+    this.root.add(holder);
+    this.proxies.set(instance, holder);
+    if (!ANNOTATION_KINDS.has(kind)) this.addLabel(holder, label);
+    return holder;
   }
 
-  private addLabel(mesh: Mesh, text: string): void {
+  private addLabel(mesh: Group, text: string): void {
     const canvas = document.createElement('canvas');
     canvas.width = 512; canvas.height = 96;
     const ctx = canvas.getContext('2d');
@@ -335,13 +415,16 @@ export class ExperienceSystem extends createSystem({
     ctx.font = '600 34px system-ui, sans-serif';
     ctx.fillStyle = '#d9fbf3';
     ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    ctx.fillText(text.slice(0, 34), 256, 48);
+    ctx.fillText(panelSafe(text).slice(0, 34), 256, 48);
     const tex = new CanvasTexture(canvas);
     const label = new Mesh(
-      new BoxGeometry(0.11, 0.02, 0.001),
+      new BoxGeometry(2.0, 0.36, 0.02),
       new MeshBasicMaterial({ map: tex, transparent: true }),
     );
-    label.position.set(0, 0.045, 0);
+    // The holder is scaled to centimetres; the label lives in its unit space and
+    // is named so the CAD swap in partvisual.ts keeps it.
+    label.name = 'PartLabel';
+    label.position.set(0, 1.18, 0);
     mesh.add(label);
   }
 
@@ -414,7 +497,7 @@ export class ExperienceSystem extends createSystem({
   }
 
   private wrap(ctx: CanvasRenderingContext2D, text: string, x: number, y: number, maxW: number, lh: number, maxLines: number): void {
-    const words = text.split(/\s+/); let line = ''; let lines = 0;
+    const words = panelSafe(text).split(/\s+/); let line = ''; let lines = 0;
     for (const word of words) {
       const cand = line ? `${line} ${word}` : word;
       if (ctx.measureText(cand).width > maxW && line) {
@@ -490,7 +573,13 @@ export class ExperienceSystem extends createSystem({
         <button data-k="ai-go">Extract &amp; validate scene</button>
         <pre class="trust" data-k="ai-out">The bench works fully with AI unplugged. The model may only fill a schema; the kernel validator accepts or rejects it.</pre>
       </details>
-      <div class="dim">Desktop: mouse + buttons work. Quest: hands only — palm-up palette, pinch to wire, press the bench NEXT button, reach into the field.</div>`;
+      <details><summary>📜 Credits & licences</summary>
+        <div class="dim" style="white-space:pre-wrap">Real part models: KiCad official libraries (kicad-packages3D + footprints) — CC BY-SA 4.0 with the KiCad libraries exception; converted from STEP offline by tools/import_cad.py, per-model data in gltf/models/manifest.json.
+Lab backdrop (env/lab.jpg) and bench colours: generated for this project, CC0.
+OCR: tesseract.js + tesseract.js-core (Apache-2.0), English data from tessdata_fast (Apache-2.0) — all local, nothing uploaded.
+Physics: the FieldForge kernel (this repo). Numbers are kernel-verified; no AI in the solver.</div>
+      </details>
+      <div class="dim">Desktop: mouse + buttons work (right-drag or Alt+drag orbits the bench). Quest: hands only — palm-up palette, pinch to wire, press the bench NEXT button, reach into the field.</div>`;
     document.body.appendChild(hud);
     hud.querySelectorAll<HTMLElement>('[data-k]').forEach((el) => { this.hud[el.dataset.k!] = el; });
     this.hud.xr!.onclick = () => { this.ensureAudio(); void (this.world as { launchXR?: () => void }).launchXR?.(); };
@@ -577,9 +666,17 @@ export class ExperienceSystem extends createSystem({
       this.resetStage();
       this.setTask('🧪 Free bench: grab a battery and a resistor from the palm palette, pinch-wire a closed loop. The kernel solves it live — no problem file needed.');
       this.drawTrust('Free bench', ['Wire a loop. The wire graph becomes a reduction tree,', 'the kernel resolves it, current flows in the wires.']);
+      this.drawGuide('Free bench', ['No problem file: wire a loop and the kernel solves it live.', 'Palm up: palette · pinch: grab & wire · open hand: drop'], 'idle');
     } else if (this.spec) {
       this.resetStage();
-      if (mode === 'auto') this.playing = true;
+      if (mode === 'auto') {
+        this.playing = true;
+        // The panel must not keep showing the last guided step in Auto mode.
+        this.drawGuide(this.spec.problem.title, [
+          'Auto replay: watch the bench assemble itself.',
+          `Target: ${this.spec.target} — verified answer ${this.spec.answer.display}.`,
+        ], 'idle');
+      }
       else this.startGuide(); // arms the step list + panel; without this Next "completes" an empty guide
     }
   }
@@ -918,7 +1015,7 @@ export class ExperienceSystem extends createSystem({
     ctx.strokeStyle = state === 'done' ? '#34d399' : '#2dd4bf'; ctx.lineWidth = 6;
     ctx.strokeRect(6, 6, W - 12, H - 12);
     ctx.fillStyle = '#5eead4'; ctx.font = '700 34px system-ui, sans-serif'; ctx.textAlign = 'left';
-    ctx.fillText('🖐 FIELDFORGE GUIDE', 36, 58);
+    ctx.fillText('FIELDFORGE GUIDE', 36, 58);
     // step pips
     if (this.guideSteps.length > 0) {
       this.guideSteps.forEach((s, i) => {
@@ -939,7 +1036,7 @@ export class ExperienceSystem extends createSystem({
 
   /** Word-wrap returning the y below the last line drawn. */
   private wrapFrom(ctx: CanvasRenderingContext2D, text: string, x: number, y: number, maxW: number, lh: number, maxLines: number): number {
-    const words = text.split(/\s+/); let line = ''; let drawn = 0;
+    const words = panelSafe(text).split(/\s+/); let line = ''; let drawn = 0;
     for (const word of words) {
       const cand = line ? `${line} ${word}` : word;
       if (ctx.measureText(cand).width > maxW && line) {
