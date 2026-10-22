@@ -18,6 +18,8 @@ import {
   BoxGeometry,
   BufferGeometry,
   CanvasTexture,
+  PlaneGeometry,
+  SRGBColorSpace,
   Float32BufferAttribute,
   Line,
   ConeGeometry,
@@ -52,9 +54,13 @@ import { buildCircuitScene, benchDefaults, type BenchPart, type BenchWire } from
 import { buildGuideSteps, wireMatchesStep, wirePairKey, type GuideStep } from './guide.js';
 import { matchCorpus, splitQuestions, type CapturedQuestion, type CorpusCandidate } from './capture.js';
 import { readPhoto } from './ocr.js';
-import { highlightPalette } from './inventory.js';
+import { highlightPalette, setPaletteVisible } from './inventory.js';
 import { clearHighlights, setHighlight } from './terminals.js';
 import { arrowLength, fieldAt, type FieldSource } from './field.js';
+import { canvasTexture, castShadows } from './lab.js';
+import { CadModels } from './models.js';
+import { drawGuideCard, drawTrustCard } from './cards.js';
+import { ABSTRACT_KINDS, CAD_SIZE, buildPartVisual, faceCamera, makeLabel, makeLoopHint, makeWire } from './visuals.js';
 
 type Mode = 'auto' | 'guided' | 'free';
 
@@ -86,6 +92,12 @@ export class ExperienceSystem extends createSystem({
   private rootEntity?: Entity;
 
   private spec: SimSpec | null = null;
+  private cad = new CadModels();
+  private labels: Mesh[] = [];
+  /** Relations seen so far in this lesson, so leads can follow the circuit's real shape. */
+  private loopMembers: string[] = [];
+  private pairMembers = new Map<string, string[]>();
+  private drawnLeads = new Set<string>();
   private mode: Mode = 'auto';
   private beatIndex = -1;
   private playing = false;
@@ -189,6 +201,7 @@ export class ExperienceSystem extends createSystem({
       else mesh.scale.setScalar((mesh.userData.baseScale ?? 1) * (1 + 0.18 * Math.sin(now / 60)));
     }
     this.animateTrajectory(now);
+    for (const label of this.labels) faceCamera(label, this.camera);
     if (this.playing && this.mode === 'auto' && now >= this.nextAt) this.advance(false);
     if (this.resumeAt && now >= this.resumeAt) { this.resumeAt = 0; this.advance(false); }
     if (this.waitingTask) this.checkTask();
@@ -212,48 +225,55 @@ export class ExperienceSystem extends createSystem({
     this.lines = new Group();
     root.add(this.lines);
 
-    // Trust card: a canvas plane at the back of the bench, tilted toward the seated reader.
+    // Trust card: an instrument readout at the back of the bench, tilted toward the seated reader.
     this.trustCanvas = document.createElement('canvas');
     this.trustCanvas.width = 1024; this.trustCanvas.height = 640;
     this.trustTexture = new CanvasTexture(this.trustCanvas);
+    this.trustTexture.colorSpace = SRGBColorSpace;
+    this.trustTexture.anisotropy = 4;
     const card = new Mesh(
-      new BoxGeometry(0.56, 0.35, 0.004),
-      new MeshBasicMaterial({ map: this.trustTexture }),
+      new PlaneGeometry(0.5, 0.3125),
+      new MeshBasicMaterial({ map: this.trustTexture, transparent: true, toneMapped: false }),
     );
     card.name = 'TrustCard';
-    card.position.set(0, 0.30, -0.27);
-    card.rotation.x = -0.42;
+    card.position.set(0, 0.18, -0.4);
+    card.rotation.x = -0.2;
     root.add(card);
 
-    // Guide panel: the step instructor that floats in front of the learner in the
-    // glasses. Bigger and higher than the trust card — this is the panel a student
-    // actually reads while their hands are busy. Same canvas-texture technique.
+    // Guide card: the lab worksheet that floats in front of the learner. It is the card a student
+    // reads while their hands are busy, so it is the larger and the higher of the two.
     this.guideCanvas = document.createElement('canvas');
     this.guideCanvas.width = 1024; this.guideCanvas.height = 512;
     this.guideTexture = new CanvasTexture(this.guideCanvas);
+    this.guideTexture.colorSpace = SRGBColorSpace;
+    this.guideTexture.anisotropy = 4;
     const guide = new Mesh(
-      new BoxGeometry(0.68, 0.34, 0.004),
-      new MeshBasicMaterial({ map: this.guideTexture }),
+      new PlaneGeometry(0.62, 0.31),
+      new MeshBasicMaterial({ map: this.guideTexture, transparent: true, toneMapped: false }),
     );
     guide.name = 'GuidePanel';
-    guide.position.set(0, 0.62, -0.24);
-    guide.rotation.x = -0.30;
+    guide.position.set(0, 0.52, -0.4);
+    guide.rotation.x = -0.14;
     root.add(guide);
-    this.drawGuide('FieldForge Guide', ['Pick a problem, then build it with your hands.', 'Palm up: palette · pinch: grab & wire · open hand: drop'], 'idle');
-    this.drawTrust('FieldForge', ['Your verified physics bench is ready.', 'Pick a problem — or grab parts and wire your own.']);
+    this.drawGuide('FieldForge Guide', ['Pick a problem, then build it with your hands.', 'Palm up for the palette. Pinch to grab and wire. Open your hand to drop.'], 'idle');
+    this.drawTrust('FieldForge', ['Your verified physics bench is ready.', 'Pick a problem, or grab parts and wire your own.']);
 
-    // Field arrows: one instanced draw call for the whole grid.
-    const cone = new ConeGeometry(0.007, 0.032, 8);
-    cone.translate(0, 0.016, 0);
-    this.arrows = new InstancedMesh(cone, new MeshBasicMaterial({ color: TEAL, transparent: true, opacity: 0.9 }), 60);
+    // Field arrows: one instanced draw call for the whole grid, lit so they read as solid.
+    const cone = new ConeGeometry(0.0042, 0.03, 10);
+    cone.translate(0, 0.015, 0);
+    this.arrows = new InstancedMesh(
+      cone,
+      new MeshStandardMaterial({ color: TEAL, roughness: 0.35, metalness: 0.1, emissive: TEAL, emissiveIntensity: 0.3, transparent: true, opacity: 0.92 }),
+      60,
+    );
     this.arrows.frustumCulled = false;
     this.arrows.visible = false;
     root.add(this.arrows);
 
     // Spatial transport buttons (hands-first: pressable in XR, clickable via ray).
-    this.makeButton('next', new Vector3(0.33, 0.018, 0.22), TEAL, 'NEXT ▸');
-    this.makeButton('play', new Vector3(-0.33, 0.018, 0.22), AMBER, '▶ ❚❚');
-    this.makeButton('capture', new Vector3(0, 0.018, 0.24), 0xf97316, '📷 ASK');
+    this.makeButton('next', new Vector3(0.33, 0.012, 0.25), 0x0f9d8a, 'NEXT');
+    this.makeButton('play', new Vector3(-0.33, 0.012, 0.25), 0xd98a0b, 'PLAY');
+    this.makeButton('capture', new Vector3(0, 0.012, 0.27), 0xd9622b, 'ASK');
 
     // If a lesson started before the bench arrived, replay its beats onto the new stage.
     if (this.spec && this.beatIndex >= 0) {
@@ -277,12 +297,24 @@ export class ExperienceSystem extends createSystem({
     this.world.createTransformEntity(arrow, { persistent: true });
   }
 
-  private makeButton(action: string, pos: Vector3, color: number, _label: string): void {
+  private makeButton(action: string, pos: Vector3, color: number, label: string): void {
     if (!this.root || !this.bench) return;
     const mesh = new Mesh(
-      new BoxGeometry(0.11, 0.014, 0.05),
-      new MeshStandardMaterial({ color, roughness: 0.4, emissive: color, emissiveIntensity: 0.35 }),
+      new BoxGeometry(0.11, 0.018, 0.05),
+      new MeshStandardMaterial({ color, roughness: 0.42, metalness: 0.1, emissive: color, emissiveIntensity: 0.12 }),
     );
+    mesh.castShadow = true;
+    const text = canvasTexture(256, 116, (ctx, w, h) => {
+      ctx.clearRect(0, 0, w, h);
+      ctx.fillStyle = '#ffffff';
+      ctx.font = '700 58px system-ui,"Segoe UI",sans-serif';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText(label, w / 2, h / 2 + 3);
+    });
+    const face = new Mesh(new PlaneGeometry(0.1, 0.0453), new MeshBasicMaterial({ map: text, transparent: true, toneMapped: false }));
+    face.rotation.x = -Math.PI / 2;
+    face.position.y = 0.0095;
+    mesh.add(face);
     const holder = new Group();
     holder.add(mesh);
     const entity = this.world.createTransformEntity(holder, this.bench);
@@ -302,66 +334,97 @@ export class ExperienceSystem extends createSystem({
     const existing = this.proxies.get(instance);
     if (existing || !this.root) return existing as Mesh;
     const pos = this.layout.get(instance) ?? this.stagePosition(this.proxies.size);
-    const color = KIND_COLORS[kind] ?? 0x94a3b8;
-    let geo: BoxGeometry | SphereGeometry | CylinderGeometry | TorusGeometry;
-    if (kind.includes('sphere') || kind.includes('particle') || kind === 'electron' || kind === 'point_charge' || kind === 'field_probe' || kind === 'lamp')
-      geo = new SphereGeometry(kind === 'electron' ? 0.014 : 0.026, 20, 14);
-    else if (kind === 'circuit_loop') geo = new TorusGeometry(0.035, 0.006, 8, 28);
-    else if (kind === 'resistor' || kind === 'capacitor') geo = new CylinderGeometry(0.013, 0.013, 0.055, 12);
-    else geo = new BoxGeometry(0.055, 0.035, 0.04);
-    const mat = new MeshStandardMaterial({
-      color, roughness: 0.35, metalness: 0.15,
-      emissive: color, emissiveIntensity: kind === 'lamp' ? 0.7 : 0.12,
-      transparent: kind.includes('sphere') || kind.includes('shell'), opacity: kind.includes('sphere') ? 0.85 : 1,
-    });
-    const mesh = new Mesh(geo, mat);
-    if (geo instanceof CylinderGeometry) mesh.rotation.z = Math.PI / 2;
-    if (geo instanceof TorusGeometry) mesh.rotation.x = Math.PI / 2;
-    mesh.position.copy(pos);
-    mesh.userData.baseScale = 1;
-    this.root.add(mesh);
-    this.proxies.set(instance, mesh);
-    this.addLabel(mesh, `${instance} · ${this.kb?.components[kind]?.label ?? kind}`);
-    return mesh;
+
+    // The anchor carries the position, the pulse scale and the name tag; the visible body hangs
+    // off it. Nothing here is a placeholder box: real parts load their CAD model, idealised
+    // physics objects are built lit and parametric (visuals.ts), and abstract ideas have no body.
+    const anchor = new Mesh(new BoxGeometry(0.001, 0.001, 0.001), new MeshBasicMaterial({ visible: false }));
+    anchor.position.set(pos.x, 0.004, pos.z);
+    anchor.userData.baseScale = 1;
+    this.root.add(anchor);
+    this.proxies.set(instance, anchor);
+
+    const abstract = ABSTRACT_KINDS.has(kind);
+    if (kind === 'circuit_loop') anchor.add(makeLoopHint());
+    const body = buildPartVisual(kind) ?? (CAD_SIZE[kind] !== undefined ? buildPartVisual('__module') : null);
+    if (body) anchor.add(body);
+
+    const size = CAD_SIZE[kind];
+    if (size !== undefined) {
+      void this.cad.sceneFor(kind).then((model) => {
+        if (model === null || this.stopped || anchor.parent === null) return;
+        if (body) anchor.remove(body);
+        model.scale.setScalar(size);
+        castShadows(model);
+        anchor.add(model);
+      });
+    }
+
+    const label = makeLabel(instance, this.kb?.components[kind]?.label ?? kind, kind);
+    label.position.set(0, abstract ? 0.06 : size !== undefined ? 0.085 : 0.11, 0);
+    anchor.add(label);
+    this.labels.push(label);
+    return anchor;
   }
 
-  private addLabel(mesh: Mesh, text: string): void {
-    const canvas = document.createElement('canvas');
-    canvas.width = 512; canvas.height = 96;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-    ctx.fillStyle = 'rgba(4,20,18,0.85)';
-    ctx.fillRect(0, 0, 512, 96);
-    ctx.font = '600 34px system-ui, sans-serif';
-    ctx.fillStyle = '#d9fbf3';
-    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    ctx.fillText(text.slice(0, 34), 256, 48);
-    const tex = new CanvasTexture(canvas);
-    const label = new Mesh(
-      new BoxGeometry(0.11, 0.02, 0.001),
-      new MeshBasicMaterial({ map: tex, transparent: true }),
-    );
-    label.position.set(0, 0.045, 0);
-    mesh.add(label);
+  /** The instance itself if it is a physical part, else the first physical part inside the pair. */
+  private physicalOf(id: string): string | null {
+    if (!ABSTRACT_KINDS.has(this.kindOf(id))) return id;
+    for (const member of this.pairMembers.get(id) ?? []) {
+      const found = this.physicalOf(member);
+      if (found) return found;
+    }
+    return null;
   }
 
-  private drawRelation(from: string, to: string): void {
-    if (!this.lines) return;
-    const a = this.layout.get(from); const b = this.layout.get(to);
-    if (!a || !b) return;
-    // A thin stretched cylinder as the visible lead between the two proxies.
-    const dir = b.clone().sub(a); const length = dir.length();
-    const lead = new Mesh(
-      new CylinderGeometry(0.0028, 0.0028, length, 6),
-      new MeshBasicMaterial({ color: AMBER }),
-    );
-    lead.position.copy(a.clone().add(b).multiplyScalar(0.5)).setY(0.05);
-    lead.quaternion.setFromUnitVectors(new Vector3(0, 1, 0), dir.normalize());
-    this.lines.add(lead);
-    // glow pulse spheres travelling the lead are handled by pulses on the endpoints
+  private lastPhysicalOf(id: string): string | null {
+    if (!ABSTRACT_KINDS.has(this.kindOf(id))) return id;
+    for (const member of [...(this.pairMembers.get(id) ?? [])].reverse()) {
+      const found = this.lastPhysicalOf(member);
+      if (found) return found;
+    }
+    return null;
+  }
+
+  /** Lay a lead between two physical parts once, whichever order the relations arrive in. */
+  private lead(a: string | null, b: string | null): void {
+    if (!a || !b || a === b || !this.lines) return;
+    const key = a < b ? `${a}|${b}` : `${b}|${a}`;
+    if (this.drawnLeads.has(key)) return;
+    const pa = this.proxyFor(a); const pb = this.proxyFor(b);
+    if (!pa || !pb) return;
+    this.drawnLeads.add(key);
+    this.lines.add(makeWire(pa.position.clone().setY(0.02), pb.position.clone().setY(0.02)));
+  }
+
+  /**
+   * A relation between two instances. Abstract ones (the loop, a series or parallel pair) have no
+   * body, so a lead is drawn between the *physical* parts they stand for: the source and the load
+   * for a loop, and consecutive members of a series pair. The result follows the real circuit.
+   */
+  private drawRelation(from: string, to: string, relation?: string): void {
     const pa = this.proxyFor(from); const pb = this.proxyFor(to);
     if (pa) this.pulses.set(pa, performance.now() + 900);
     if (pb) this.pulses.set(pb, performance.now() + 900);
+
+    const fromKind = this.kindOf(from);
+    if (fromKind === 'circuit_loop') {
+      if (!this.loopMembers.includes(to)) this.loopMembers.push(to);
+      const source = this.loopMembers.find((m) => this.kindOf(m) === 'battery');
+      const load = this.loopMembers.find((m) => m !== source);
+      this.lead(source ?? null, load ? this.physicalOf(load) : null);
+      return;
+    }
+    if (ABSTRACT_KINDS.has(fromKind)) {
+      const members = this.pairMembers.get(from) ?? [];
+      if (!members.includes(to)) members.push(to);
+      this.pairMembers.set(from, members);
+      if ((relation ?? '').includes('series') && members.length >= 2) {
+        this.lead(this.lastPhysicalOf(members[0]!), this.physicalOf(members[1]!));
+      }
+      return;
+    }
+    this.lead(from, to);
   }
 
   private showFieldArrows(): void {
@@ -381,7 +444,7 @@ export class ExperienceSystem extends createSystem({
           const dir = new Vector3(sample.e[0], sample.e[1], sample.e[2]).normalize();
           q.setFromUnitVectors(up, dir);
           const len = arrowLength(sample.magnitude);
-          m.compose(p, q, new Vector3(1, len / 0.032, 1));
+          m.compose(p, q, new Vector3(1, (len * 0.6) / 0.03, 1));
           this.arrows.setMatrixAt(count++, m);
         }
       }
@@ -396,33 +459,8 @@ export class ExperienceSystem extends createSystem({
   private drawTrust(title: string, lines: string[]): void {
     const ctx = this.trustCanvas?.getContext('2d');
     if (!ctx || !this.trustCanvas) return;
-    const { width: w, height: h } = this.trustCanvas;
-    ctx.fillStyle = '#06231f'; ctx.fillRect(0, 0, w, h);
-    ctx.strokeStyle = '#2dd4bf'; ctx.lineWidth = 6; ctx.strokeRect(6, 6, w - 12, h - 12);
-    ctx.fillStyle = '#2dd4bf'; ctx.font = '700 34px system-ui, sans-serif';
-    ctx.fillText('✓ TRUST CARD — dimensions checked', 36, 58);
-    ctx.fillStyle = '#f0fdf9'; ctx.font = '700 44px system-ui, sans-serif';
-    this.wrap(ctx, title, 36, 118, w - 72, 48, 2);
-    ctx.font = '400 30px system-ui, sans-serif'; ctx.fillStyle = '#c8f5ec';
-    let y = 230;
-    for (const line of lines.slice(0, 9)) { this.wrap(ctx, line, 36, y, w - 72, 36, 2); y += 76; }
-    if (this.physics) {
-      ctx.font = '400 22px ui-monospace, monospace'; ctx.fillStyle = '#7dd3c8';
-      ctx.fillText(`bundle ${this.physics.kb.contentHash} · kernel-verified · no AI in the solver`, 36, h - 30);
-    }
+    drawTrustCard(ctx, this.trustCanvas.width, this.trustCanvas.height, title, lines, this.physics?.kb.contentHash ?? null);
     if (this.trustTexture) this.trustTexture.needsUpdate = true;
-  }
-
-  private wrap(ctx: CanvasRenderingContext2D, text: string, x: number, y: number, maxW: number, lh: number, maxLines: number): void {
-    const words = text.split(/\s+/); let line = ''; let lines = 0;
-    for (const word of words) {
-      const cand = line ? `${line} ${word}` : word;
-      if (ctx.measureText(cand).width > maxW && line) {
-        ctx.fillText(line, x, y); y += lh; lines++; line = word;
-        if (lines >= maxLines) return;
-      } else line = cand;
-    }
-    if (line) ctx.fillText(line, x, y);
   }
 
   // ---------------------------------------------------------------- HUD (desktop + mirror)
@@ -430,39 +468,52 @@ export class ExperienceSystem extends createSystem({
   private buildHud(): void {
     const style = document.createElement('style');
     style.textContent = `
-      #ff-hud{position:fixed;top:12px;left:12px;width:368px;max-height:calc(100vh - 24px);overflow:auto;
-        background:rgba(4,24,21,.92);color:#e6fff8;border:1px solid #2dd4bf;border-radius:14px;
-        font:14px/1.45 system-ui,sans-serif;padding:14px;z-index:50;backdrop-filter:blur(8px)}
-      #ff-hud h1{font-size:19px;margin:0} #ff-hud h1 span{color:#2dd4bf}
-      #ff-hud button{background:#0b3d36;color:#d9fbf3;border:1px solid #2dd4bf;border-radius:8px;
-        padding:6px 10px;cursor:pointer;font:600 13px system-ui}
-      #ff-hud button.on{background:#2dd4bf;color:#04211c}
-      #ff-hud select,#ff-hud textarea{width:100%;background:#072e29;color:#e6fff8;border:1px solid #1f6f63;
-        border-radius:8px;padding:7px;margin:4px 0}
-      #ff-hud .row{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:7px 0}
-      #ff-hud .task{background:#123f37;border-left:4px solid #f5a524;padding:8px;border-radius:6px;white-space:pre-wrap}
-      #ff-hud .trust{background:#021815;border:1px solid #14544a;border-radius:8px;padding:9px;white-space:pre-wrap;
-        font:12.5px/1.5 ui-monospace,monospace;max-height:260px;overflow:auto}
-      #ff-hud .dim{color:#8fd8cb;font-size:12px} #ff-hud .big{font-size:17px;color:#fde68a;font-weight:700}
+      #ff-hud{position:fixed;top:14px;left:14px;width:352px;max-height:calc(100vh - 28px);overflow:auto;
+        background:rgba(12,22,27,.84);color:#e8f1ef;border:1px solid rgba(138,176,180,.28);border-radius:18px;
+        font:13.5px/1.5 system-ui,"Segoe UI",Roboto,sans-serif;padding:16px;z-index:50;
+        backdrop-filter:blur(14px) saturate(1.2);box-shadow:0 18px 50px rgba(0,0,0,.35);
+        scrollbar-width:thin;scrollbar-color:#2a4a52 transparent}
+      #ff-hud h1{font:700 19px/1.1 system-ui,sans-serif;margin:0;letter-spacing:.2px}
+      #ff-hud h1 span{color:#2dd4bf}
+      #ff-hud h1 small{display:block;font:600 10.5px/1.4 system-ui;letter-spacing:.16em;text-transform:uppercase;color:#8fb3b8;margin-top:4px}
+      #ff-hud button{background:rgba(255,255,255,.06);color:#e8f1ef;border:1px solid rgba(138,176,180,.3);
+        border-radius:10px;padding:7px 12px;cursor:pointer;font:600 12.5px system-ui;transition:background .15s,border-color .15s}
+      #ff-hud button:hover{background:rgba(45,212,191,.16);border-color:rgba(45,212,191,.6)}
+      #ff-hud button.on{background:#2dd4bf;color:#06201b;border-color:#2dd4bf}
+      #ff-hud .seg{gap:0;flex-wrap:nowrap}
+      #ff-hud .seg button{flex:1;border-radius:0}
+      #ff-hud .seg button:first-child{border-radius:10px 0 0 10px}
+      #ff-hud .seg button:last-child{border-radius:0 10px 10px 0}
+      #ff-hud select,#ff-hud textarea{width:100%;box-sizing:border-box;background:rgba(255,255,255,.06);color:#e8f1ef;
+        border:1px solid rgba(138,176,180,.3);border-radius:10px;padding:8px 10px;margin:4px 0;font:inherit}
+      #ff-hud select option{background:#10262d;color:#e8f1ef}
+      #ff-hud .row{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:9px 0}
+      #ff-hud .task{background:rgba(245,165,36,.1);border-left:3px solid #f5a524;padding:10px 12px;border-radius:8px;white-space:pre-wrap}
+      #ff-hud .trust{background:rgba(0,0,0,.28);border:1px solid rgba(138,176,180,.2);border-radius:10px;padding:10px 12px;
+        white-space:pre-wrap;font:12px/1.6 ui-monospace,Menlo,Consolas,monospace;max-height:240px;overflow:auto;color:#cfe8e3}
+      #ff-hud .dim{color:#8fb3b8;font-size:12px}
+      #ff-hud .big{font-size:17px;color:#fcd34d;font-weight:700}
+      #ff-hud details{margin:8px 0;border-top:1px solid rgba(138,176,180,.18);padding-top:8px}
+      #ff-hud summary{cursor:pointer;color:#bcd4d6;font-weight:600;font-size:12.5px}
       @media (max-width:760px){#ff-hud{width:calc(100vw - 48px)}}`;
     document.head.appendChild(style);
     const hud = document.createElement('div');
     hud.id = 'ff-hud';
     hud.innerHTML = `
       <div class="row" style="justify-content:space-between">
-        <h1>Field<span>Forge</span> ⚡</h1>
-        <button data-k="xr">🥽 Enter XR</button>
-        <button data-k="sound" class="on">🔊</button>
+        <h1>Field<span>Forge</span><small>Verified physics lab</small></h1>
+        <button data-k="xr">Enter XR</button>
+        <button data-k="sound" class="on">Sound</button>
       </div>
       <div class="dim"><span data-k="status">Loading verified physics…</span> · <span data-k="fps">— fps</span></div>
-      <div class="row" role="group" aria-label="Mode">
-        <button data-k="m-auto" class="on">▶ Auto</button>
-        <button data-k="m-guided">🖐 Guided</button>
-        <button data-k="m-free">🧪 Free bench</button>
+      <div class="row seg" role="group" aria-label="Mode">
+        <button data-k="m-auto" class="on">Auto</button>
+        <button data-k="m-guided">Guided</button>
+        <button data-k="m-free">Free bench</button>
       </div>
       <select data-k="problem" aria-label="Problem"></select>
       <div class="row">
-        <button data-k="prev">⏮</button><button data-k="play">▶ Play</button><button data-k="next">Next ⏭</button>
+        <button data-k="prev">Restart</button><button data-k="play">Play</button><button data-k="next">Next</button>
         <label class="dim"><input type="checkbox" data-k="probe" checked> Hand probe</label>
       </div>
       <div class="task" data-k="task">Pick a problem to begin.</div>
@@ -475,8 +526,8 @@ export class ExperienceSystem extends createSystem({
         <div class="dim">Defaults are stated, never hidden: battery 12 V · resistor/lamp 10 Ω. Wiring is translated to a reduction tree and solved by the kernel — watch the wires flow.</div>
       </div>
       <div class="dim" data-k="probe-read"></div>
-      <details><summary>📷 Capture a question (book / laptop screen)</summary>
-        <div class="row"><button data-k="cap-photo">🖼 Photo</button><button data-k="cap-cam">🎥 Camera</button><button data-k="cap-snap" style="display:none">📸 Snap</button><button data-k="cap-xr">🥽 Pick in glasses</button></div>
+      <details><summary>Capture a question (book / laptop screen)</summary>
+        <div class="row"><button data-k="cap-photo">Photo</button><button data-k="cap-cam">Camera</button><button data-k="cap-snap" style="display:none">Snap</button><button data-k="cap-xr">Pick in glasses</button></div>
         <input data-k="cap-file" type="file" accept="image/*" style="display:none">
         <video data-k="cap-video" style="display:none;width:100%;border-radius:6px" autoplay playsinline muted></video>
         <div class="dim" data-k="cap-status">Snap your textbook page or laptop screen (on the companion). In the Quest, use passthrough to line the page up, take a screenshot, and share it here — WebXR cannot hand web apps the raw passthrough camera, so capture is companion-side and everything after it (picking, confirming, building) happens in the glasses.</div>
@@ -485,7 +536,7 @@ export class ExperienceSystem extends createSystem({
         <div class="row" data-k="cap-confirm-row" style="display:none"><span data-k="cap-picked" class="dim" style="flex:1"></span><button data-k="cap-solve">✓ Solve this</button><button data-k="cap-cancel">Pick another</button></div>
         <pre class="trust" data-k="cap-out">A captured question is only ever a proposal: a corpus match loads a kernel-verified problem; anything new goes through the AI boundary, and the kernel validator accepts or rejects it.</pre>
       </details>
-      <details><summary>🤖 Paste a problem (AI at the boundary — optional)</summary>
+      <details><summary>Paste a problem (AI at the boundary — optional)</summary>
         <textarea data-k="ai-text" rows="3" placeholder="A 12 V battery drives a 4 ohm resistor. What current flows?"></textarea>
         <button data-k="ai-go">Extract &amp; validate scene</button>
         <pre class="trust" data-k="ai-out">The bench works fully with AI unplugged. The model may only fill a schema; the kernel validator accepts or rejects it.</pre>
@@ -494,7 +545,7 @@ export class ExperienceSystem extends createSystem({
     document.body.appendChild(hud);
     hud.querySelectorAll<HTMLElement>('[data-k]').forEach((el) => { this.hud[el.dataset.k!] = el; });
     this.hud.xr!.onclick = () => { this.ensureAudio(); void (this.world as { launchXR?: () => void }).launchXR?.(); };
-    this.hud.sound!.onclick = () => { this.soundOn = !this.soundOn; this.hud.sound!.classList.toggle('on', this.soundOn); this.hud.sound!.textContent = this.soundOn ? '🔊' : '🔇'; };
+    this.hud.sound!.onclick = () => { this.soundOn = !this.soundOn; this.hud.sound!.classList.toggle('on', this.soundOn); this.hud.sound!.textContent = this.soundOn ? 'Sound' : 'Muted'; };
     this.hud['m-auto']!.onclick = () => this.setMode('auto');
     this.hud['m-guided']!.onclick = () => this.setMode('guided');
     this.hud['m-free']!.onclick = () => this.setMode('free');
@@ -562,6 +613,7 @@ export class ExperienceSystem extends createSystem({
     this.beatIndex = -1; this.waitingTask = null; this.resumeAt = 0;
     for (const mesh of this.proxies.values()) { this.root?.remove(mesh); }
     this.proxies.clear(); this.pulses.clear();
+    this.labels = []; this.loopMembers = []; this.pairMembers.clear(); this.drawnLeads.clear();
     if (this.lines && this.root) { this.root.remove(this.lines); this.lines = new Group(); this.root.add(this.lines); }
     if (this.arrows) this.arrows.visible = false;
     if (this.trail && this.root) { this.root.remove(this.trail); this.trail = undefined; }
@@ -570,12 +622,13 @@ export class ExperienceSystem extends createSystem({
 
   private setMode(mode: Mode): void {
     this.mode = mode; this.playing = false; this.waitingTask = null;
+    setPaletteVisible(mode !== 'auto'); // lessons that play themselves keep the bench clear
     for (const m of ['auto', 'guided', 'free'] as Mode[])
       this.hud[`m-${m}`]?.classList.toggle('on', m === mode);
     if (this.hud.free) this.hud.free.style.display = mode === 'free' ? 'block' : 'none';
     if (mode === 'free') {
       this.resetStage();
-      this.setTask('🧪 Free bench: grab a battery and a resistor from the palm palette, pinch-wire a closed loop. The kernel solves it live — no problem file needed.');
+      this.setTask('Free bench: grab a battery and a resistor from the palm palette, pinch-wire a closed loop. The kernel solves it live — no problem file needed.');
       this.drawTrust('Free bench', ['Wire a loop. The wire graph becomes a reduction tree,', 'the kernel resolves it, current flows in the wires.']);
     } else if (this.spec) {
       this.resetStage();
@@ -588,7 +641,7 @@ export class ExperienceSystem extends createSystem({
     this.ensureAudio();
     if (this.mode === 'free') this.setMode('auto');
     this.playing = !this.playing;
-    if (this.hud.play) this.hud.play.textContent = this.playing ? '❚❚ Pause' : '▶ Play';
+    if (this.hud.play) this.hud.play.textContent = this.playing ? 'Pause' : 'Play';
     if (this.playing) this.nextAt = performance.now() + 300;
   }
 
@@ -608,7 +661,7 @@ export class ExperienceSystem extends createSystem({
     const beat = this.spec!.timeline[this.beatIndex];
     if (!beat) {
       this.playing = false;
-      this.setTask('✅ Lesson complete. Try Guided mode to build it yourself, or Free bench to explore.');
+      this.setTask('Lesson complete. Try Guided mode to build it yourself, or Free bench to explore.');
       this.sound('answer');
       return;
     }
@@ -623,7 +676,7 @@ export class ExperienceSystem extends createSystem({
       if (!isTask) this.spawnProxy(beat.instance, beat.component ?? '');
       this.sound('place');
     } else if (beat.kind === 'relate' && beat.from && beat.to) {
-      if (!isTask) { this.spawnProxy(beat.from, this.kindOf(beat.from)); this.spawnProxy(beat.to, this.kindOf(beat.to)); this.drawRelation(beat.from, beat.to); }
+      if (!isTask) { this.spawnProxy(beat.from, this.kindOf(beat.from)); this.spawnProxy(beat.to, this.kindOf(beat.to)); this.drawRelation(beat.from, beat.to, beat.relation); }
       this.sound('place');
     } else {
       if (beat.instance) {
@@ -653,8 +706,8 @@ export class ExperienceSystem extends createSystem({
       this.baseline = { kinds: this.countKinds(), wires: this.liveWireCount() };
       this.waitingTask = beat;
       this.setTask(beat.kind === 'place'
-        ? `🖐 Your task: place a ${this.kb?.components[beat.component ?? '']?.label ?? beat.component} (for ${beat.instance}) from the palette. Then it will be verified.`
-        : `🖐 Your task: pinch-wire ${beat.from} → ${beat.to} (${beat.relation}). The system checks your topology.`);
+        ? `Your task: place a ${this.kb?.components[beat.component ?? '']?.label ?? beat.component} (for ${beat.instance}) from the palette. Then it will be verified.`
+        : `Your task: pinch-wire ${beat.from} → ${beat.to} (${beat.relation}). The system checks your topology.`);
     } else {
       if (this.hud['task-do']) this.hud['task-do'].style.display = 'none';
       this.setTask(`${this.mode === 'guided' ? '✓ ' : ''}${beat.narrate}${beat.display ? `  →  ${beat.display}` : ''}`);
@@ -725,7 +778,7 @@ export class ExperienceSystem extends createSystem({
       `Build it with your hands — ${this.guideSteps.length} steps.`,
       'The palette has every part you need. Follow the panel in front of you.',
     ], 'idle');
-    this.setTask(`🖐 Guided: ${this.spec.problem.title} — ${this.guideSteps.length} steps. Read the panel in front of you, then use your hands.`);
+    this.setTask(`Guided: ${this.spec.problem.title} — ${this.guideSteps.length} steps. Read the panel in front of you, then use your hands.`);
     this.resumeAt = performance.now() + 900;
   }
 
@@ -737,13 +790,13 @@ export class ExperienceSystem extends createSystem({
     if (!step) {
       this.waitingGuide = null;
       highlightPalette(null); clearHighlights();
-      this.drawGuide('✅ You built it', [
+      this.drawGuide('You built it', [
         `${this.spec.problem.title}`,
         `Verified answer: ${this.spec.answer.display}`,
         'Every step was placed and wired by your hands — and checked.',
         'Try Free bench to explore, or pick another problem.',
       ], 'done');
-      this.setTask('✅ Guided build complete — every step verified by your hands.');
+      this.setTask('Guided build complete — every step verified by your hands.');
       this.sound('answer');
       return;
     }
@@ -774,7 +827,7 @@ export class ExperienceSystem extends createSystem({
       this.waitingGuide = null;
       highlightPalette(null); clearHighlights();
       this.drawGuide(`Step ${step.index} / ${step.total} — ${step.title}`, [step.instruction, beat.display ? `→ ${beat.display}` : ''], 'observe');
-      this.setTask(`👀 ${step.instruction}${beat.display ? `  →  ${beat.display}` : ''}`);
+      this.setTask(`${step.instruction}${beat.display ? `  →  ${beat.display}` : ''}`);
       this.sound(step.final ? 'answer' : 'resolve');
       this.resumeAt = performance.now() + (step.final ? 2600 : 1500);
       // The final answer ends the guided sequence.
@@ -799,7 +852,7 @@ export class ExperienceSystem extends createSystem({
       this.highlightStepTerminals(step);
     }
     this.drawGuide(`Step ${step.index} / ${step.total} — ${step.title}`, [step.instruction], 'task');
-    this.setTask(`🖐 Step ${step.index}/${step.total}: ${step.instruction}`);
+    this.setTask(`Step ${step.index}/${step.total}: ${step.instruction}`);
     if (this.hud['task-do']) this.hud['task-do'].style.display = 'block';
     this.sound('place');
   }
@@ -906,49 +959,16 @@ export class ExperienceSystem extends createSystem({
     this.resumeAt = performance.now() + 800;
   }
 
-  /** Render the in-glasses guide panel (canvas texture; the HUD mirrors it). */
   private drawGuide(title: string, lines: string[], state: 'idle' | 'task' | 'observe' | 'done'): void {
     const canvas = this.guideCanvas; const tex = this.guideTexture;
     if (!canvas || !tex) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
-    const W = canvas.width; const H = canvas.height;
-    ctx.fillStyle = state === 'done' ? '#06281c' : state === 'task' ? '#0b2436' : '#071018';
-    ctx.fillRect(0, 0, W, H);
-    ctx.strokeStyle = state === 'done' ? '#34d399' : '#2dd4bf'; ctx.lineWidth = 6;
-    ctx.strokeRect(6, 6, W - 12, H - 12);
-    ctx.fillStyle = '#5eead4'; ctx.font = '700 34px system-ui, sans-serif'; ctx.textAlign = 'left';
-    ctx.fillText('🖐 FIELDFORGE GUIDE', 36, 58);
-    // step pips
-    if (this.guideSteps.length > 0) {
-      this.guideSteps.forEach((s, i) => {
-        ctx.beginPath();
-        ctx.arc(W - 40 - (this.guideSteps.length - 1 - i) * 30, 46, 10, 0, Math.PI * 2);
-        ctx.fillStyle = i < this.guideIndex ? '#34d399' : i === this.guideIndex ? '#fbbf24' : '#1f3a34';
-        ctx.fill();
-      });
-    }
-    ctx.fillStyle = '#f0fdf9'; ctx.font = '700 54px system-ui, sans-serif';
-    let y = this.wrapFrom(ctx, title, 36, 128, W - 72, 62, 2);
-    ctx.font = '38px system-ui, sans-serif'; ctx.fillStyle = '#c9f5ec';
-    for (const line of lines) { y = this.wrapFrom(ctx, line, 36, y + 14, W - 72, 48, 5); if (y > H - 56) break; }
-    ctx.font = '30px system-ui, sans-serif'; ctx.fillStyle = '#7dd3c8';
-    ctx.fillText(state === 'task' ? 'Do it with your hands — I am watching the bench.' : ' ', 36, H - 28);
+    drawGuideCard(
+      ctx, canvas.width, canvas.height, title, lines, state,
+      this.guideSteps.length > 0 ? { index: this.guideIndex, total: this.guideSteps.length } : null,
+    );
     tex.needsUpdate = true;
-  }
-
-  /** Word-wrap returning the y below the last line drawn. */
-  private wrapFrom(ctx: CanvasRenderingContext2D, text: string, x: number, y: number, maxW: number, lh: number, maxLines: number): number {
-    const words = text.split(/\s+/); let line = ''; let drawn = 0;
-    for (const word of words) {
-      const cand = line ? `${line} ${word}` : word;
-      if (ctx.measureText(cand).width > maxW && line) {
-        ctx.fillText(line, x, y); y += lh; drawn++; line = word;
-        if (drawn >= maxLines) return y;
-      } else line = cand;
-    }
-    if (line) { ctx.fillText(line, x, y); y += lh; }
-    return y;
   }
 
   // ---------------------------------------------------------------- free-bench solver bridge
@@ -1008,7 +1028,7 @@ export class ExperienceSystem extends createSystem({
       const current = steps[steps.length - 1]!.quantity;
       const amps = typeof current.value === 'number' ? current.value : 0;
       this.hud['free-result']!.textContent =
-        `⚡ ${topo.summary}\nLoop current I = ${amps.toPrecision(4)} A — resolved live by the kernel (${paths.length} path${paths.length > 1 ? 's' : ''}). Current is now flowing in your wires.`;
+        `${topo.summary}\nLoop current I = ${amps.toPrecision(4)} A — resolved live by the kernel (${paths.length} path${paths.length > 1 ? 's' : ''}). Current is now flowing in your wires.`;
       this.queries.wires.entities.forEach((e) => e.setValue(Wire, 'current', amps));
       const trace = steps.filter((s) => s.formula).slice(-5)
         .map((s) => `${formatRef(s.ref)} — ${s.formula?.exprText ?? ''}`).join('\n');
@@ -1090,7 +1110,7 @@ export class ExperienceSystem extends createSystem({
       this.root.add(this.trail);
       if (this.hud['probe-read']) {
         this.hud['probe-read']!.textContent =
-          `🎞 Engine C trajectory (${traj.mode}, RK4): real duration ${traj.t[traj.t.length - 1]} s played over 6 s, ` +
+          `Engine C trajectory (${traj.mode}, RK4): real duration ${traj.t[traj.t.length - 1]} s played over 6 s, ` +
           `magnified ×${scale.toFixed(scale >= 100 ? 0 : 1)} to fit the bench. Laws: ${traj.laws.join(', ')}. The path is integrated, never keyframed.`;
       }
     }
@@ -1149,7 +1169,7 @@ export class ExperienceSystem extends createSystem({
     this.probeArrow.visible = true;
     if (this.hud['probe-read']) {
       this.hud['probe-read']!.textContent =
-        `🖐 Hand probe (kernel-resolved): E = ${sample.magnitude.toExponential(3)} V/m · V = ${sample.potential.toExponential(3)} V · direction away from + charge. Arrow length is log-scaled; the number is exact.`;
+        `Hand probe (kernel-resolved): E = ${sample.magnitude.toExponential(3)} V/m · V = ${sample.potential.toExponential(3)} V · direction away from + charge. Arrow length is log-scaled; the number is exact.`;
     }
   }
 
@@ -1191,7 +1211,7 @@ export class ExperienceSystem extends createSystem({
     this.captured = splitQuestions(text);
     this.renderCaptureList();
     status.textContent = this.captured.length > 1
-      ? `I found ${this.captured.length} questions on that page. Pick the one you want below — or press 📷 ASK on the bench and pick it in the glasses.`
+      ? `I found ${this.captured.length} questions on that page. Pick the one you want below — or press ASK on the bench and pick it in the glasses.`
       : 'I read one question. Check the text, then choose “Solve this”.';
     this.sound('resolve');
   }
@@ -1272,9 +1292,9 @@ export class ExperienceSystem extends createSystem({
     const match = matchCorpus(text, await this.corpusCandidates());
     if (match) {
       out.textContent =
-        `📖 This is corpus problem ${match.id} (match ${(match.score * 100).toFixed(0)}%). ` +
+        `This is corpus problem ${match.id} (match ${(match.score * 100).toFixed(0)}%). ` +
         `Loading its kernel-verified version as a guided build — same physics, guaranteed answer.`;
-      this.setTask(`📷 Captured question matched verified problem ${match.id}. Build it guided.`);
+      this.setTask(`Captured question matched verified problem ${match.id}. Build it guided.`);
       await this.loadProblem(match.id);
       this.setMode('guided');
       this.sound('answer');
@@ -1285,7 +1305,7 @@ export class ExperienceSystem extends createSystem({
       out.textContent =
         'No corpus match, and AI is off (no proxy / personal key), so I cannot interpret a new ' +
         'question — that is the take-it-away test working. The bench still solves anything you ' +
-        'build in Free bench. Configure AI in the 🤖 section to interpret captures.';
+        'build in Free bench. Configure AI in the section to interpret captures.';
       this.sound('error');
       return;
     }
@@ -1341,7 +1361,7 @@ export class ExperienceSystem extends createSystem({
 
     this.spec = {
       fieldforge: 'captured',
-      problem: { id: 'captured', title: '📷 Captured question', text: sourceText, source: 'Captured by the learner; kernel-validated', tags: ['captured'] },
+      problem: { id: 'captured', title: 'Captured question', text: sourceText, source: 'Captured by the learner; kernel-validated', tags: ['captured'] },
       target: formatRef(target),
       answer: { value: 0, unit: '', rank: 'scalar', display: display || '—' },
       scene: {
@@ -1367,17 +1387,17 @@ export class ExperienceSystem extends createSystem({
     if (this.hud.free) this.hud.free.style.display = 'none';
     this.resetStage();
     this.startGuide();
-    this.drawGuide('📷 Captured question', [
+    this.drawGuide('Captured question', [
       'The kernel validated this one. Build it with your hands, step by step.',
       display ? `You are aiming at: ${display}` : '',
     ], 'idle');
-    this.setTask('📷 Captured question validated by the kernel — build it guided, with your hands.');
+    this.setTask('Captured question validated by the kernel — build it guided, with your hands.');
     this.sound('answer');
   }
 
   // ---------------------------------------------------------- in-glasses picker
   //
-  // The orange 📷 ASK button on the bench. Inside the headset there is no mouse, so
+  // The orange ASK button on the bench. Inside the headset there is no mouse, so
   // picking a question is a two-button dance on the physical bench buttons:
   // NEXT steps through the list (shown on the guide panel), PLAY asks "Solve this
   // question?", PLAY again confirms and the guided build starts. Sources, in
@@ -1387,7 +1407,7 @@ export class ExperienceSystem extends createSystem({
   private onCaptureButton(): void {
     if (this.picker) {
       this.picker = null;
-      this.drawGuide('Picker closed', ['Back to your lesson. Press 📷 ASK anytime to pick a question.'], 'idle');
+      this.drawGuide('Picker closed', ['Back to your lesson. Press ASK anytime to pick a question.'], 'idle');
       return;
     }
     const items: Array<{ label: string; run: () => void | Promise<void> }> = [];
@@ -1407,8 +1427,8 @@ export class ExperienceSystem extends createSystem({
       }
     }
     if (items.length === 0) {
-      this.drawGuide('📷 No questions yet', [
-        'Capture a page on the companion (📷 Capture a question),',
+      this.drawGuide('No questions yet', [
+        'Capture a page on the companion (Capture a question),',
         'or wait for the problem list to load.',
       ], 'idle');
       return;
@@ -1424,7 +1444,7 @@ export class ExperienceSystem extends createSystem({
     if (picker.stage === 'confirm') {
       this.drawGuide('Solve this question?', [
         picker.items[picker.index]!.label,
-        '▶ press PLAY again = yes, build it guided',
+        'press PLAY again = yes, build it guided',
         '▸ press NEXT = back to the list',
       ], 'task');
       return;
@@ -1434,7 +1454,7 @@ export class ExperienceSystem extends createSystem({
     const lines = picker.items.slice(start, start + 5).map((item, i) =>
       `${start + i === picker.index ? '►' : ' '} ${item.label}`);
     lines.push(`Question ${picker.index + 1} of ${n} · NEXT = move · PLAY = choose`);
-    this.drawGuide(this.captured.length > 0 ? '📖 From your book — which question?' : '📖 Book list — which question?', lines, 'task');
+    this.drawGuide(this.captured.length > 0 ? 'From your book — which question?' : 'Book list — which question?', lines, 'task');
   }
 
   private pickerNext(): void {

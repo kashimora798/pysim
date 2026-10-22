@@ -61,26 +61,34 @@ def convert(step: Path, kind: str) -> dict:
 
     raw = OUT_DIR / f".{kind}.raw.glb"
     cascadio.step_to_glb(str(step), str(raw), tol_linear=0.05, tol_angular=0.5)
+    # Keep the *scene*, not a merged geometry: the converter's output carries one PBR
+    # material per STEP body (resin, copper leads, sleeve colour...) and vertex normals.
+    # `scene.to_geometry()` used to merge everything into one mesh and silently dropped
+    # both, which is why every part rendered as plain white plastic. Transforms are
+    # applied to the scene graph, so materials and normals survive untouched.
     scene = trimesh.load(raw)
     raw.unlink()
-    geometry = scene.to_geometry()
-    tris = int(len(geometry.faces))
+    tris = int(sum(len(g.faces) for g in scene.geometry.values()))
 
     # cascadio emits metres with the STEP axes preserved (KiCad models are Z-up).
-    size_mm = [round(float(s) * 1000, 2) for s in geometry.extents]
+    lo, hi = scene.bounds
+    size_mm = [round(float(s) * 1000, 2) for s in (hi - lo)]
     # Rotate -90 deg about X: (x, y, z) -> (x, z, -y), so STEP's Z becomes three.js Y.
     # The returned transform (rotation, centre, scale) is applied to footprint pads
     # too -- one transform chain, so anchors can never drift from the mesh.
     rot = trimesh.transformations.rotation_matrix(-np.pi / 2, [1, 0, 0])
-    geometry.apply_transform(rot)
-    bounds = geometry.bounds
-    center = (bounds[0] + bounds[1]) / 2.0
-    scale = 1.0 / float(max(bounds[1] - bounds[0]))
-    geometry.apply_translation([-center[0], -bounds[0][1], -center[2]])
-    geometry.apply_scale(scale)
+    scene.apply_transform(rot)
+    lo, hi = scene.bounds
+    center = (lo + hi) / 2.0
+    scale = 1.0 / float(max(hi - lo))
+    shift = np.eye(4)
+    shift[:3, 3] = [-center[0], -lo[1], -center[2]]
+    zoom = np.eye(4)
+    zoom[:3, :3] *= scale
+    scene.apply_transform(zoom @ shift)
 
     out = OUT_DIR / f"{kind}.glb"
-    trimesh.Scene(geometry).export(out)
+    scene.export(out)
     return {"size_mm": size_mm, "triangles": tris, "bytes": out.stat().st_size,
             "_pad_transform": {"rot": rot, "center": center, "scale": scale}}
 

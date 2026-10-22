@@ -51,11 +51,13 @@ import {
   setWorldPosition,
   setWorldQuaternion,
   type Entity,
+  type Object3D,
 } from '@iwsdk/core';
 
 import { loadPhysics, type ComponentDef, type KnowledgeBase } from '../physics/kernel.js';
 import { Bench as BenchComponent, Part } from './components.js';
 import { CadModels } from './models.js';
+import { castShadows } from './lab.js';
 
 // ------------------------------------------------------------------ seated ergonomics
 
@@ -370,6 +372,11 @@ export class InventorySystem extends createSystem({
 
   // ================================================================ public API
 
+  /** The palette's root object, for show/hide; undefined until it is built. */
+  paletteObject(): Object3D | undefined {
+    return this.palette?.object3D ?? undefined;
+  }
+
   /** True once the knowledge base and the bench have both arrived and the palette exists. */
   get ready(): boolean {
     return this.built;
@@ -430,6 +437,7 @@ export class InventorySystem extends createSystem({
         group.remove(child);
       }
       group.add(model);
+      castShadows(model);
     });
 
     const entity = this.world.createTransformEntity(group, this.bench);
@@ -533,6 +541,7 @@ export class InventorySystem extends createSystem({
     backdrop.pointerEvents = 'none';
     panel.add(backdrop);
 
+    panel.visible = paletteWanted;
     this.palette = this.world.createTransformEntity(panel, bench);
 
     const labelMesh = this.buildLabels(
@@ -1172,6 +1181,9 @@ const UP = new Vector3(0, 1, 0);
 
 let activeInventory: InventorySystem | null = null;
 
+/** Whether the palette should be shown. Auto-play lessons hide it so the bench stays clear. */
+let paletteWanted = false;
+
 /** Light the palette slots for `kinds` (the guide's current need); null clears. */
 export function highlightPalette(kinds: readonly string[] | null): void {
   if (activeInventory === null) {
@@ -1182,4 +1194,11 @@ export function highlightPalette(kinds: readonly string[] | null): void {
   } else {
     activeInventory.highlightWanted(kinds);
   }
+}
+
+/** Show or hide the parts palette. Remembered, so it applies even if the palette is built later. */
+export function setPaletteVisible(visible: boolean): void {
+  paletteWanted = visible;
+  const object = activeInventory?.paletteObject();
+  if (object) object.visible = visible;
 }

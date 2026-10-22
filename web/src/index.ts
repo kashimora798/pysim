@@ -12,6 +12,7 @@ import projectOptions from 'virtual:iwsdk-project';
 import { BenchSystem } from './ff/bench.js';
 import { ExperienceSystem } from './ff/experience.js';
 import { InventorySystem } from './ff/inventory.js';
+import { LabSystem } from './ff/lab.js';
 import { TerminalSystem } from './ff/terminals.js';
 import { WireSystem } from './ff/wire.js';
 
@@ -27,6 +28,8 @@ World.create(
   // `qualify`; the experience (modes, player, solver bridge, trust card, probe) runs last
   // because it observes all of them.
   world.registerSystem(BenchSystem);
+  // The lab (light, room, passthrough switch, desktop camera) follows the bench it surrounds.
+  world.registerSystem(LabSystem);
   world.registerSystem(TerminalSystem);
   world.registerSystem(WireSystem);
   world.registerSystem(InventorySystem);

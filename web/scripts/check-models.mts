@@ -51,6 +51,18 @@ for (const [kind, entry] of Object.entries(manifest.models)) {
   if (bytes.length > SIZE_BUDGET) fail(`${kind}: ${bytes.length} bytes over budget`);
   if (bytes.toString('ascii', 0, 4) !== 'glTF') fail(`${kind}: not a GLB (bad magic)`);
   if (bytes.readUInt32LE(8) !== bytes.length) fail(`${kind}: GLB length header mismatch`);
+  // A model with no material or no normals renders as faceted white plastic. That is what
+  // shipped once, because the importer merged the scene and dropped both, so check it here.
+  const jsonLength = bytes.readUInt32LE(12);
+  const gltf = JSON.parse(bytes.toString('utf8', 20, 20 + jsonLength)) as {
+    materials?: unknown[];
+    meshes?: Array<{ primitives: Array<{ attributes: Record<string, number> }> }>;
+  };
+  if ((gltf.materials?.length ?? 0) < 1) fail(`${kind}: GLB has no materials (colours were lost)`);
+  const primitives = (gltf.meshes ?? []).flatMap((m) => m.primitives);
+  if (primitives.length === 0 || primitives.some((p) => p.attributes.NORMAL === undefined)) {
+    fail(`${kind}: GLB is missing vertex normals`);
+  }
   const wired = entry.pads.filter((p) => p.terminal !== null);
   if (wired.length < 2) fail(`${kind}: fewer than two mapped footprint terminals`);
   for (const pad of entry.pads) {
