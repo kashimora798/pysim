@@ -89,11 +89,19 @@ class Trajectory:
             "mode": self.mode,
             "laws": list(self.laws),
             "integrator": "RK4 (exact for constant acceleration; <0.5% phase error on cyclotron orbits at the sampled dt)",
-            "t": [round(x, 8) for x in self.t],
-            "position": [[round(c, 8) for c in p] for p in self.position],
-            "velocity": [[round(c, 8) for c in v] for v in self.velocity],
-            "speed": [round(s, 8) for s in self.speed],
+            # Significant figures, not decimal places: a cyclotron orbit lasts ~1e-7 s, and rounding
+            # its sample times to 8 decimals collapsed neighbouring samples to the same instant,
+            # which made any dv/dt taken from the file meaningless.
+            "t": [_sig(x) for x in self.t],
+            "position": [[_sig(c) for c in p] for p in self.position],
+            "velocity": [[_sig(c) for c in v] for v in self.velocity],
+            "speed": [_sig(s) for s in self.speed],
         }
+
+
+def _sig(x: float, digits: int = 9) -> float:
+    """`x` to `digits` significant figures (keeps tiny times and large speeds equally precise)."""
+    return float(f"{x:.{digits}g}")
 
 
 class ODEError(RuntimeError):

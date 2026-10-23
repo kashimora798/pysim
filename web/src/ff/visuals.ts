@@ -47,10 +47,10 @@ export const ABSTRACT_KINDS: ReadonlySet<string> = new Set([
 
 /** Longest dimension of each CAD model on the bench, in metres. */
 export const CAD_SIZE: Readonly<Record<string, number>> = {
-  battery: 0.12,
-  resistor: 0.1,
-  capacitor: 0.07,
-  lamp: 0.075,
+  battery: 0.17,
+  resistor: 0.15,
+  capacitor: 0.1,
+  lamp: 0.11,
 };
 
 /** Accent colour per kind, used for dots on labels and tints on idealised objects. */
@@ -301,6 +301,51 @@ export function makeWire(a: Vector3, b: Vector3, color = 0xd9622b): Mesh {
   wire.castShadow = true;
   wire.name = 'Lead';
   return wire;
+}
+
+/** A lead that also returns its centre curve, so charge carriers can be placed along it. */
+export function makeLead(a: Vector3, b: Vector3, color = 0xd9622b): { mesh: Mesh; curve: CatmullRomCurve3 } {
+  const mid = a.clone().add(b).multiplyScalar(0.5);
+  mid.y += 0.018 + a.distanceTo(b) * 0.1;
+  const curve = new CatmullRomCurve3([a.clone(), mid, b.clone()]);
+  const mesh = new Mesh(
+    new TubeGeometry(curve, 32, 0.0024, 10, false),
+    new MeshStandardMaterial({ color, roughness: 0.4, metalness: 0.15 }),
+  );
+  mesh.castShadow = true;
+  mesh.name = 'Lead';
+  return { mesh, curve };
+}
+
+const UP = new Vector3(0, 1, 0);
+const dirScratch = new Vector3();
+
+/** A lit arrow for a vector (velocity, acceleration). Direction and length are set per frame. */
+export class VectorArrow extends Group {
+  private readonly shaft: Mesh;
+  private readonly head: Mesh;
+
+  constructor(color: number) {
+    super();
+    const material = new MeshStandardMaterial({ color, roughness: 0.35, metalness: 0.1, emissive: color, emissiveIntensity: 0.45 });
+    this.shaft = new Mesh(new CylinderGeometry(0.0022, 0.0022, 1, 10), material);
+    this.head = new Mesh(new ConeGeometry(0.0065, 0.016, 14), material);
+    this.add(this.shaft, this.head);
+    this.visible = false;
+  }
+
+  /** Point from `origin` along `dir` (any length) for `length` metres; hides itself when degenerate. */
+  set(origin: Vector3, dir: Vector3, length: number): void {
+    this.visible = length > 1e-4 && dir.lengthSq() > 1e-18;
+    if (!this.visible) return;
+    const headLength = 0.016;
+    const shaftLength = Math.max(0.001, length - headLength);
+    this.position.copy(origin);
+    this.quaternion.setFromUnitVectors(UP, dirScratch.copy(dir).normalize());
+    this.shaft.scale.y = shaftLength;
+    this.shaft.position.y = shaftLength / 2;
+    this.head.position.y = shaftLength + headLength / 2;
+  }
 }
 
 /** A faint ring lying on the mat, for the "closed loop" idea. A hint, not a prop. */

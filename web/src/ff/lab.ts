@@ -233,7 +233,7 @@ export class LabSystem extends createSystem({
   // Desktop orbit (right-drag to turn, wheel to zoom). Left-drag stays free for grabbing parts.
   private azimuth = 0;
   private polar = 1.05; // radians from straight up
-  private radius = 1.3;
+  private radius = 1.12;
   private dragging = false;
   private lastX = 0;
   private lastY = 0;

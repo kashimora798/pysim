@@ -16,11 +16,12 @@
 
 import {
   BoxGeometry,
-  BufferGeometry,
   CanvasTexture,
+  DoubleSide,
+  CatmullRomCurve3,
+  TubeGeometry,
   PlaneGeometry,
   SRGBColorSpace,
-  Float32BufferAttribute,
   Line,
   ConeGeometry,
   CylinderGeometry,
@@ -57,12 +58,28 @@ import { readPhoto } from './ocr.js';
 import { highlightPalette, setPaletteVisible } from './inventory.js';
 import { clearHighlights, setHighlight } from './terminals.js';
 import { arrowLength, fieldAt, type FieldSource } from './field.js';
-import { canvasTexture, castShadows } from './lab.js';
+import { canvasTexture, castShadows, stripPictographs } from './lab.js';
 import { CadModels } from './models.js';
 import { drawGuideCard, drawTrustCard } from './cards.js';
-import { ABSTRACT_KINDS, CAD_SIZE, buildPartVisual, faceCamera, makeLabel, makeLoopHint, makeWire } from './visuals.js';
+import { ABSTRACT_KINDS, CAD_SIZE, VectorArrow, buildPartVisual, faceCamera, makeLabel, makeLead, makeLoopHint } from './visuals.js';
 
 type Mode = 'auto' | 'guided' | 'free';
+
+/** Charge carriers drawn on each lead. */
+const BEADS_PER_LEAD = 9;
+const beadPoint = new Vector3();
+const beadMatrix = new Matrix4();
+
+const trajPoint = new Vector3();
+const trajVec = new Vector3();
+const trajAccel = new Vector3();
+
+/** Compact number for readouts: plain for ordinary sizes, scientific for very large or small. */
+function fmt(n: number): string {
+  if (n === 0) return '0';
+  const a = Math.abs(n);
+  return a >= 1e4 || a < 1e-2 ? n.toExponential(2) : String(Number(n.toPrecision(3)));
+}
 
 const TEAL = 0x2dd4bf;
 const AMBER = 0xf5a524;
@@ -97,7 +114,29 @@ export class ExperienceSystem extends createSystem({
   /** Relations seen so far in this lesson, so leads can follow the circuit's real shape. */
   private loopMembers: string[] = [];
   private pairMembers = new Map<string, string[]>();
-  private drawnLeads = new Set<string>();
+  private loopId = '';
+  private pads: Record<string, Record<string, [number, number]>> = {};
+  /** Amps the kernel resolved for each instance, fed by the lesson's beats. Drives the flow. */
+  private currents = new Map<string, number>();
+  private watts = new Map<string, number>();
+  private leadList: Array<{ curve: CatmullRomCurve3; currentOf: string }> = [];
+  private beadMesh?: InstancedMesh;
+  // trajectory player
+  private answered = false;
+  private simClock = 0;
+  private simSpeed = 1;
+  private lastAnim = 0;
+  private lastSimText = 0;
+  private trajPts: Vector3[] = [];
+  private trajAcc: Vector3[] = [];
+  private trajMaxAcc = 0;
+  private trajScale = 1;
+  private velArrow?: VectorArrow;
+  private accArrow?: VectorArrow;
+  private simRead?: HTMLElement | null;
+  private trajBox?: { minX: number; maxX: number; minZ: number; maxZ: number };
+  private towardPositive = 0;
+  private fitted = new Set<string>();
   private mode: Mode = 'auto';
   private beatIndex = -1;
   private playing = false;
@@ -148,7 +187,7 @@ export class ExperienceSystem extends createSystem({
   private stopped = false;
   private resumeAt = 0;
   private soundOn = true;
-  private trail?: Line;
+  private trail?: Mesh;
   private frames = 0;
   private lastFpsAt = 0;
 
@@ -201,6 +240,7 @@ export class ExperienceSystem extends createSystem({
       else mesh.scale.setScalar((mesh.userData.baseScale ?? 1) * (1 + 0.18 * Math.sin(now / 60)));
     }
     this.animateTrajectory(now);
+    this.animateCurrent(now);
     for (const label of this.labels) faceCamera(label, this.camera);
     if (this.playing && this.mode === 'auto' && now >= this.nextAt) this.advance(false);
     if (this.resumeAt && now >= this.resumeAt) { this.resumeAt = 0; this.advance(false); }
@@ -232,11 +272,11 @@ export class ExperienceSystem extends createSystem({
     this.trustTexture.colorSpace = SRGBColorSpace;
     this.trustTexture.anisotropy = 4;
     const card = new Mesh(
-      new PlaneGeometry(0.5, 0.3125),
+      new PlaneGeometry(0.44, 0.275),
       new MeshBasicMaterial({ map: this.trustTexture, transparent: true, toneMapped: false }),
     );
     card.name = 'TrustCard';
-    card.position.set(0, 0.18, -0.4);
+    card.position.set(0, 0.15, -0.4);
     card.rotation.x = -0.2;
     root.add(card);
 
@@ -248,11 +288,11 @@ export class ExperienceSystem extends createSystem({
     this.guideTexture.colorSpace = SRGBColorSpace;
     this.guideTexture.anisotropy = 4;
     const guide = new Mesh(
-      new PlaneGeometry(0.62, 0.31),
+      new PlaneGeometry(0.56, 0.28),
       new MeshBasicMaterial({ map: this.guideTexture, transparent: true, toneMapped: false }),
     );
     guide.name = 'GuidePanel';
-    guide.position.set(0, 0.52, -0.4);
+    guide.position.set(0, 0.45, -0.4);
     guide.rotation.x = -0.14;
     root.add(guide);
     this.drawGuide('FieldForge Guide', ['Pick a problem, then build it with your hands.', 'Palm up for the palette. Pinch to grab and wire. Open your hand to drop.'], 'idle');
@@ -271,9 +311,20 @@ export class ExperienceSystem extends createSystem({
     root.add(this.arrows);
 
     // Spatial transport buttons (hands-first: pressable in XR, clickable via ray).
-    this.makeButton('next', new Vector3(0.33, 0.012, 0.25), 0x0f9d8a, 'NEXT');
-    this.makeButton('play', new Vector3(-0.33, 0.012, 0.25), 0xd98a0b, 'PLAY');
-    this.makeButton('capture', new Vector3(0, 0.012, 0.27), 0xd9622b, 'ASK');
+    this.makeButton('next', new Vector3(0.64, 0.012, -0.02), 0x0f9d8a, 'NEXT');
+    this.makeButton('play', new Vector3(0.64, 0.012, 0.1), 0xd98a0b, 'PLAY');
+    this.makeButton('capture', new Vector3(0.64, 0.012, 0.22), 0xd9622b, 'ASK');
+
+    // The real pad positions of each CAD part, so leads attach where the leads of a real part are.
+    void Promise.all(
+      ['battery', 'resistor', 'lamp', 'capacitor'].map(async (kind) => {
+        const map: Record<string, [number, number]> = {};
+        for (const pad of await this.cad.terminalAnchors(kind)) {
+          if (pad.terminal) map[pad.terminal] = [pad.pos[0], pad.pos[1]];
+        }
+        this.pads[kind] = map;
+      }),
+    ).then(() => { if (!this.stopped) this.rebuildLeads(); });
 
     // If a lesson started before the bench arrived, replay its beats onto the new stage.
     if (this.spec && this.beatIndex >= 0) {
@@ -356,6 +407,7 @@ export class ExperienceSystem extends createSystem({
         if (body) anchor.remove(body);
         model.scale.setScalar(size);
         castShadows(model);
+        if (kind === 'lamp') this.prepareLampGlow(model);
         anchor.add(model);
       });
     }
@@ -367,67 +419,168 @@ export class ExperienceSystem extends createSystem({
     return anchor;
   }
 
-  /** The instance itself if it is a physical part, else the first physical part inside the pair. */
-  private physicalOf(id: string): string | null {
-    if (!ABSTRACT_KINDS.has(this.kindOf(id))) return id;
-    for (const member of this.pairMembers.get(id) ?? []) {
-      const found = this.physicalOf(member);
-      if (found) return found;
-    }
-    return null;
+  /** Give the LED's resin body its own material, so it alone can glow with the current through it. */
+  private prepareLampGlow(model: Group): void {
+    model.traverse((node) => {
+      const mesh = node as Mesh;
+      if (!mesh.isMesh) return;
+      const material = mesh.material as MeshStandardMaterial;
+      if (material.color.r > 0.72 && material.color.g > 0.72) {
+        mesh.material = material.clone();
+        mesh.userData.glow = true;
+      }
+    });
   }
 
-  private lastPhysicalOf(id: string): string | null {
-    if (!ABSTRACT_KINDS.has(this.kindOf(id))) return id;
-    for (const member of [...(this.pairMembers.get(id) ?? [])].reverse()) {
-      const found = this.lastPhysicalOf(member);
-      if (found) return found;
-    }
-    return null;
+  /** Where a terminal sits on the bench: the part's anchor plus the real pad offset from its footprint. */
+  private padWorld(part: string, terminal: string): Vector3 | null {
+    const anchor = this.proxies.get(part);
+    if (!anchor) return null;
+    const kind = this.kindOf(part);
+    const size = CAD_SIZE[kind] ?? 0.06;
+    const pad = this.pads[kind]?.[terminal] ?? [0, 0];
+    return new Vector3(anchor.position.x + pad[0] * size, anchor.position.y + 0.012, anchor.position.z + pad[1] * size);
   }
 
-  /** Lay a lead between two physical parts once, whichever order the relations arrive in. */
-  private lead(a: string | null, b: string | null): void {
-    if (!a || !b || a === b || !this.lines) return;
-    const key = a < b ? `${a}|${b}` : `${b}|${a}`;
-    if (this.drawnLeads.has(key)) return;
-    const pa = this.proxyFor(a); const pb = this.proxyFor(b);
-    if (!pa || !pb) return;
-    this.drawnLeads.add(key);
-    this.lines.add(makeWire(pa.position.clone().setY(0.02), pb.position.clone().setY(0.02)));
+  /**
+   * Rebuild every lead from the relations seen so far, pad to pad, following the real circuit:
+   * the source's + to the load, the load back to the source's -, series members chained, and
+   * parallel members tied at both ends. Idempotent, so relations may arrive in any order.
+   */
+  private rebuildLeads(): void {
+    if (!this.lines || !this.root) return;
+    for (const child of [...this.lines.children]) this.lines.remove(child);
+    this.leadList = [];
+    if (this.beadMesh) { this.root.remove(this.beadMesh); this.beadMesh = undefined; }
+
+    const source = this.loopMembers.find((m) => this.kindOf(m) === 'battery');
+    const loadRoot = this.loopMembers.find((m) => m !== source);
+    if (!source || !loadRoot) return;
+
+    type End = { part: string; terminal: string };
+    type Net = { a: End; b: End };
+    const leads: Array<{ from: End; to: End; currentOf: string }> = [];
+    const build = (id: string): Net | null => {
+      const kind = this.kindOf(id);
+      if (kind === 'series_pair' || kind === 'parallel_pair') {
+        const members = this.pairMembers.get(id) ?? [];
+        if (members.length < 2) return null;
+        const first = build(members[0]!);
+        const second = build(members[1]!);
+        if (!first || !second) return null;
+        if (kind === 'series_pair') {
+          leads.push({ from: first.b, to: second.a, currentOf: members[0]! });
+          return { a: first.a, b: second.b };
+        }
+        leads.push({ from: first.a, to: second.a, currentOf: members[1]! });
+        leads.push({ from: second.b, to: first.b, currentOf: members[1]! });
+        return { a: first.a, b: first.b };
+      }
+      return ['resistor', 'lamp', 'capacitor'].includes(kind)
+        ? { a: { part: id, terminal: 'terminal_a' }, b: { part: id, terminal: 'terminal_b' } }
+        : null;
+    };
+    const net = build(loadRoot);
+    if (!net) return;
+    leads.push({ from: { part: source, terminal: 'positive_terminal' }, to: net.a, currentOf: 'loop' });
+    leads.push({ from: net.b, to: { part: source, terminal: 'negative_terminal' }, currentOf: 'loop' });
+
+    for (const lead of leads) {
+      const a = this.padWorld(lead.from.part, lead.from.terminal);
+      const b = this.padWorld(lead.to.part, lead.to.terminal);
+      if (!a || !b) continue;
+      const { mesh, curve } = makeLead(a, b);
+      this.lines.add(mesh);
+      this.leadList.push({ curve, currentOf: lead.currentOf });
+    }
+
+    // Charge carriers: one instanced mesh for every bead on every lead.
+    const count = this.leadList.length * BEADS_PER_LEAD;
+    if (count > 0) {
+      const beads = new InstancedMesh(
+        new SphereGeometry(0.0036, 10, 8),
+        new MeshBasicMaterial({ color: 0xffd45e, toneMapped: false }),
+        count,
+      );
+      beads.frustumCulled = false;
+      beads.count = 0;
+      this.beadMesh = beads;
+      this.root.add(beads);
+    }
+  }
+
+  /** Slide the carriers along each lead: faster for more current, in the conventional direction. */
+  private animateCurrent(now: number): void {
+    const beads = this.beadMesh;
+    if (!beads) return;
+    let k = 0;
+    for (const lead of this.leadList) {
+      const amps = this.currents.get(lead.currentOf === 'loop' ? this.loopId : lead.currentOf) ?? 0;
+      if (amps <= 0) continue;
+      const speed = 0.1 + 0.32 * Math.tanh(amps / 3); // lead-lengths per second
+      for (let b = 0; b < BEADS_PER_LEAD; b += 1, k += 1) {
+        lead.curve.getPointAt((b / BEADS_PER_LEAD + (now / 1000) * speed) % 1, beadPoint);
+        beadMatrix.makeTranslation(beadPoint.x, beadPoint.y, beadPoint.z);
+        beads.setMatrixAt(k, beadMatrix);
+      }
+    }
+    beads.count = k;
+    beads.instanceMatrix.needsUpdate = true;
+
+    // A lamp glows with the power the kernel resolved for it.
+    for (const [id, anchor] of this.proxies) {
+      if (this.kindOf(id) !== 'lamp') continue;
+      const power = this.watts.get(id) ?? 0;
+      anchor.traverse((node) => {
+        const mesh = node as Mesh;
+        if (mesh.userData.glow !== true) return;
+        const material = mesh.material as MeshStandardMaterial;
+        material.emissive.set(0xffc766);
+        material.emissiveIntensity = 1.6 * Math.tanh(power / 6);
+      });
+    }
+  }
+
+  /** The kernel's own beats carry the numbers that drive the flow and the glow. */
+  private noteBeat(beat: Beat): void {
+    const instance = beat.ref?.split('.')[0];
+    if (instance && typeof beat.value === 'number') {
+      if (beat.property === 'electric.current') this.currents.set(instance, Math.abs(beat.value));
+      if (beat.property === 'electric.power') this.watts.set(instance, Math.abs(beat.value));
+    }
+    if (beat.kind === 'answer') {
+      this.answered = true;
+      this.simClock = 0;
+    }
   }
 
   /**
    * A relation between two instances. Abstract ones (the loop, a series or parallel pair) have no
-   * body, so a lead is drawn between the *physical* parts they stand for: the source and the load
-   * for a loop, and consecutive members of a series pair. The result follows the real circuit.
+   * body, so the leads are rebuilt pad to pad for the physical parts they stand for.
    */
-  private drawRelation(from: string, to: string, relation?: string): void {
+  private drawRelation(from: string, to: string): void {
     const pa = this.proxyFor(from); const pb = this.proxyFor(to);
     if (pa) this.pulses.set(pa, performance.now() + 900);
     if (pb) this.pulses.set(pb, performance.now() + 900);
 
     const fromKind = this.kindOf(from);
     if (fromKind === 'circuit_loop') {
+      this.loopId = from;
       if (!this.loopMembers.includes(to)) this.loopMembers.push(to);
-      const source = this.loopMembers.find((m) => this.kindOf(m) === 'battery');
-      const load = this.loopMembers.find((m) => m !== source);
-      this.lead(source ?? null, load ? this.physicalOf(load) : null);
-      return;
-    }
-    if (ABSTRACT_KINDS.has(fromKind)) {
+    } else if (ABSTRACT_KINDS.has(fromKind)) {
       const members = this.pairMembers.get(from) ?? [];
       if (!members.includes(to)) members.push(to);
       this.pairMembers.set(from, members);
-      if ((relation ?? '').includes('series') && members.length >= 2) {
-        this.lead(this.lastPhysicalOf(members[0]!), this.physicalOf(members[1]!));
-      }
-      return;
     }
-    this.lead(from, to);
+    this.rebuildLeads();
   }
 
   private showFieldArrows(): void {
+    // An animated problem is about the motion; a static grid of arrows around it is just noise.
+    if (this.spec?.trajectory) {
+      if (this.arrows) this.arrows.visible = false;
+      return;
+    }
     if (!this.arrows || !this.kb || this.sources.length === 0) return;
     const c0 = this.sources[0]!.position;
     const center = new Vector3(c0[0], c0[1], c0[2]);
@@ -552,6 +705,19 @@ export class ExperienceSystem extends createSystem({
     this.hud.problem!.onchange = () => void this.loadProblem((this.hud.problem as HTMLSelectElement).value);
     this.hud.play!.onclick = () => this.togglePlay();
     this.hud.next!.onclick = () => this.advance(true);
+    this.hud.trust?.insertAdjacentHTML('afterend', `
+      <div class="simbox" data-k="sim-panel" style="display:none">
+        <div class="row"><span class="dim">Playback</span>
+          <select data-k="speed" style="width:auto"><option value="0.25">0.25x</option><option value="0.5">0.5x</option><option value="1" selected>1x</option><option value="2">2x</option></select>
+          <button data-k="replay">Replay</button></div>
+        <div class="trust" data-k="sim-read">The path plays after the kernel gives the answer.</div>
+        <div class="dim">Cyan arrow: velocity. Amber arrow: acceleration (dv/dt of the integrated path).</div>
+      </div>`);
+    const hudRoot = document.getElementById('ff-hud');
+    const speedSelect = hudRoot?.querySelector<HTMLSelectElement>('[data-k="speed"]');
+    if (speedSelect) speedSelect.onchange = () => { this.simSpeed = Number(speedSelect.value) || 1; };
+    const replay = hudRoot?.querySelector<HTMLButtonElement>('[data-k="replay"]');
+    if (replay) replay.onclick = () => { this.simClock = 0; };
     this.hud.prev!.onclick = () => { this.resetStage(); if (this.mode === 'auto') this.playing = true; };
     this.hud['task-do']!.onclick = () => this.completeTask();
     this.hud.probe!.onchange = () => { this.probeEnabled = (this.hud.probe as HTMLInputElement).checked; };
@@ -574,7 +740,7 @@ export class ExperienceSystem extends createSystem({
   }
 
   private setStatus(text: string): void { if (this.hud.status) this.hud.status.textContent = text; }
-  private setTask(text: string): void { if (this.hud.task) this.hud.task.textContent = text; }
+  private setTask(text: string): void { if (this.hud.task) this.hud.task.textContent = stripPictographs(text); } // emoji render as empty boxes in some fonts
 
   private fillProblemList(): void {
     const select = this.hud.problem as HTMLSelectElement | undefined;
@@ -607,13 +773,20 @@ export class ExperienceSystem extends createSystem({
       this.mode === 'guided' ? 'Guided: build each step with your hands.' : 'Press Play / Next — or the teal NEXT button on the bench.',
     ]);
     if (this.mode === 'auto') this.playing = true;
+    else if (this.mode === 'guided') this.startGuide(); // choosing a problem in Guided mode must begin its steps
   }
 
   private resetStage(): void {
     this.beatIndex = -1; this.waitingTask = null; this.resumeAt = 0;
     for (const mesh of this.proxies.values()) { this.root?.remove(mesh); }
     this.proxies.clear(); this.pulses.clear();
-    this.labels = []; this.loopMembers = []; this.pairMembers.clear(); this.drawnLeads.clear();
+    this.labels = []; this.loopMembers = []; this.pairMembers.clear(); this.loopId = '';
+    this.currents.clear(); this.watts.clear(); this.leadList = []; this.answered = false; this.simClock = 0;
+    if (this.beadMesh && this.root) { this.root.remove(this.beadMesh); this.beadMesh = undefined; }
+    for (const arrow of [this.velArrow, this.accArrow]) if (arrow && this.root) this.root.remove(arrow);
+    this.velArrow = undefined; this.accArrow = undefined; this.trajBox = undefined; this.fitted.clear();
+    const simPanel = document.querySelector<HTMLElement>('#ff-hud [data-k="sim-panel"]');
+    if (simPanel) simPanel.style.display = this.spec?.trajectory ? 'block' : 'none';
     if (this.lines && this.root) { this.root.remove(this.lines); this.lines = new Group(); this.root.add(this.lines); }
     if (this.arrows) this.arrows.visible = false;
     if (this.trail && this.root) { this.root.remove(this.trail); this.trail = undefined; }
@@ -671,12 +844,13 @@ export class ExperienceSystem extends createSystem({
 
   private applyBeat(beat: Beat): void {
     if (!this.spec) return;
+    this.noteBeat(beat);
     const isTask = this.mode === 'guided' && (beat.kind === 'place' || beat.kind === 'relate');
     if (beat.kind === 'place' && beat.instance) {
       if (!isTask) this.spawnProxy(beat.instance, beat.component ?? '');
       this.sound('place');
     } else if (beat.kind === 'relate' && beat.from && beat.to) {
-      if (!isTask) { this.spawnProxy(beat.from, this.kindOf(beat.from)); this.spawnProxy(beat.to, this.kindOf(beat.to)); this.drawRelation(beat.from, beat.to, beat.relation); }
+      if (!isTask) { this.spawnProxy(beat.from, this.kindOf(beat.from)); this.spawnProxy(beat.to, this.kindOf(beat.to)); this.drawRelation(beat.from, beat.to); }
       this.sound('place');
     } else {
       if (beat.instance) {
@@ -699,7 +873,7 @@ export class ExperienceSystem extends createSystem({
       beat.kind === 'answer' ? `Paths found: ${b.paths_found ?? this.spec.checks.paths_found} · dimensions ✓ · paths agree ✓` : '',
     ].filter(Boolean);
     this.drawTrust(beat.kind === 'answer' ? `Answer: ${beat.display ?? ''}` : beat.narrate, lines);
-    if (this.hud.trust) this.hud.trust.textContent = lines.join('\n');
+    if (this.hud.trust) this.hud.trust.textContent = stripPictographs(lines.join('\n'));
 
     if (isTask) {
       if (this.hud['task-do']) this.hud['task-do'].style.display = 'block';
@@ -712,6 +886,14 @@ export class ExperienceSystem extends createSystem({
       if (this.hud['task-do']) this.hud['task-do'].style.display = 'none';
       this.setTask(`${this.mode === 'guided' ? '✓ ' : ''}${beat.narrate}${beat.display ? `  →  ${beat.display}` : ''}`);
       if (this.mode === 'guided') this.resumeAt = performance.now() + 1500;
+      if (this.mode === 'auto') {
+        this.drawGuide(
+          this.spec.problem.title,
+          [`${beat.narrate}${beat.display ? `  \u2192  ${beat.display}` : ''}`],
+          beat.kind === 'answer' ? 'done' : 'observe',
+          { index: this.beatIndex + 1, total: this.spec.timeline.length },
+        );
+      }
     }
   }
 
@@ -959,14 +1141,19 @@ export class ExperienceSystem extends createSystem({
     this.resumeAt = performance.now() + 800;
   }
 
-  private drawGuide(title: string, lines: string[], state: 'idle' | 'task' | 'observe' | 'done'): void {
+  private drawGuide(
+    title: string,
+    lines: string[],
+    state: 'idle' | 'task' | 'observe' | 'done',
+    progress?: { index: number; total: number } | null,
+  ): void {
     const canvas = this.guideCanvas; const tex = this.guideTexture;
     if (!canvas || !tex) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
     drawGuideCard(
       ctx, canvas.width, canvas.height, title, lines, state,
-      this.guideSteps.length > 0 ? { index: this.guideIndex, total: this.guideSteps.length } : null,
+      progress !== undefined ? progress : this.guideSteps.length > 0 ? { index: this.guideIndex, total: this.guideSteps.length } : null,
     );
     tex.needsUpdate = true;
   }
@@ -1085,41 +1272,169 @@ export class ExperienceSystem extends createSystem({
     return new Vector3(v[0] ?? 0, v[2] ?? 0, -(v[1] ?? 0));
   }
 
+  /** One-time setup of the path, the thick trail, the arrows and the field region around it. */
+  private buildTrajectory(traj: NonNullable<SimSpec['trajectory']>, base: Vector3): void {
+    if (!this.root) return;
+    const origin = this.mapPhysics(traj.position[0]!);
+    const rel = traj.position.map((pos) => this.mapPhysics(pos).sub(origin));
+    let extent = 0;
+    for (const r of rel) extent = Math.max(extent, r.length());
+    const scale = extent > 1e-9 ? Math.min(0.5 / extent, 5000) : 1;
+    this.trajScale = scale;
+    this.trajPts = rel.map((r) => new Vector3(base.x + r.x * scale, 0.05 + r.y * scale, base.z + r.z * scale));
+
+    // Acceleration at each sample: dv/dt of the *integrated* velocities. No new physics, just a
+    // derivative of what the solver already produced.
+    const n = traj.t.length;
+    this.trajAcc = [];
+    this.trajMaxAcc = 0;
+    for (let i = 0; i < n; i += 1) {
+      const hi = Math.min(n - 1, i + 1);
+      const lo = Math.max(0, hi - 1);
+      const dt = ((traj.t[n - 1]! - traj.t[0]!) / (n - 1)) * (hi - lo) || 1; // uniform samples
+      const acc = this.mapPhysics(traj.velocity[hi]!).sub(this.mapPhysics(traj.velocity[lo]!)).divideScalar(dt);
+      this.trajAcc.push(acc);
+      this.trajMaxAcc = Math.max(this.trajMaxAcc, acc.length());
+    }
+
+    // A thick glowing trail, revealed segment by segment as the particle moves.
+    const tube = new Mesh(
+      new TubeGeometry(new CatmullRomCurve3(this.trajPts), Math.min(400, n * 2), 0.0021, 8, false),
+      new MeshStandardMaterial({ color: 0xa78bfa, roughness: 0.3, emissive: 0xa78bfa, emissiveIntensity: 0.55 }),
+    );
+    tube.frustumCulled = false;
+    this.trail = tube;
+    this.root.add(tube);
+
+    this.velArrow = new VectorArrow(0x22d3ee);
+    this.accArrow = new VectorArrow(0xfbbf24);
+    this.root.add(this.velArrow, this.accArrow);
+
+    // Remember the flight's footprint; the field visuals are fitted to it as they appear.
+    let minX = Infinity; let maxX = -Infinity; let minZ = Infinity; let maxZ = -Infinity;
+    for (const p of this.trajPts) { minX = Math.min(minX, p.x); maxX = Math.max(maxX, p.x); minZ = Math.min(minZ, p.z); maxZ = Math.max(maxZ, p.z); }
+    this.trajBox = { minX, maxX, minZ, maxZ };
+    const mid = this.trajAcc[Math.floor(n / 2)]!;
+    this.towardPositive = this.kindOf(traj.instance) === 'electron' ? Math.sign(mid.z) || 1 : 0;
+    this.fitted.clear();
+
+    if (this.hud['probe-read']) {
+      this.hud['probe-read']!.textContent =
+        `Engine C trajectory (${traj.mode}, RK4): real duration ${fmt(traj.t[n - 1]!)} s, played over 6 s ` +
+        `and magnified x${scale.toFixed(scale >= 100 ? 0 : 1)} to fit the bench. Laws: ${traj.laws.join(', ')}. ` +
+        'The path is integrated, never keyframed.';
+    }
+  }
+
+  /**
+   * Fit field visuals around the flight they act on, whenever they appear on the bench: a magnetic
+   * region stretches to contain the orbit; capacitor plates stand parallel to the motion with the
+   * field axis between them and the positive plate on the side the electron accelerates toward.
+   */
+  private fitFieldVisuals(traj: NonNullable<SimSpec['trajectory']>): void {
+    const box = this.trajBox;
+    if (!box) return;
+    for (const [id, anchor] of this.proxies) {
+      if (this.fitted.has(id)) continue;
+      const kind = this.kindOf(id);
+      const body = anchor.children[0];
+      if (!body) continue;
+      if (kind === 'uniform_magnetic_field_region' && traj.mode === 'magnetic') {
+        body.scale.set((box.maxX - box.minX + 0.14) / 0.2, 1, (box.maxZ - box.minZ + 0.14) / 0.15);
+        body.position.set((box.minX + box.maxX) / 2 - anchor.position.x, 0, (box.minZ + box.maxZ) / 2 - anchor.position.z);
+        this.fitted.add(id);
+      } else if (kind === 'parallel_plate_capacitor' && traj.mode !== 'magnetic') {
+        body.clear();
+        const length = box.maxX - box.minX + 0.12;
+        const gap = Math.max(0.07, box.maxZ - box.minZ + 0.07);
+        for (const side of [-1, 1]) {
+          const tint = this.towardPositive === 0 ? 0xc3ccd4 : side === this.towardPositive ? 0xff8a8a : 0x8ab4ff;
+          const plate = new Mesh(
+            new BoxGeometry(length, 0.075, 0.004),
+            new MeshStandardMaterial({
+              color: tint, roughness: 0.25, metalness: 0.4, emissive: tint,
+              emissiveIntensity: this.towardPositive === 0 ? 0 : 0.18,
+              transparent: true, opacity: 0.28, depthWrite: false, side: DoubleSide,
+            }),
+          );
+          plate.position.set(0, 0.046, side * (gap / 2));
+          plate.renderOrder = 2; // translucent: drawn after the particle and its trail
+          body.add(plate);
+          // a solid rail along the bottom edge, so the plate still reads as a plate
+          const rail = new Mesh(new BoxGeometry(length, 0.004, 0.006), new MeshStandardMaterial({ color: tint, roughness: 0.3, metalness: 0.8 }));
+          rail.position.set(0, 0.046 - 0.0375, side * (gap / 2));
+          rail.castShadow = true;
+          body.add(rail);
+        }
+        body.position.set((box.minX + box.maxX) / 2 - anchor.position.x, 0, (box.minZ + box.maxZ) / 2 - anchor.position.z);
+        this.fitted.add(id);
+      }
+    }
+  }
+
+  /**
+   * Play the integrated path: smooth between samples, a trail that grows behind the particle,
+   * arrows for its velocity and acceleration, and a live readout. It waits for the answer, so a
+   * student sees the result *and then* the motion that produced it. Loops with a short hold.
+   */
   private animateTrajectory(now: number): void {
     const traj = this.spec?.trajectory;
     if (!traj || !this.root) return;
-    const mesh = this.proxies.get(traj.instance);
+    const anchor = this.proxies.get(traj.instance);
     const base = this.layout.get(traj.instance);
-    if (!mesh || !base || traj.t.length < 2) return;
+    const n = traj.t.length;
+    if (!anchor || !base || n < 2) return;
+    if (!this.trail) this.buildTrajectory(traj, base);
+    this.fitFieldVisuals(traj);
 
-    const origin = traj.position[0]!;
-    let extent = 0;
-    for (const pos of traj.position) {
-      const d = this.mapPhysics(pos).distanceTo(this.mapPhysics(origin));
-      if (d > extent) extent = d;
-    }
-    const scale = extent > 1e-9 ? Math.min(0.5 / extent, 5000) : 1;
+    const dt = Math.min(0.1, (now - this.lastAnim) / 1000);
+    this.lastAnim = now;
+    if (this.answered) this.simClock += dt * this.simSpeed;
 
-    if (!this.trail) {
-      const pts = traj.position.map((pos) =>
-        base.clone().add(this.mapPhysics(pos).sub(this.mapPhysics(origin)).multiplyScalar(scale)).setY(base.y + 0.02),
-      );
-      const geo = new BufferGeometry();
-      geo.setAttribute('position', new Float32BufferAttribute(pts.flatMap((p) => [p.x, p.y, p.z]), 3));
-      this.trail = new Line(geo, new MeshBasicMaterial({ color: 0xa78bfa, transparent: true, opacity: 0.85 }));
-      this.root.add(this.trail);
-      if (this.hud['probe-read']) {
-        this.hud['probe-read']!.textContent =
-          `Engine C trajectory (${traj.mode}, RK4): real duration ${traj.t[traj.t.length - 1]} s played over 6 s, ` +
-          `magnified ×${scale.toFixed(scale >= 100 ? 0 : 1)} to fit the bench. Laws: ${traj.laws.join(', ')}. The path is integrated, never keyframed.`;
+    const PLAY = 6;
+    const HOLD = 1.4;
+    const progress = this.answered ? Math.min(1, (this.simClock % (PLAY + HOLD)) / PLAY) : 0;
+    const f = progress * (n - 1);
+    const i = Math.min(n - 2, Math.floor(f));
+    const u = f - i;
+
+    const p0 = this.trajPts[i]!;
+    const p1 = this.trajPts[i + 1]!;
+    const x = p0.x + (p1.x - p0.x) * u;
+    const y = p0.y + (p1.y - p0.y) * u;
+    const z = p0.z + (p1.z - p0.z) * u;
+    const radius = traj.mode === 'electric' || this.kindOf(traj.instance) === 'electron' ? 0.009 : 0.018;
+    anchor.position.set(x, y - radius, z);
+    trajPoint.set(x, y, z);
+
+    // reveal the trail up to the particle
+    const tube = this.trail;
+    const indexCount = tube?.geometry.index?.count ?? 0;
+    if (tube && indexCount > 0) tube.geometry.setDrawRange(0, Math.floor((progress * indexCount) / 3) * 3);
+
+    // arrows from the integrated velocity and its derivative
+    const v0 = this.mapPhysics(traj.velocity[i]!);
+    const v1 = this.mapPhysics(traj.velocity[i + 1]!);
+    trajVec.copy(v0).lerp(v1, u);
+    this.velArrow?.set(trajPoint, trajVec, this.answered ? 0.07 : 0);
+    trajAccel.copy(this.trajAcc[i]!).lerp(this.trajAcc[i + 1]!, u);
+    const accMag = trajAccel.length();
+    const showAcc = this.trajMaxAcc > 0 && accMag > this.trajMaxAcc * 0.02;
+    this.accArrow?.set(trajPoint, trajAccel, this.answered && showAcc ? 0.025 + 0.05 * Math.min(1, accMag / this.trajMaxAcc) : 0);
+
+    // live readout, a few times a second
+    if (now - this.lastSimText > 120) {
+      this.lastSimText = now;
+      this.simRead ??= document.querySelector<HTMLElement>('#ff-hud [data-k="sim-read"]');
+      if (this.simRead) {
+        const t = traj.t[0]! + ((traj.t[n - 1]! - traj.t[0]!) / (n - 1)) * (i + u);
+        const speed = traj.speed[i]! + (traj.speed[i + 1]! - traj.speed[i]!) * u;
+        const drift = traj.speed[0]! !== 0 ? ((speed - traj.speed[0]!) / traj.speed[0]!) * 100 : 0;
+        this.simRead.textContent = this.answered
+          ? `t = ${fmt(t)} s\nspeed = ${fmt(speed)} m/s (${drift >= 0 ? '+' : ''}${drift.toFixed(3)}% since start)\n|a| = ${fmt(accMag / Math.max(1e-12, 1))} m/s\u00B2`
+          : 'The path plays after the kernel gives the answer.';
       }
     }
-
-    const duration = traj.t[traj.t.length - 1]!;
-    const phase = duration > 0 ? ((now / 1000) % 6) / 6 : 0;
-    const idx = Math.min(traj.t.length - 1, Math.floor(phase * (traj.t.length - 1)));
-    const offset = this.mapPhysics(traj.position[idx]!).sub(this.mapPhysics(origin)).multiplyScalar(scale);
-    mesh.position.copy(base).add(offset).setY(base.y + 0.02 + offset.y);
   }
 
   // ---------------------------------------------------------------- hand-as-probe
